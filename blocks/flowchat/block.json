@@ -1,0 +1,109 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "flowchat/chat",
+    "version": "1.0.0",
+    "title": "FlowChat",
+    "category": "widgets",
+    "icon": "format-chat",
+    "description": "Embed an AI chat widget powered by n8n.",
+    "keywords": ["chat", "ai", "n8n", "assistant", "support", "bot"],
+    "textdomain": "flowchat",
+    "attributes": {
+        "instanceId": {
+            "type": "string",
+            "default": ""
+        },
+        "mode": {
+            "type": "string",
+            "default": "inline",
+            "enum": ["inline", "bubble", "fullscreen"]
+        },
+        "width": {
+            "type": "string",
+            "default": "100%"
+        },
+        "height": {
+            "type": "string",
+            "default": "500px"
+        },
+        "theme": {
+            "type": "string",
+            "default": "light",
+            "enum": ["light", "dark", "auto"]
+        },
+        "template": {
+            "type": "string",
+            "default": ""
+        },
+        "primaryColor": {
+            "type": "string",
+            "default": ""
+        },
+        "welcomeMessage": {
+            "type": "string",
+            "default": ""
+        },
+        "placeholder": {
+            "type": "string",
+            "default": ""
+        },
+        "title": {
+            "type": "string",
+            "default": ""
+        },
+        "bubblePosition": {
+            "type": "string",
+            "default": "bottom-right",
+            "enum": ["bottom-right", "bottom-left"]
+        },
+        "autoOpen": {
+            "type": "boolean",
+            "default": false
+        },
+        "autoOpenDelay": {
+            "type": "number",
+            "default": 3000
+        },
+        "showHeader": {
+            "type": "boolean",
+            "default": true
+        },
+        "showTimestamp": {
+            "type": "boolean",
+            "default": true
+        },
+        "showAvatar": {
+            "type": "boolean",
+            "default": true
+        },
+        "requireLogin": {
+            "type": "boolean",
+            "default": false
+        },
+        "allowedRoles": {
+            "type": "array",
+            "default": [],
+            "items": {
+                "type": "string"
+            }
+        },
+        "customClass": {
+            "type": "string",
+            "default": ""
+        }
+    },
+    "supports": {
+        "html": false,
+        "align": ["wide", "full"],
+        "className": true,
+        "anchor": true,
+        "spacing": {
+            "margin": true,
+            "padding": true
+        }
+    },
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./editor.css",
+    "render": "file:./render.php"
+}

@@ -1,0 +1,102 @@
+/**
+ * FlowChat Block Editor Styles
+ */
+
+.flowchat-block {
+    background: #f8f9fa;
+    border: 1px solid #e2e4e7;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.flowchat-block-preview {
+    min-height: 200px;
+}
+
+.flowchat-block-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: white;
+}
+
+.flowchat-block-icon {
+    font-size: 20px;
+}
+
+.flowchat-block-title {
+    flex: 1;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.flowchat-block-mode {
+    font-size: 11px;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.flowchat-block-preview-body {
+    padding: 16px;
+}
+
+.flowchat-block-welcome {
+    background: #e8f4fd;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border-bottom-left-radius: 4px;
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    color: #1e3a5f;
+    max-width: 80%;
+}
+
+.flowchat-block-input-preview {
+    background: white;
+    border: 1px solid #e2e4e7;
+    border-radius: 24px;
+    padding: 12px 16px;
+    color: #999;
+    font-size: 14px;
+}
+
+.flowchat-block-dimensions {
+    padding: 8px 16px;
+    background: #f0f0f0;
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    border-top: 1px solid #e2e4e7;
+}
+
+.flowchat-block-error {
+    color: #dc2626;
+}
+
+/* Color control */
+.flowchat-color-control {
+    margin-bottom: 16px;
+}
+
+.flowchat-color-control label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.flowchat-color-control .components-button {
+    margin-top: 8px;
+}
+
+/* Placeholder styles */
+.flowchat-block .components-placeholder {
+    min-height: 200px;
+}
+
+.flowchat-block .components-placeholder__fieldset {
+    max-width: 300px;
+}
