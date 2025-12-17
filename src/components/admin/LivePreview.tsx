@@ -453,7 +453,7 @@ export const LivePreview: React.FC<LivePreviewProps> = ({ instance, mode }) => {
   return (
     <div
       ref={containerRef}
-      className="flowchat-live-preview"
+      className="n8n-chat-live-preview"
       aria-label="Chat widget preview"
     />
   );

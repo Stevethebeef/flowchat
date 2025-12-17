@@ -1,15 +1,15 @@
 <?php
 /**
- * FlowChat Elementor Widget
+ * n8n Chat Elementor Widget
  *
- * Native Elementor integration for FlowChat.
+ * Native Elementor integration for n8n Chat.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Integrations;
+namespace N8nChat\Integrations;
 
-use FlowChat\Core\Instance_Manager;
+use N8nChat\Core\Instance_Manager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -18,25 +18,25 @@ if (!defined('ABSPATH')) {
 /**
  * Check if Elementor is active
  */
-function flowchat_is_elementor_active(): bool {
+function n8n_chat_is_elementor_active(): bool {
     return did_action('elementor/loaded');
 }
 
 /**
  * Register Elementor widget
  */
-function flowchat_register_elementor_widget($widgets_manager): void {
-    $widgets_manager->register(new FlowChat_Elementor_Widget());
+function n8n_chat_register_elementor_widget($widgets_manager): void {
+    $widgets_manager->register(new N8nChat_Elementor_Widget());
 }
 
 /**
  * Register widget category
  */
-function flowchat_add_elementor_category($elements_manager): void {
+function n8n_chat_add_elementor_category($elements_manager): void {
     $elements_manager->add_category(
-        'flowchat',
+        'n8n-chat',
         [
-            'title' => __('FlowChat', 'flowchat'),
+            'title' => __('n8n Chat', 'n8n-chat'),
             'icon' => 'fa fa-comments',
         ]
     );
@@ -45,36 +45,36 @@ function flowchat_add_elementor_category($elements_manager): void {
 /**
  * Initialize Elementor integration
  */
-function flowchat_init_elementor(): void {
-    if (!flowchat_is_elementor_active()) {
+function n8n_chat_init_elementor(): void {
+    if (!n8n_chat_is_elementor_active()) {
         return;
     }
 
     // Add category
-    add_action('elementor/elements/categories_registered', __NAMESPACE__ . '\flowchat_add_elementor_category');
+    add_action('elementor/elements/categories_registered', __NAMESPACE__ . '\n8n_chat_add_elementor_category');
 
     // Register widget
-    add_action('elementor/widgets/register', __NAMESPACE__ . '\flowchat_register_elementor_widget');
+    add_action('elementor/widgets/register', __NAMESPACE__ . '\n8n_chat_register_elementor_widget');
 }
-add_action('init', __NAMESPACE__ . '\flowchat_init_elementor');
+add_action('init', __NAMESPACE__ . '\n8n_chat_init_elementor');
 
 /**
- * FlowChat Elementor Widget Class
+ * n8n Chat Elementor Widget Class
  */
-class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
+class N8nChat_Elementor_Widget extends \Elementor\Widget_Base {
 
     /**
      * Get widget name
      */
     public function get_name(): string {
-        return 'flowchat';
+        return 'n8n-chat';
     }
 
     /**
      * Get widget title
      */
     public function get_title(): string {
-        return __('FlowChat', 'flowchat');
+        return __('n8n Chat', 'n8n-chat');
     }
 
     /**
@@ -88,14 +88,14 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
      * Get widget categories
      */
     public function get_categories(): array {
-        return ['flowchat', 'general'];
+        return ['n8n-chat', 'general'];
     }
 
     /**
      * Get widget keywords
      */
     public function get_keywords(): array {
-        return ['chat', 'ai', 'n8n', 'assistant', 'support', 'bot', 'flowchat'];
+        return ['chat', 'ai', 'n8n', 'assistant', 'support', 'bot', 'n8n-chat'];
     }
 
     /**
@@ -106,11 +106,11 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $instance_manager = Instance_Manager::get_instance();
         $instances = $instance_manager->get_all_instances();
 
-        $instance_options = ['' => __('— Select Instance —', 'flowchat')];
+        $instance_options = ['' => __('— Select Instance —', 'n8n-chat')];
         foreach ($instances as $instance) {
             $label = $instance['name'];
             if (!$instance['isEnabled']) {
-                $label .= ' (' . __('disabled', 'flowchat') . ')';
+                $label .= ' (' . __('disabled', 'n8n-chat') . ')';
             }
             $instance_options[$instance['id']] = $label;
         }
@@ -119,7 +119,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'content_section',
             [
-                'label' => __('Chat Settings', 'flowchat'),
+                'label' => __('Chat Settings', 'n8n-chat'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -127,7 +127,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'instance_id',
             [
-                'label' => __('Chat Instance', 'flowchat'),
+                'label' => __('Chat Instance', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => '',
                 'options' => $instance_options,
@@ -137,13 +137,13 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'display_mode',
             [
-                'label' => __('Display Mode', 'flowchat'),
+                'label' => __('Display Mode', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => 'inline',
                 'options' => [
-                    'inline' => __('Inline', 'flowchat'),
-                    'bubble' => __('Bubble', 'flowchat'),
-                    'fullscreen' => __('Fullscreen', 'flowchat'),
+                    'inline' => __('Inline', 'n8n-chat'),
+                    'bubble' => __('Bubble', 'n8n-chat'),
+                    'fullscreen' => __('Fullscreen', 'n8n-chat'),
                 ],
             ]
         );
@@ -151,13 +151,13 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'theme',
             [
-                'label' => __('Theme', 'flowchat'),
+                'label' => __('Theme', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => 'light',
                 'options' => [
-                    'light' => __('Light', 'flowchat'),
-                    'dark' => __('Dark', 'flowchat'),
-                    'auto' => __('Auto (System)', 'flowchat'),
+                    'light' => __('Light', 'n8n-chat'),
+                    'dark' => __('Dark', 'n8n-chat'),
+                    'auto' => __('Auto (System)', 'n8n-chat'),
                 ],
             ]
         );
@@ -168,7 +168,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'dimensions_section',
             [
-                'label' => __('Dimensions', 'flowchat'),
+                'label' => __('Dimensions', 'n8n-chat'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
                 'condition' => [
                     'display_mode' => 'inline',
@@ -179,7 +179,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_responsive_control(
             'width',
             [
-                'label' => __('Width', 'flowchat'),
+                'label' => __('Width', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px', '%', 'vw'],
                 'range' => [
@@ -192,7 +192,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
                     'size' => 100,
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .flowchat-container' => 'width: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .n8n-chat-container' => 'width: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -200,7 +200,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_responsive_control(
             'height',
             [
-                'label' => __('Height', 'flowchat'),
+                'label' => __('Height', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SLIDER,
                 'size_units' => ['px', 'vh'],
                 'range' => [
@@ -212,7 +212,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
                     'size' => 500,
                 ],
                 'selectors' => [
-                    '{{WRAPPER}} .flowchat-container' => 'height: {{SIZE}}{{UNIT}};',
+                    '{{WRAPPER}} .n8n-chat-container' => 'height: {{SIZE}}{{UNIT}};',
                 ],
             ]
         );
@@ -223,7 +223,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'overrides_section',
             [
-                'label' => __('Content Overrides', 'flowchat'),
+                'label' => __('Content Overrides', 'n8n-chat'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -231,27 +231,27 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'title_override',
             [
-                'label' => __('Title', 'flowchat'),
+                'label' => __('Title', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::TEXT,
-                'placeholder' => __('Leave empty for default', 'flowchat'),
+                'placeholder' => __('Leave empty for default', 'n8n-chat'),
             ]
         );
 
         $this->add_control(
             'welcome_override',
             [
-                'label' => __('Welcome Message', 'flowchat'),
+                'label' => __('Welcome Message', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::TEXTAREA,
-                'placeholder' => __('Leave empty for default', 'flowchat'),
+                'placeholder' => __('Leave empty for default', 'n8n-chat'),
             ]
         );
 
         $this->add_control(
             'placeholder_override',
             [
-                'label' => __('Input Placeholder', 'flowchat'),
+                'label' => __('Input Placeholder', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::TEXT,
-                'placeholder' => __('Leave empty for default', 'flowchat'),
+                'placeholder' => __('Leave empty for default', 'n8n-chat'),
             ]
         );
 
@@ -261,7 +261,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'bubble_section',
             [
-                'label' => __('Bubble Settings', 'flowchat'),
+                'label' => __('Bubble Settings', 'n8n-chat'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
                 'condition' => [
                     'display_mode' => 'bubble',
@@ -272,12 +272,12 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'bubble_position',
             [
-                'label' => __('Position', 'flowchat'),
+                'label' => __('Position', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SELECT,
                 'default' => 'bottom-right',
                 'options' => [
-                    'bottom-right' => __('Bottom Right', 'flowchat'),
-                    'bottom-left' => __('Bottom Left', 'flowchat'),
+                    'bottom-right' => __('Bottom Right', 'n8n-chat'),
+                    'bottom-left' => __('Bottom Left', 'n8n-chat'),
                 ],
             ]
         );
@@ -285,7 +285,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'auto_open',
             [
-                'label' => __('Auto Open', 'flowchat'),
+                'label' => __('Auto Open', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
                 'default' => '',
             ]
@@ -294,7 +294,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'auto_open_delay',
             [
-                'label' => __('Auto Open Delay (ms)', 'flowchat'),
+                'label' => __('Auto Open Delay (ms)', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::NUMBER,
                 'default' => 3000,
                 'min' => 0,
@@ -312,7 +312,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'display_options_section',
             [
-                'label' => __('Display Options', 'flowchat'),
+                'label' => __('Display Options', 'n8n-chat'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -320,7 +320,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_header',
             [
-                'label' => __('Show Header', 'flowchat'),
+                'label' => __('Show Header', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
                 'default' => 'yes',
             ]
@@ -329,7 +329,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_timestamp',
             [
-                'label' => __('Show Timestamps', 'flowchat'),
+                'label' => __('Show Timestamps', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
                 'default' => 'yes',
             ]
@@ -338,7 +338,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'show_avatar',
             [
-                'label' => __('Show Avatars', 'flowchat'),
+                'label' => __('Show Avatars', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
                 'default' => 'yes',
             ]
@@ -350,7 +350,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'access_section',
             [
-                'label' => __('Access Control', 'flowchat'),
+                'label' => __('Access Control', 'n8n-chat'),
                 'tab' => \Elementor\Controls_Manager::TAB_CONTENT,
             ]
         );
@@ -358,7 +358,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'require_login',
             [
-                'label' => __('Require Login', 'flowchat'),
+                'label' => __('Require Login', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::SWITCHER,
                 'default' => '',
             ]
@@ -370,7 +370,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->start_controls_section(
             'style_section',
             [
-                'label' => __('Style', 'flowchat'),
+                'label' => __('Style', 'n8n-chat'),
                 'tab' => \Elementor\Controls_Manager::TAB_STYLE,
             ]
         );
@@ -378,10 +378,10 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         $this->add_control(
             'primary_color',
             [
-                'label' => __('Primary Color', 'flowchat'),
+                'label' => __('Primary Color', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::COLOR,
                 'selectors' => [
-                    '{{WRAPPER}} .flowchat-container' => '--flowchat-primary: {{VALUE}};',
+                    '{{WRAPPER}} .n8n-chat-container' => '--n8n-chat-primary: {{VALUE}};',
                 ],
             ]
         );
@@ -390,18 +390,18 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Border::get_type(),
             [
                 'name' => 'border',
-                'selector' => '{{WRAPPER}} .flowchat-container',
+                'selector' => '{{WRAPPER}} .n8n-chat-container',
             ]
         );
 
         $this->add_control(
             'border_radius',
             [
-                'label' => __('Border Radius', 'flowchat'),
+                'label' => __('Border Radius', 'n8n-chat'),
                 'type' => \Elementor\Controls_Manager::DIMENSIONS,
                 'size_units' => ['px', '%'],
                 'selectors' => [
-                    '{{WRAPPER}} .flowchat-container' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
+                    '{{WRAPPER}} .n8n-chat-container' => 'border-radius: {{TOP}}{{UNIT}} {{RIGHT}}{{UNIT}} {{BOTTOM}}{{UNIT}} {{LEFT}}{{UNIT}};',
                 ],
             ]
         );
@@ -410,7 +410,7 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
             \Elementor\Group_Control_Box_Shadow::get_type(),
             [
                 'name' => 'box_shadow',
-                'selector' => '{{WRAPPER}} .flowchat-container',
+                'selector' => '{{WRAPPER}} .n8n-chat-container',
             ]
         );
 
@@ -476,9 +476,9 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
         }
 
         // Build and render shortcode
-        $shortcode = '[flowchat ' . implode(' ', $shortcode_atts) . ']';
+        $shortcode = '[n8n_chat' . implode(' ', $shortcode_atts) . ']';
 
-        echo '<div class="flowchat-elementor-widget">';
+        echo '<div class="n8n-chat-elementor-widget">';
         echo do_shortcode($shortcode);
         echo '</div>';
     }
@@ -489,25 +489,25 @@ class FlowChat_Elementor_Widget extends \Elementor\Widget_Base {
     protected function content_template(): void {
         ?>
         <#
-        var instanceName = settings.instance_id || '<?php esc_html_e('No instance selected', 'flowchat'); ?>';
+        var instanceName = settings.instance_id || '<?php esc_html_e('No instance selected', 'n8n-chat'); ?>';
         var mode = settings.display_mode || 'inline';
         #>
-        <div class="flowchat-elementor-preview">
-            <div class="flowchat-elementor-preview-header">
-                <span class="flowchat-elementor-preview-icon">💬</span>
-                <span class="flowchat-elementor-preview-title">FlowChat</span>
-                <span class="flowchat-elementor-preview-mode">{{{ mode }}}</span>
+        <div class="n8n-chat-elementor-preview">
+            <div class="n8n-chat-elementor-preview-header">
+                <span class="n8n-chat-elementor-preview-icon">💬</span>
+                <span class="n8n-chat-elementor-preview-title">n8n Chat</span>
+                <span class="n8n-chat-elementor-preview-mode">{{{ mode }}}</span>
             </div>
-            <div class="flowchat-elementor-preview-body">
-                <p class="flowchat-elementor-preview-instance">
+            <div class="n8n-chat-elementor-preview-body">
+                <p class="n8n-chat-elementor-preview-instance">
                     <# if (settings.instance_id) { #>
-                        <?php esc_html_e('Instance:', 'flowchat'); ?> {{{ settings.instance_id }}}
+                        <?php esc_html_e('Instance:', 'n8n-chat'); ?> {{{ settings.instance_id }}}
                     <# } else { #>
-                        <?php esc_html_e('Please select a chat instance', 'flowchat'); ?>
+                        <?php esc_html_e('Please select a chat instance', 'n8n-chat'); ?>
                     <# } #>
                 </p>
                 <# if (settings.title_override) { #>
-                    <p><?php esc_html_e('Title:', 'flowchat'); ?> {{{ settings.title_override }}}</p>
+                    <p><?php esc_html_e('Title:', 'n8n-chat'); ?> {{{ settings.title_override }}}</p>
                 <# } #>
             </div>
         </div>

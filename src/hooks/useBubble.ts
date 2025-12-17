@@ -57,7 +57,7 @@ export function useBubble({
     // Check once per session
     if (conditions.oncePerSession) {
       try {
-        const key = `flowchat_autoopen_${sessionId}`;
+        const key = `n8n_chat_autoopen_${sessionId}`;
         if (sessionStorage.getItem(key)) {
           return true;
         }
@@ -69,7 +69,7 @@ export function useBubble({
     // Check once per day
     if (conditions.oncePerDay) {
       try {
-        const key = `flowchat_autoopen_day_${sessionId}`;
+        const key = `n8n_chat_autoopen_day_${sessionId}`;
         const lastOpen = localStorage.getItem(key);
         if (lastOpen) {
           const lastDate = new Date(lastOpen).toDateString();
@@ -101,7 +101,7 @@ export function useBubble({
 
     if (conditions.oncePerSession) {
       try {
-        sessionStorage.setItem(`flowchat_autoopen_${sessionId}`, 'true');
+        sessionStorage.setItem(`n8n_chat_autoopen_${sessionId}`, 'true');
       } catch {
         // Ignore storage errors
       }
@@ -110,7 +110,7 @@ export function useBubble({
     if (conditions.oncePerDay) {
       try {
         localStorage.setItem(
-          `flowchat_autoopen_day_${sessionId}`,
+          `n8n_chat_autoopen_day_${sessionId}`,
           new Date().toISOString()
         );
       } catch {

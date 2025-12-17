@@ -13,13 +13,13 @@ import React, {
   useEffect,
   type ReactNode,
 } from 'react';
-import type { FlowChatConfig, BubbleConfig } from '../types';
+import type { N8nChatConfig, BubbleConfig } from '../types';
 
 // ============================================================================
 // Types
 // ============================================================================
 
-export interface InstanceConfig extends FlowChatConfig {
+export interface InstanceConfig extends N8nChatConfig {
   id: string;
   name: string;
   description?: string;
@@ -102,11 +102,11 @@ const initialState: InstanceManagerState = {
 // ============================================================================
 
 const STORAGE_KEYS = {
-  session: (id: string) => `flowchat_session_${id}`,
-  history: (id: string) => `flowchat_history_${id}`,
-  state: (id: string) => `flowchat_state_${id}`,
-  unread: (id: string) => `flowchat_unread_${id}`,
-  global: 'flowchat_global',
+  session: (id: string) => `n8n_chat_session_${id}`,
+  history: (id: string) => `n8n_chat_history_${id}`,
+  state: (id: string) => `n8n_chat_state_${id}`,
+  unread: (id: string) => `n8n_chat_unread_${id}`,
+  global: 'n8n_chat_global',
 };
 
 // ============================================================================
@@ -457,7 +457,7 @@ export function useInstanceManager(): InstanceManagerContextValue {
  */
 export function useCanMountInstance(): boolean {
   const { activeInstances } = useInstanceManager();
-  const features = (window as any).flowchatFeatures || {};
+  const features = (window as any).n8nChatFeatures || {};
 
   if (activeInstances.size === 0) {
     return true; // First instance always allowed

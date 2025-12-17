@@ -22,13 +22,13 @@ interface Template {
 }
 
 const CATEGORIES = [
-  { id: 'all', label: 'All Templates' },
-  { id: 'customer_support', label: 'Customer Support' },
-  { id: 'sales', label: 'Sales' },
-  { id: 'lead_generation', label: 'Lead Generation' },
-  { id: 'faq', label: 'FAQ Bots' },
-  { id: 'ecommerce', label: 'E-commerce' },
-  { id: 'custom', label: 'My Templates' },
+  { id: 'all', label: 'All Templates', icon: '📋' },
+  { id: 'customer_support', label: 'Customer Support', icon: '🎧' },
+  { id: 'sales', label: 'Sales', icon: '💰' },
+  { id: 'lead_generation', label: 'Lead Generation', icon: '📊' },
+  { id: 'faq', label: 'FAQ & Knowledge', icon: '❓' },
+  { id: 'ecommerce', label: 'E-commerce', icon: '🛒' },
+  { id: 'custom', label: 'My Templates', icon: '⭐' },
 ];
 
 // Default category icons
@@ -64,10 +64,10 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/templates`,
+        `${(window as any).n8nChatAdmin.publicApiUrl}/templates`,
         {
           headers: {
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
         }
       );
@@ -77,7 +77,24 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
       }
 
       const data = await response.json();
-      setTemplates(data);
+
+      // API returns { success: true, templates: [...] }
+      if (data.success && Array.isArray(data.templates)) {
+        // Transform backend format to frontend format
+        const transformedTemplates = data.templates.map((t: any) => ({
+          id: t.id,
+          name: t.name,
+          description: t.description || '',
+          category: t.category || 'custom',
+          thumbnail: t.thumbnail,
+          config: t.config || {},
+          tags: t.tags || [],
+          isBuiltIn: !t.custom,
+        }));
+        setTemplates(transformedTemplates);
+      } else {
+        throw new Error('Invalid response format');
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -89,12 +106,12 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
     try {
       // Create a new instance with template config
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/instances`,
+        `${(window as any).n8nChatAdmin.apiUrl}/instances`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
           body: JSON.stringify({
             ...template.config,
@@ -134,9 +151,9 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
 
   if (loading) {
     return (
-      <div className="flowchat-templates">
-        <div className="flowchat-loading">
-          <div className="flowchat-loading-spinner" />
+      <div className="n8n-chat-templates">
+        <div className="n8n-chat-loading">
+          <div className="n8n-chat-loading-spinner" />
           <p>Loading templates...</p>
         </div>
       </div>
@@ -144,10 +161,10 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
   }
 
   return (
-    <div className="flowchat-templates">
+    <div className="n8n-chat-templates">
       {/* Header */}
-      <div className="flowchat-page-header">
-        <div className="flowchat-page-header-content">
+      <div className="n8n-chat-page-header">
+        <div className="n8n-chat-page-header-content">
           <h1>Template Gallery</h1>
           <p>
             Choose a pre-built template to quickly create a new chat bot.
@@ -163,8 +180,8 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
       )}
 
       {/* Filters */}
-      <div className="flowchat-templates-filters">
-        <div className="flowchat-templates-search">
+      <div className="n8n-chat-templates-filters">
+        <div className="n8n-chat-templates-search">
           <span className="dashicons dashicons-search"></span>
           <input
             type="text"
@@ -174,11 +191,11 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
           />
         </div>
 
-        <div className="flowchat-templates-categories">
+        <div className="n8n-chat-templates-categories">
           {CATEGORIES.map((category) => (
             <button
               key={category.id}
-              className={`flowchat-category-btn ${
+              className={`n8n-chat-category-btn ${
                 selectedCategory === category.id ? 'is-active' : ''
               }`}
               onClick={() => setSelectedCategory(category.id)}
@@ -191,7 +208,7 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
 
       {/* Templates Grid */}
       {filteredTemplates.length === 0 ? (
-        <div className="flowchat-empty-state">
+        <div className="n8n-chat-empty-state">
           <span className="dashicons dashicons-layout"></span>
           <h3>No templates found</h3>
           <p>
@@ -201,32 +218,32 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
           </p>
         </div>
       ) : (
-        <div className="flowchat-templates-grid">
+        <div className="n8n-chat-templates-grid">
           {filteredTemplates.map((template) => (
-            <div key={template.id} className="flowchat-template-card">
-              <div className="flowchat-template-preview">
+            <div key={template.id} className="n8n-chat-template-card">
+              <div className="n8n-chat-template-preview">
                 {template.thumbnail ? (
                   <img src={template.thumbnail} alt={template.name} />
                 ) : (
-                  <div className="flowchat-template-preview-placeholder">
-                    <span className="flowchat-template-icon">
+                  <div className="n8n-chat-template-preview-placeholder">
+                    <span className="n8n-chat-template-icon">
                       {CATEGORY_ICONS[template.category] || '💬'}
                     </span>
                   </div>
                 )}
                 {!template.isBuiltIn && (
-                  <span className="flowchat-template-badge">Custom</span>
+                  <span className="n8n-chat-template-badge">Custom</span>
                 )}
               </div>
 
-              <div className="flowchat-template-info">
+              <div className="n8n-chat-template-info">
                 <h3>{template.name}</h3>
                 <p>{template.description}</p>
 
                 {template.tags.length > 0 && (
-                  <div className="flowchat-template-tags">
+                  <div className="n8n-chat-template-tags">
                     {template.tags.slice(0, 3).map((tag) => (
-                      <span key={tag} className="flowchat-template-tag">
+                      <span key={tag} className="n8n-chat-template-tag">
                         {tag}
                       </span>
                     ))}
@@ -234,7 +251,7 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
                 )}
               </div>
 
-              <div className="flowchat-template-actions">
+              <div className="n8n-chat-template-actions">
                 <button
                   className="button"
                   onClick={() => setPreviewTemplate(template)}
@@ -258,44 +275,44 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
       {/* Preview Modal */}
       {previewTemplate && (
         <div
-          className="flowchat-modal-overlay"
+          className="n8n-chat-modal-overlay"
           onClick={() => setPreviewTemplate(null)}
         >
           <div
-            className="flowchat-modal flowchat-template-preview-modal"
+            className="n8n-chat-modal n8n-chat-template-preview-modal"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flowchat-modal-header">
+            <div className="n8n-chat-modal-header">
               <h2>{previewTemplate.name}</h2>
               <button
-                className="flowchat-modal-close"
+                className="n8n-chat-modal-close"
                 onClick={() => setPreviewTemplate(null)}
               >
                 <span className="dashicons dashicons-no-alt"></span>
               </button>
             </div>
 
-            <div className="flowchat-modal-body">
-              <div className="flowchat-template-detail">
-                <div className="flowchat-template-detail-preview">
+            <div className="n8n-chat-modal-body">
+              <div className="n8n-chat-template-detail">
+                <div className="n8n-chat-template-detail-preview">
                   {previewTemplate.thumbnail ? (
                     <img src={previewTemplate.thumbnail} alt="" />
                   ) : (
-                    <div className="flowchat-template-preview-placeholder large">
-                      <span className="flowchat-template-icon">
+                    <div className="n8n-chat-template-preview-placeholder large">
+                      <span className="n8n-chat-template-icon">
                         {CATEGORY_ICONS[previewTemplate.category] || '💬'}
                       </span>
                     </div>
                   )}
                 </div>
 
-                <div className="flowchat-template-detail-info">
-                  <p className="flowchat-template-detail-description">
+                <div className="n8n-chat-template-detail-info">
+                  <p className="n8n-chat-template-detail-description">
                     {previewTemplate.description}
                   </p>
 
-                  <div className="flowchat-template-detail-meta">
-                    <div className="flowchat-template-meta-item">
+                  <div className="n8n-chat-template-detail-meta">
+                    <div className="n8n-chat-template-meta-item">
                       <strong>Category:</strong>
                       <span>
                         {CATEGORIES.find((c) => c.id === previewTemplate.category)
@@ -303,7 +320,7 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
                       </span>
                     </div>
 
-                    <div className="flowchat-template-meta-item">
+                    <div className="n8n-chat-template-meta-item">
                       <strong>Type:</strong>
                       <span>
                         {previewTemplate.isBuiltIn ? 'Built-in' : 'Custom'}
@@ -312,11 +329,11 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
                   </div>
 
                   {previewTemplate.tags.length > 0 && (
-                    <div className="flowchat-template-detail-tags">
+                    <div className="n8n-chat-template-detail-tags">
                       <strong>Tags:</strong>
-                      <div className="flowchat-template-tags">
+                      <div className="n8n-chat-template-tags">
                         {previewTemplate.tags.map((tag) => (
-                          <span key={tag} className="flowchat-template-tag">
+                          <span key={tag} className="n8n-chat-template-tag">
                             {tag}
                           </span>
                         ))}
@@ -325,7 +342,7 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
                   )}
 
                   <h4>Includes:</h4>
-                  <ul className="flowchat-template-features">
+                  <ul className="n8n-chat-template-features">
                     <li>
                       <span className="dashicons dashicons-yes"></span>
                       Pre-configured welcome message
@@ -347,7 +364,7 @@ export const TemplatesGallery: React.FC<TemplatesGalleryProps> = ({ onNavigate }
               </div>
             </div>
 
-            <div className="flowchat-modal-footer">
+            <div className="n8n-chat-modal-footer">
               <button
                 className="button"
                 onClick={() => setPreviewTemplate(null)}

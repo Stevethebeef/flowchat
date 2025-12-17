@@ -1,14 +1,14 @@
 <?php
 /**
- * Instance Router for FlowChat
+ * Instance Router for n8n Chat
  *
  * Handles URL-based targeting to automatically display
  * chat instances on matching pages.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 defined('ABSPATH') || exit;
 
@@ -89,7 +89,7 @@ class Instance_Router {
 
         // Fire action for matched instance
         if ($this->matched_instance) {
-            do_action('flowchat_instance_matched', $this->matched_instance, $current_url);
+            do_action('n8n_chat_instance_matched', $this->matched_instance, $current_url);
         }
     }
 
@@ -407,7 +407,7 @@ class Instance_Router {
         }
 
         // Render bubble
-        $frontend = \FlowChat\Frontend\Frontend::get_instance();
+        $frontend = \N8nChat\Frontend\Frontend::get_instance();
         $frontend->render_bubble($this->matched_instance['id']);
     }
 

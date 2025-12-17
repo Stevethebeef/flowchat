@@ -1,0 +1,471 @@
+# Copyright (C) 2024 n8.chat
+# This file is distributed under the same license as the n8n Chat plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: n8n Chat 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/n8n-chat\n"
+"POT-Creation-Date: 2024-01-01 00:00:00+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#. Plugin Name of the plugin
+msgid "n8n Chat"
+msgstr ""
+
+#. Description of the plugin
+msgid "Beautiful, customizable chat widget for n8n workflows. Streaming responses, file uploads, voice input, templates gallery, and full design control."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Dashboard"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Chat Bots"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Templates"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Settings"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Tools"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Save"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Cancel"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Delete"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Edit"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Duplicate"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Copy"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Close"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Back"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Loading..."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Error"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Success"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Warning"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Welcome to n8n Chat"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Total Chat Bots"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Active Bots"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Total Conversations"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Today's Chats"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Quick Actions"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "New Chat Bot"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Browse Templates"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Import / Export"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Your Chat Bots"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "View All"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "No chat bots yet"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Create your first chat bot to get started."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Getting Started"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Chat Instances"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Add New Instance"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "No chat instances yet."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Create Your First Instance"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Name"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Status"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Webhook URL"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Sessions"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Shortcode"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Actions"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Active"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Inactive"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Bubble"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Inline"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "General"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Connection"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Display"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Messages"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Appearance"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Rules"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "General Settings"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Internal name for organization. This won't be visible to visitors."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "When inactive, the chat will not appear on your site."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Set as default instance"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Show"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Hide"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Advanced Options"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Slug"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "PHP Function"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "System Prompt (Meta-Prompt)"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Available Dynamic Tags"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "n8n Webhook URL"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Streaming"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Stream responses in real-time"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Connection Test"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Test Connection Now"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Connected"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Connection Failed"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Timeout"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Chat Input Key"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Session Key"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Enable voice input"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Enable file uploads"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Input Features"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Page Targeting"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "User Access"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Device Targeting"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Schedule"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Priority"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Color Scheme"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Custom Colors"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Typography"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Bot Avatar"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Custom CSS"
+msgstr ""
+
+#. Frontend i18n strings
+#: includes/frontend/class-assets.php
+msgid "Loading messages..."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Sending..."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Connection error. Please try again."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Failed to send message. Please try again."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Failed to upload file."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "File is too large."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "This file type is not allowed."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Listening..."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Voice input is not supported in this browser."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Microphone access denied."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Type your message..."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Send"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Minimize"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Attach file"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Remove file"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Copy message"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Copied!"
+msgstr ""
+
+#. Tooltips
+#: includes/frontend/class-assets.php
+msgid "Copy this from your n8n Chat Trigger node. Open n8n → Chat Trigger node → Production URL"
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "The JSON key n8n expects for the user's message. Only change if your n8n workflow uses a different key name."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "The JSON key for session tracking. Enables conversation history in n8n."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Enable Server-Sent Events for real-time responses. Your n8n Chat Trigger must also have streaming enabled."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "When enabled, the bubble appears site-wide without needing shortcodes. Disable to show only on pages with the shortcode."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Uses Web Speech API. Supported in Chrome, Edge, and Safari. Firefox has limited support."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Files are uploaded to wp-content/uploads/n8n-chat/temp/ and auto-deleted after 24 hours."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Extracts colors from theme.json (block themes), Customizer settings, or CSS variables like --wp--preset--color--primary."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Examples: /products/* (wildcard), /blog (exact), product (contains). Uses simple pattern matching, not regex."
+msgstr ""
+
+#: includes/frontend/class-assets.php
+msgid "Higher number = higher priority. If a page matches multiple chat instances, the highest priority wins."
+msgstr ""

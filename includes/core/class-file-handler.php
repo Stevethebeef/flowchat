@@ -5,10 +5,10 @@
  * Handles file uploads and cleanup for chat attachments.
  * Files are stored in a separate directory from WordPress Media Library.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -22,7 +22,7 @@ class File_Handler {
     /**
      * Upload directory relative to wp-content/uploads
      */
-    private const UPLOAD_DIR = 'flowchat/temp';
+    private const UPLOAD_DIR = 'n8n-chat/temp';
 
     /**
      * Default file retention in hours
@@ -53,7 +53,7 @@ class File_Handler {
      */
     public function __construct() {
         // Register cleanup hook
-        add_action('flowchat_cleanup_files', [$this, 'cleanup_old_files']);
+        add_action('n8n_chat_cleanup_files', [$this, 'cleanup_old_files']);
     }
 
     /**
@@ -65,15 +65,15 @@ class File_Handler {
      */
     public function handle_upload(array $file, string $instance_id) {
         // Get instance configuration
-        $instance_manager = new Instance_Manager();
-        $instance = $instance_manager->get_instance($instance_id);
+        $instance_manager = Instance_Manager::get_instance();
+        $instance = $instance_manager->get($instance_id);
 
         if (!$instance) {
-            return new \WP_Error('invalid_instance', __('Invalid instance ID.', 'flowchat'));
+            return new \WP_Error('invalid_instance', __('Invalid instance ID.', 'n8n-chat'));
         }
 
         if (empty($instance['features']['fileUpload'])) {
-            return new \WP_Error('uploads_disabled', __('File uploads are not enabled for this chat.', 'flowchat'));
+            return new \WP_Error('uploads_disabled', __('File uploads are not enabled for this chat.', 'n8n-chat'));
         }
 
         // Validate file
@@ -101,7 +101,7 @@ class File_Handler {
 
         // Move uploaded file
         if (!move_uploaded_file($file['tmp_name'], $target_path)) {
-            return new \WP_Error('upload_failed', __('Failed to save uploaded file.', 'flowchat'));
+            return new \WP_Error('upload_failed', __('Failed to save uploaded file.', 'n8n-chat'));
         }
 
         // Set proper permissions
@@ -111,7 +111,7 @@ class File_Handler {
         $url = $upload_dir['baseurl'] . '/' . self::UPLOAD_DIR . '/' . $date_folder . '/' . $filename;
 
         // Get retention hours
-        $settings = get_option('flowchat_global_settings', []);
+        $settings = get_option('n8n_chat_global_settings', []);
         $retention_hours = $settings['file_retention_hours'] ?? self::DEFAULT_RETENTION_HOURS;
 
         return [
@@ -139,7 +139,7 @@ class File_Handler {
 
         // Check if file exists
         if (empty($file['tmp_name']) || !is_uploaded_file($file['tmp_name'])) {
-            return new \WP_Error('no_file', __('No file was uploaded.', 'flowchat'));
+            return new \WP_Error('no_file', __('No file was uploaded.', 'n8n-chat'));
         }
 
         // Check file size
@@ -149,7 +149,7 @@ class File_Handler {
                 'file_too_large',
                 sprintf(
                     /* translators: %s: maximum file size */
-                    __('File size exceeds the maximum allowed size of %s.', 'flowchat'),
+                    __('File size exceeds the maximum allowed size of %s.', 'n8n-chat'),
                     size_format($max_size)
                 )
             );
@@ -168,7 +168,7 @@ class File_Handler {
                 'invalid_type',
                 sprintf(
                     /* translators: %s: file type */
-                    __('File type "%s" is not allowed.', 'flowchat'),
+                    __('File type "%s" is not allowed.', 'n8n-chat'),
                     $actual_mime
                 )
             );
@@ -179,7 +179,7 @@ class File_Handler {
         $dangerous_extensions = ['php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'phps', 'phar', 'exe', 'sh', 'bat', 'cmd'];
 
         if (in_array($ext, $dangerous_extensions, true)) {
-            return new \WP_Error('dangerous_file', __('This file type is not allowed for security reasons.', 'flowchat'));
+            return new \WP_Error('dangerous_file', __('This file type is not allowed for security reasons.', 'n8n-chat'));
         }
 
         return true;
@@ -193,16 +193,16 @@ class File_Handler {
      */
     private function get_upload_error_message(int $error_code): string {
         $messages = [
-            UPLOAD_ERR_INI_SIZE => __('The file exceeds the maximum upload size.', 'flowchat'),
-            UPLOAD_ERR_FORM_SIZE => __('The file exceeds the maximum upload size.', 'flowchat'),
-            UPLOAD_ERR_PARTIAL => __('The file was only partially uploaded.', 'flowchat'),
-            UPLOAD_ERR_NO_FILE => __('No file was uploaded.', 'flowchat'),
-            UPLOAD_ERR_NO_TMP_DIR => __('Server configuration error: missing temp folder.', 'flowchat'),
-            UPLOAD_ERR_CANT_WRITE => __('Server configuration error: failed to write file.', 'flowchat'),
-            UPLOAD_ERR_EXTENSION => __('File upload stopped by server extension.', 'flowchat'),
+            UPLOAD_ERR_INI_SIZE => __('The file exceeds the maximum upload size.', 'n8n-chat'),
+            UPLOAD_ERR_FORM_SIZE => __('The file exceeds the maximum upload size.', 'n8n-chat'),
+            UPLOAD_ERR_PARTIAL => __('The file was only partially uploaded.', 'n8n-chat'),
+            UPLOAD_ERR_NO_FILE => __('No file was uploaded.', 'n8n-chat'),
+            UPLOAD_ERR_NO_TMP_DIR => __('Server configuration error: missing temp folder.', 'n8n-chat'),
+            UPLOAD_ERR_CANT_WRITE => __('Server configuration error: failed to write file.', 'n8n-chat'),
+            UPLOAD_ERR_EXTENSION => __('File upload stopped by server extension.', 'n8n-chat'),
         ];
 
-        return $messages[$error_code] ?? __('Unknown upload error.', 'flowchat');
+        return $messages[$error_code] ?? __('Unknown upload error.', 'n8n-chat');
     }
 
     /**
@@ -214,7 +214,7 @@ class File_Handler {
         // Add .htaccess
         $htaccess_file = $dir . '/.htaccess';
         if (!file_exists($htaccess_file)) {
-            $htaccess_content = "# FlowChat upload protection\n";
+            $htaccess_content = "# n8n Chat upload protection\n";
             $htaccess_content .= "Options -Indexes\n";
             $htaccess_content .= "<FilesMatch \"\\.(php|phtml|php3|php4|php5|php7|phps|phar|exe|sh|bat|cmd)$\">\n";
             $htaccess_content .= "    Order Allow,Deny\n";
@@ -237,7 +237,7 @@ class File_Handler {
      * @return int Number of deleted files
      */
     public function cleanup_old_files(): int {
-        $settings = get_option('flowchat_global_settings', []);
+        $settings = get_option('n8n_chat_global_settings', []);
         $retention_hours = $settings['file_retention_hours'] ?? self::DEFAULT_RETENTION_HOURS;
 
         $upload_dir = wp_upload_dir();

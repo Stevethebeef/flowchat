@@ -97,12 +97,12 @@ export function MessageFeedback({
       }
 
       // Send to API if sessionId is provided
-      if (sessionId && window.flowchatConfig?.apiBase) {
-        await fetch(`${window.flowchatConfig.apiBase}/flowchat/v1/feedback`, {
+      if (sessionId && window.n8nChatConfig?.apiBase) {
+        await fetch(`${window.n8nChatConfig.apiBase}/n8n-chat/v1/feedback`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-WP-Nonce': window.flowchatConfig?.nonce || '',
+            'X-WP-Nonce': window.n8nChatConfig?.nonce || '',
           },
           body: JSON.stringify({
             session_id: sessionId,
@@ -121,9 +121,9 @@ export function MessageFeedback({
   };
 
   const classes = [
-    'flowchat-message-feedback',
-    showOnHover ? 'flowchat-feedback-hover' : '',
-    disabled ? 'flowchat-feedback-disabled' : '',
+    'n8n-chat-message-feedback',
+    showOnHover ? 'n8n-chat-feedback-hover' : '',
+    disabled ? 'n8n-chat-feedback-disabled' : '',
     className,
   ].filter(Boolean).join(' ');
 
@@ -131,7 +131,7 @@ export function MessageFeedback({
     <div className={classes}>
       <button
         type="button"
-        className={`flowchat-feedback-button flowchat-feedback-positive ${feedback === 'positive' ? 'flowchat-feedback-active' : ''}`}
+        className={`n8n-chat-feedback-button n8n-chat-feedback-positive ${feedback === 'positive' ? 'n8n-chat-feedback-active' : ''}`}
         onClick={() => handleFeedback('positive')}
         disabled={disabled || isSubmitting}
         aria-label="Helpful response"
@@ -141,7 +141,7 @@ export function MessageFeedback({
       </button>
       <button
         type="button"
-        className={`flowchat-feedback-button flowchat-feedback-negative ${feedback === 'negative' ? 'flowchat-feedback-active' : ''}`}
+        className={`n8n-chat-feedback-button n8n-chat-feedback-negative ${feedback === 'negative' ? 'n8n-chat-feedback-active' : ''}`}
         onClick={() => handleFeedback('negative')}
         disabled={disabled || isSubmitting}
         aria-label="Unhelpful response"

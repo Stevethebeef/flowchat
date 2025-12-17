@@ -4,10 +4,10 @@
  *
  * Builds context data for chat sessions including user info, page data, and dynamic tags.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -69,7 +69,7 @@ class Context_Builder {
         if (!is_user_logged_in()) {
             return [
                 'isLoggedIn' => false,
-                'name' => __('Guest', 'flowchat'),
+                'name' => __('Guest', 'n8n-chat'),
                 'email' => '',
                 'role' => 'guest',
             ];
@@ -256,38 +256,38 @@ class Context_Builder {
     public function get_available_tags(): array {
         $tags = [
             'site' => [
-                'label' => __('Site Information', 'flowchat'),
+                'label' => __('Site Information', 'n8n-chat'),
                 'tags' => [
-                    '{site_name}' => __('Site name', 'flowchat'),
-                    '{site_url}' => __('Site URL', 'flowchat'),
-                    '{site_description}' => __('Site tagline', 'flowchat'),
+                    '{site_name}' => __('Site name', 'n8n-chat'),
+                    '{site_url}' => __('Site URL', 'n8n-chat'),
+                    '{site_description}' => __('Site tagline', 'n8n-chat'),
                 ],
             ],
             'page' => [
-                'label' => __('Current Page', 'flowchat'),
+                'label' => __('Current Page', 'n8n-chat'),
                 'tags' => [
-                    '{current_page_url}' => __('Page URL', 'flowchat'),
-                    '{current_page_title}' => __('Page title', 'flowchat'),
-                    '{current_page_excerpt}' => __('Page excerpt', 'flowchat'),
-                    '{current_page_content}' => __('Page content (first 2000 chars)', 'flowchat'),
-                    '{current_page_type}' => __('Page type (post, page, product, etc.)', 'flowchat'),
+                    '{current_page_url}' => __('Page URL', 'n8n-chat'),
+                    '{current_page_title}' => __('Page title', 'n8n-chat'),
+                    '{current_page_excerpt}' => __('Page excerpt', 'n8n-chat'),
+                    '{current_page_content}' => __('Page content (first 2000 chars)', 'n8n-chat'),
+                    '{current_page_type}' => __('Page type (post, page, product, etc.)', 'n8n-chat'),
                 ],
             ],
             'user' => [
-                'label' => __('User Information', 'flowchat'),
+                'label' => __('User Information', 'n8n-chat'),
                 'tags' => [
-                    '{user_name}' => __('User display name or "Guest"', 'flowchat'),
-                    '{user_email}' => __('User email (empty if guest)', 'flowchat'),
-                    '{user_role}' => __('User role or "guest"', 'flowchat'),
-                    '{user_logged_in}' => __('"yes" or "no"', 'flowchat'),
+                    '{user_name}' => __('User display name or "Guest"', 'n8n-chat'),
+                    '{user_email}' => __('User email (empty if guest)', 'n8n-chat'),
+                    '{user_role}' => __('User role or "guest"', 'n8n-chat'),
+                    '{user_logged_in}' => __('"yes" or "no"', 'n8n-chat'),
                 ],
             ],
             'datetime' => [
-                'label' => __('Date & Time', 'flowchat'),
+                'label' => __('Date & Time', 'n8n-chat'),
                 'tags' => [
-                    '{current_date}' => __('Current date (e.g., "December 10, 2024")', 'flowchat'),
-                    '{current_time}' => __('Current time (e.g., "3:45 pm")', 'flowchat'),
-                    '{current_day}' => __('Day of week (e.g., "Tuesday")', 'flowchat'),
+                    '{current_date}' => __('Current date (e.g., "December 10, 2024")', 'n8n-chat'),
+                    '{current_time}' => __('Current time (e.g., "3:45 pm")', 'n8n-chat'),
+                    '{current_day}' => __('Day of week (e.g., "Tuesday")', 'n8n-chat'),
                 ],
             ],
         ];
@@ -295,12 +295,12 @@ class Context_Builder {
         // Add WooCommerce tags if active
         if ($this->is_woocommerce_active()) {
             $tags['woocommerce'] = [
-                'label' => __('WooCommerce', 'flowchat'),
+                'label' => __('WooCommerce', 'n8n-chat'),
                 'tags' => [
-                    '{woo_cart_total}' => __('Cart total with currency', 'flowchat'),
-                    '{woo_cart_count}' => __('Number of items in cart', 'flowchat'),
-                    '{woo_cart_items}' => __('Cart items list', 'flowchat'),
-                    '{woo_currency}' => __('Currency symbol', 'flowchat'),
+                    '{woo_cart_total}' => __('Cart total with currency', 'n8n-chat'),
+                    '{woo_cart_count}' => __('Number of items in cart', 'n8n-chat'),
+                    '{woo_cart_items}' => __('Cart items list', 'n8n-chat'),
+                    '{woo_currency}' => __('Currency symbol', 'n8n-chat'),
                 ],
             ];
         }
@@ -335,13 +335,13 @@ class Context_Builder {
         if (is_search()) {
             return sprintf(
                 /* translators: %s: search query */
-                __('Search results for: %s', 'flowchat'),
+                __('Search results for: %s', 'n8n-chat'),
                 get_search_query()
             );
         }
 
         if (is_404()) {
-            return __('Page not found', 'flowchat');
+            return __('Page not found', 'n8n-chat');
         }
 
         return get_bloginfo('name');

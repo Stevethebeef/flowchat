@@ -1,14 +1,14 @@
 <?php
 /**
- * JWT Manager for FlowChat
+ * JWT Manager for n8n Chat
  *
  * Handles JWT token generation and validation for direct
  * browser-to-n8n streaming authentication.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 defined('ABSPATH') || exit;
 
@@ -65,12 +65,12 @@ class JWT_Manager {
      * @return string Secret key
      */
     private function get_secret_key(): string {
-        $key = get_option('flowchat_jwt_secret');
+        $key = get_option('n8n_chat_jwt_secret');
 
         if (empty($key)) {
             // Generate a secure random key
             $key = wp_generate_password(64, true, true);
-            update_option('flowchat_jwt_secret', $key, false);
+            update_option('n8n_chat_jwt_secret', $key, false);
         }
 
         return $key;
@@ -117,7 +117,7 @@ class JWT_Manager {
         }
 
         // Generate nonce for added security
-        $payload['nonce'] = wp_create_nonce('flowchat_jwt_' . $session_id);
+        $payload['nonce'] = wp_create_nonce('n8n_chat_jwt_' . $session_id);
 
         return $this->encode_token($header, $payload);
     }
@@ -334,7 +334,7 @@ class JWT_Manager {
      * @return bool Success
      */
     public function revoke_all_tokens(): bool {
-        delete_option('flowchat_jwt_secret');
+        delete_option('n8n_chat_jwt_secret');
         $this->secret_key = $this->get_secret_key();
         return true;
     }

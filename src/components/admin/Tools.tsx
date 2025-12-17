@@ -48,10 +48,10 @@ export const Tools: React.FC = () => {
     setLoadingSystem(true);
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/system-info`,
+        `${(window as any).n8nChatAdmin.apiUrl}/system-info`,
         {
           headers: {
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
         }
       );
@@ -74,10 +74,10 @@ export const Tools: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/export?type=all`,
+        `${(window as any).n8nChatAdmin.apiUrl}/export?type=all`,
         {
           headers: {
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
         }
       );
@@ -87,7 +87,7 @@ export const Tools: React.FC = () => {
       }
 
       const data = await response.json();
-      downloadJson(data, 'flowchat-export-all.json');
+      downloadJson(data, 'n8n-chat-export-all.json');
       setSuccess('Export completed successfully!');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Export failed');
@@ -102,10 +102,10 @@ export const Tools: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/export?type=instances`,
+        `${(window as any).n8nChatAdmin.apiUrl}/export?type=instances`,
         {
           headers: {
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
         }
       );
@@ -115,7 +115,7 @@ export const Tools: React.FC = () => {
       }
 
       const data = await response.json();
-      downloadJson(data, 'flowchat-instances.json');
+      downloadJson(data, 'n8n-chat-instances.json');
       setSuccess('Instances exported successfully!');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Export failed');
@@ -130,10 +130,10 @@ export const Tools: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/export?type=settings`,
+        `${(window as any).n8nChatAdmin.apiUrl}/export?type=settings`,
         {
           headers: {
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
         }
       );
@@ -143,7 +143,7 @@ export const Tools: React.FC = () => {
       }
 
       const data = await response.json();
-      downloadJson(data, 'flowchat-settings.json');
+      downloadJson(data, 'n8n-chat-settings.json');
       setSuccess('Settings exported successfully!');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Export failed');
@@ -180,12 +180,12 @@ export const Tools: React.FC = () => {
       const data = JSON.parse(content);
 
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/import`,
+        `${(window as any).n8nChatAdmin.apiUrl}/import`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
           body: JSON.stringify(data),
         }
@@ -220,12 +220,12 @@ export const Tools: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/test-webhook`,
+        `${(window as any).n8nChatAdmin.apiUrl}/test-webhook`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
           body: JSON.stringify({ url: webhookUrl }),
         }
@@ -250,13 +250,13 @@ export const Tools: React.FC = () => {
     if (!systemInfo) return;
 
     const report = `
-FlowChat System Report
+n8n Chat System Report
 Generated: ${new Date().toISOString()}
 
 == Server Environment ==
 PHP Version: ${systemInfo.php_version}
 WordPress Version: ${systemInfo.wp_version}
-FlowChat Version: ${systemInfo.plugin_version}
+n8n Chat Version: ${systemInfo.plugin_version}
 Server: ${systemInfo.server_info}
 Memory Limit: ${systemInfo.memory_limit}
 Max Execution Time: ${systemInfo.max_execution_time}
@@ -284,7 +284,7 @@ ${systemInfo.active_plugins.join('\n')}
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'flowchat-system-report.txt';
+    a.download = 'n8n-chat-system-report.txt';
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -299,14 +299,14 @@ ${systemInfo.active_plugins.join('\n')}
   };
 
   const renderImportExportTab = () => (
-    <div className="flowchat-tools-section">
+    <div className="n8n-chat-tools-section">
       <h2>Export</h2>
-      <p className="flowchat-tools-description">
-        Export your FlowChat configuration to a JSON file for backup or migration.
+      <p className="n8n-chat-tools-description">
+        Export your n8n Chat configuration to a JSON file for backup or migration.
       </p>
 
-      <div className="flowchat-export-options">
-        <div className="flowchat-export-option">
+      <div className="n8n-chat-export-options">
+        <div className="n8n-chat-export-option">
           <h4>Export All</h4>
           <p>Includes all instances, settings, and templates.</p>
           <button
@@ -318,7 +318,7 @@ ${systemInfo.active_plugins.join('\n')}
           </button>
         </div>
 
-        <div className="flowchat-export-option">
+        <div className="n8n-chat-export-option">
           <h4>Export Instances Only</h4>
           <p>Export all chat bot configurations.</p>
           <button
@@ -330,7 +330,7 @@ ${systemInfo.active_plugins.join('\n')}
           </button>
         </div>
 
-        <div className="flowchat-export-option">
+        <div className="n8n-chat-export-option">
           <h4>Export Settings Only</h4>
           <p>Export global plugin settings.</p>
           <button
@@ -346,11 +346,11 @@ ${systemInfo.active_plugins.join('\n')}
       <hr />
 
       <h2>Import</h2>
-      <p className="flowchat-tools-description">
-        Import a previously exported FlowChat configuration file.
+      <p className="n8n-chat-tools-description">
+        Import a previously exported n8n Chat configuration file.
       </p>
 
-      <div className="flowchat-import-section">
+      <div className="n8n-chat-import-section">
         <input
           ref={fileInputRef}
           type="file"
@@ -378,11 +378,11 @@ ${systemInfo.active_plugins.join('\n')}
         </button>
 
         <p className="description">
-          Supported formats: FlowChat export files (.json)
+          Supported formats: n8n Chat export files (.json)
         </p>
       </div>
 
-      <div className="flowchat-import-warning">
+      <div className="n8n-chat-import-warning">
         <span className="dashicons dashicons-warning"></span>
         <div>
           <strong>Warning:</strong> Importing will merge with existing data.
@@ -393,16 +393,16 @@ ${systemInfo.active_plugins.join('\n')}
   );
 
   const renderDebugTab = () => (
-    <div className="flowchat-tools-section">
+    <div className="n8n-chat-tools-section">
       <h2>Webhook Tester</h2>
-      <p className="flowchat-tools-description">
+      <p className="n8n-chat-tools-description">
         Test connectivity to an n8n webhook URL.
       </p>
 
-      <div className="flowchat-debug-test">
-        <div className="flowchat-field">
+      <div className="n8n-chat-debug-test">
+        <div className="n8n-chat-field">
           <label htmlFor="fc-test-webhook">Webhook URL</label>
-          <div className="flowchat-input-group">
+          <div className="n8n-chat-input-group">
             <input
               type="url"
               id="fc-test-webhook"
@@ -422,7 +422,7 @@ ${systemInfo.active_plugins.join('\n')}
         </div>
 
         {webhookResult && (
-          <div className={`flowchat-test-result ${webhookResult.success ? 'is-success' : 'is-error'}`}>
+          <div className={`n8n-chat-test-result ${webhookResult.success ? 'is-success' : 'is-error'}`}>
             <span className={`dashicons ${webhookResult.success ? 'dashicons-yes-alt' : 'dashicons-warning'}`}></span>
             <span>{webhookResult.message}</span>
           </div>
@@ -432,18 +432,18 @@ ${systemInfo.active_plugins.join('\n')}
       <hr />
 
       <h2>Debug Logs</h2>
-      <p className="flowchat-tools-description">
-        Recent FlowChat activity logs (requires logging enabled in Settings).
+      <p className="n8n-chat-tools-description">
+        Recent n8n Chat activity logs (requires logging enabled in Settings).
       </p>
 
-      <div className="flowchat-debug-logs">
+      <div className="n8n-chat-debug-logs">
         {debugLogs.length === 0 ? (
-          <div className="flowchat-debug-empty">
+          <div className="n8n-chat-debug-empty">
             <span className="dashicons dashicons-info"></span>
             <p>No debug logs available. Enable logging in Settings to see activity here.</p>
           </div>
         ) : (
-          <pre className="flowchat-log-viewer">
+          <pre className="n8n-chat-log-viewer">
             {debugLogs.join('\n')}
           </pre>
         )}
@@ -452,23 +452,23 @@ ${systemInfo.active_plugins.join('\n')}
   );
 
   const renderSystemTab = () => (
-    <div className="flowchat-tools-section">
+    <div className="n8n-chat-tools-section">
       <h2>System Information</h2>
-      <p className="flowchat-tools-description">
+      <p className="n8n-chat-tools-description">
         Technical details about your WordPress environment.
       </p>
 
       {loadingSystem ? (
-        <div className="flowchat-loading-inline">
+        <div className="n8n-chat-loading-inline">
           <span className="spinner is-active"></span>
           Loading system information...
         </div>
       ) : systemInfo ? (
         <>
-          <div className="flowchat-system-grid">
-            <div className="flowchat-system-card">
+          <div className="n8n-chat-system-grid">
+            <div className="n8n-chat-system-card">
               <h3>Server Environment</h3>
-              <table className="flowchat-system-table">
+              <table className="n8n-chat-system-table">
                 <tbody>
                   <tr>
                     <td>PHP Version</td>
@@ -479,7 +479,7 @@ ${systemInfo.active_plugins.join('\n')}
                     <td>{systemInfo.wp_version}</td>
                   </tr>
                   <tr>
-                    <td>FlowChat Version</td>
+                    <td>n8n Chat Version</td>
                     <td>{systemInfo.plugin_version}</td>
                   </tr>
                   <tr>
@@ -502,9 +502,9 @@ ${systemInfo.active_plugins.join('\n')}
                     <td>SSL Enabled</td>
                     <td>
                       {systemInfo.ssl_enabled ? (
-                        <span className="flowchat-status-ok">Yes</span>
+                        <span className="n8n-chat-status-ok">Yes</span>
                       ) : (
-                        <span className="flowchat-status-warning">No</span>
+                        <span className="n8n-chat-status-warning">No</span>
                       )}
                     </td>
                   </tr>
@@ -512,20 +512,20 @@ ${systemInfo.active_plugins.join('\n')}
               </table>
             </div>
 
-            <div className="flowchat-system-card">
+            <div className="n8n-chat-system-card">
               <h3>PHP Extensions</h3>
-              <table className="flowchat-system-table">
+              <table className="n8n-chat-system-table">
                 <tbody>
                   {Object.entries(systemInfo.php_extensions).map(([ext, enabled]) => (
                     <tr key={ext}>
                       <td>{ext}</td>
                       <td>
                         {enabled ? (
-                          <span className="flowchat-status-ok">
+                          <span className="n8n-chat-status-ok">
                             <span className="dashicons dashicons-yes"></span>
                           </span>
                         ) : (
-                          <span className="flowchat-status-error">
+                          <span className="n8n-chat-status-error">
                             <span className="dashicons dashicons-no"></span>
                           </span>
                         )}
@@ -536,20 +536,20 @@ ${systemInfo.active_plugins.join('\n')}
               </table>
             </div>
 
-            <div className="flowchat-system-card">
+            <div className="n8n-chat-system-card">
               <h3>Database Tables</h3>
-              <table className="flowchat-system-table">
+              <table className="n8n-chat-system-table">
                 <tbody>
                   {Object.entries(systemInfo.database_tables).map(([table, info]) => (
                     <tr key={table}>
                       <td>{table}</td>
                       <td>
                         {info.exists ? (
-                          <span className="flowchat-status-ok">
+                          <span className="n8n-chat-status-ok">
                             OK ({info.rows} rows)
                           </span>
                         ) : (
-                          <span className="flowchat-status-error">Missing</span>
+                          <span className="n8n-chat-status-error">Missing</span>
                         )}
                       </td>
                     </tr>
@@ -558,17 +558,17 @@ ${systemInfo.active_plugins.join('\n')}
               </table>
             </div>
 
-            <div className="flowchat-system-card">
+            <div className="n8n-chat-system-card">
               <h3>Active Theme</h3>
               <p>{systemInfo.active_theme}</p>
 
               <h3 style={{ marginTop: '16px' }}>Active Plugins</h3>
-              <ul className="flowchat-plugin-list">
+              <ul className="n8n-chat-plugin-list">
                 {systemInfo.active_plugins.slice(0, 10).map((plugin) => (
                   <li key={plugin}>{plugin}</li>
                 ))}
                 {systemInfo.active_plugins.length > 10 && (
-                  <li className="flowchat-plugin-more">
+                  <li className="n8n-chat-plugin-more">
                     +{systemInfo.active_plugins.length - 10} more
                   </li>
                 )}
@@ -576,7 +576,7 @@ ${systemInfo.active_plugins.join('\n')}
             </div>
           </div>
 
-          <div className="flowchat-system-actions">
+          <div className="n8n-chat-system-actions">
             <button className="button" onClick={copySystemInfo}>
               <span className="dashicons dashicons-clipboard"></span>
               Copy to Clipboard
@@ -588,7 +588,7 @@ ${systemInfo.active_plugins.join('\n')}
           </div>
         </>
       ) : (
-        <div className="flowchat-debug-empty">
+        <div className="n8n-chat-debug-empty">
           <span className="dashicons dashicons-warning"></span>
           <p>Failed to load system information.</p>
           <button className="button" onClick={fetchSystemInfo}>
@@ -600,11 +600,11 @@ ${systemInfo.active_plugins.join('\n')}
   );
 
   return (
-    <div className="flowchat-tools">
+    <div className="n8n-chat-tools">
       {/* Header */}
-      <div className="flowchat-page-header">
+      <div className="n8n-chat-page-header">
         <h1>Tools</h1>
-        <p>Import, export, and debug your FlowChat installation.</p>
+        <p>Import, export, and debug your n8n Chat installation.</p>
       </div>
 
       {error && (
@@ -626,23 +626,23 @@ ${systemInfo.active_plugins.join('\n')}
       )}
 
       {/* Tabs */}
-      <div className="flowchat-tools-tabs">
+      <div className="n8n-chat-tools-tabs">
         <button
-          className={`flowchat-tools-tab ${activeTab === 'import-export' ? 'is-active' : ''}`}
+          className={`n8n-chat-tools-tab ${activeTab === 'import-export' ? 'is-active' : ''}`}
           onClick={() => setActiveTab('import-export')}
         >
           <span className="dashicons dashicons-upload"></span>
           Import / Export
         </button>
         <button
-          className={`flowchat-tools-tab ${activeTab === 'debug' ? 'is-active' : ''}`}
+          className={`n8n-chat-tools-tab ${activeTab === 'debug' ? 'is-active' : ''}`}
           onClick={() => setActiveTab('debug')}
         >
           <span className="dashicons dashicons-admin-tools"></span>
           Debug
         </button>
         <button
-          className={`flowchat-tools-tab ${activeTab === 'system' ? 'is-active' : ''}`}
+          className={`n8n-chat-tools-tab ${activeTab === 'system' ? 'is-active' : ''}`}
           onClick={() => setActiveTab('system')}
         >
           <span className="dashicons dashicons-info"></span>
@@ -651,7 +651,7 @@ ${systemInfo.active_plugins.join('\n')}
       </div>
 
       {/* Content */}
-      <div className="flowchat-tools-content">
+      <div className="n8n-chat-tools-content">
         {activeTab === 'import-export' && renderImportExportTab()}
         {activeTab === 'debug' && renderDebugTab()}
         {activeTab === 'system' && renderSystemTab()}

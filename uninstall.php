@@ -1,11 +1,11 @@
 <?php
 /**
- * FlowChat Uninstall
+ * n8n Chat Uninstall
  *
  * Fired when the plugin is uninstalled (deleted).
  * Removes all plugin data from the database.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
 // If uninstall not called from WordPress, exit
@@ -14,22 +14,22 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 }
 
 /**
- * Clean up all FlowChat data
+ * Clean up all n8n Chat data
  */
-function flowchat_uninstall(): void {
+function n8n_chat_uninstall(): void {
     global $wpdb;
 
     // Check if we should preserve data (user preference)
-    $settings = get_option('flowchat_global_settings', []);
+    $settings = get_option('n8n_chat_global_settings', []);
     if (!empty($settings['preserve_data_on_uninstall'])) {
         return;
     }
 
     // Drop custom tables
     $tables = [
-        $wpdb->prefix . 'flowchat_sessions',
-        $wpdb->prefix . 'flowchat_messages',
-        $wpdb->prefix . 'flowchat_fallback_messages',
+        $wpdb->prefix . 'n8n_chat_sessions',
+        $wpdb->prefix . 'n8n_chat_messages',
+        $wpdb->prefix . 'n8n_chat_fallback_messages',
     ];
 
     foreach ($tables as $table) {
@@ -38,16 +38,17 @@ function flowchat_uninstall(): void {
 
     // Delete options
     $options = [
-        'flowchat_version',
-        'flowchat_db_version',
-        'flowchat_instances',
-        'flowchat_global_settings',
-        'flowchat_error_messages',
-        'flowchat_custom_templates',
-        'flowchat_license_key',
-        'flowchat_license_status',
-        'flowchat_activated_at',
-        'flowchat_deactivated_at',
+        'n8n_chat_version',
+        'n8n_chat_db_version',
+        'n8n_chat_instances',
+        'n8n_chat_global_settings',
+        'n8n_chat_error_messages',
+        'n8n_chat_custom_templates',
+        'n8n_chat_license_key',
+        'n8n_chat_license_status',
+        'n8n_chat_activated_at',
+        'n8n_chat_deactivated_at',
+        'n8n_chat_jwt_secret',
     ];
 
     foreach ($options as $option) {
@@ -56,22 +57,22 @@ function flowchat_uninstall(): void {
 
     // Delete transients
     $wpdb->query(
-        "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_flowchat_%'"
+        "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_n8n_chat_%'"
     );
     $wpdb->query(
-        "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_timeout_flowchat_%'"
+        "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_timeout_n8n_chat_%'"
     );
 
     // Clear scheduled hooks
-    wp_clear_scheduled_hook('flowchat_cleanup_files');
-    wp_clear_scheduled_hook('flowchat_cleanup_sessions');
+    wp_clear_scheduled_hook('n8n_chat_cleanup_files');
+    wp_clear_scheduled_hook('n8n_chat_cleanup_sessions');
 
     // Delete upload directory
     $upload_dir = wp_upload_dir();
-    $flowchat_dir = $upload_dir['basedir'] . '/flowchat';
+    $n8n_chat_dir = $upload_dir['basedir'] . '/n8n-chat';
 
-    if (is_dir($flowchat_dir)) {
-        flowchat_delete_directory($flowchat_dir);
+    if (is_dir($n8n_chat_dir)) {
+        n8n_chat_delete_directory($n8n_chat_dir);
     }
 
     // Clear any cached data
@@ -84,7 +85,7 @@ function flowchat_uninstall(): void {
  * @param string $dir Directory path
  * @return bool Success
  */
-function flowchat_delete_directory(string $dir): bool {
+function n8n_chat_delete_directory(string $dir): bool {
     if (!is_dir($dir)) {
         return false;
     }
@@ -95,7 +96,7 @@ function flowchat_delete_directory(string $dir): bool {
         $path = $dir . '/' . $file;
 
         if (is_dir($path)) {
-            flowchat_delete_directory($path);
+            n8n_chat_delete_directory($path);
         } else {
             unlink($path);
         }
@@ -105,4 +106,4 @@ function flowchat_delete_directory(string $dir): bool {
 }
 
 // Run uninstall
-flowchat_uninstall();
+n8n_chat_uninstall();

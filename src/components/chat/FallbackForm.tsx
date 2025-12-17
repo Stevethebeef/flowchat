@@ -1,5 +1,5 @@
 /**
- * Fallback Contact Form Component for FlowChat
+ * Fallback Contact Form Component for n8n Chat
  *
  * Displayed when n8n webhook is unavailable.
  */
@@ -76,9 +76,9 @@ export const FallbackForm: React.FC<FallbackFormProps> = ({
 
   if (status === 'success') {
     return (
-      <div className={`flowchat-fallback-form flowchat-fallback-form--success ${className}`}>
-        <div className="flowchat-fallback-form__success">
-          <div className="flowchat-fallback-form__success-icon">
+      <div className={`n8n-chat-fallback-form n8n-chat-fallback-form--success ${className}`}>
+        <div className="n8n-chat-fallback-form__success">
+          <div className="n8n-chat-fallback-form__success-icon">
             <svg
               width="48"
               height="48"
@@ -91,11 +91,11 @@ export const FallbackForm: React.FC<FallbackFormProps> = ({
               <polyline points="22 4 12 14.01 9 11.01" />
             </svg>
           </div>
-          <h3 className="flowchat-fallback-form__success-title">Message Sent!</h3>
-          <p className="flowchat-fallback-form__success-message">{config.successMessage}</p>
+          <h3 className="n8n-chat-fallback-form__success-title">Message Sent!</h3>
+          <p className="n8n-chat-fallback-form__success-message">{config.successMessage}</p>
           {onCancel && (
             <button
-              className="flowchat-fallback-form__button flowchat-fallback-form__button--text"
+              className="n8n-chat-fallback-form__button n8n-chat-fallback-form__button--text"
               onClick={onCancel}
               type="button"
             >
@@ -108,19 +108,19 @@ export const FallbackForm: React.FC<FallbackFormProps> = ({
   }
 
   return (
-    <div className={`flowchat-fallback-form ${className}`}>
-      <div className="flowchat-fallback-form__header">
-        <h3 className="flowchat-fallback-form__title">{config.title}</h3>
-        <p className="flowchat-fallback-form__message">{config.message}</p>
+    <div className={`n8n-chat-fallback-form ${className}`}>
+      <div className="n8n-chat-fallback-form__header">
+        <h3 className="n8n-chat-fallback-form__title">{config.title}</h3>
+        <p className="n8n-chat-fallback-form__message">{config.message}</p>
       </div>
 
-      <form className="flowchat-fallback-form__form" onSubmit={handleSubmit}>
+      <form className="n8n-chat-fallback-form__form" onSubmit={handleSubmit}>
         {showField('name') && (
-          <div className="flowchat-fallback-form__field">
-            <label htmlFor={`flowchat-fallback-name-${instanceId}`}>Name</label>
+          <div className="n8n-chat-fallback-form__field">
+            <label htmlFor={`n8n-chat-fallback-name-${instanceId}`}>Name</label>
             <input
               type="text"
-              id={`flowchat-fallback-name-${instanceId}`}
+              id={`n8n-chat-fallback-name-${instanceId}`}
               name="name"
               value={formData.name}
               onChange={handleChange}
@@ -131,13 +131,13 @@ export const FallbackForm: React.FC<FallbackFormProps> = ({
         )}
 
         {showField('email') && (
-          <div className="flowchat-fallback-form__field">
-            <label htmlFor={`flowchat-fallback-email-${instanceId}`}>
+          <div className="n8n-chat-fallback-form__field">
+            <label htmlFor={`n8n-chat-fallback-email-${instanceId}`}>
               Email {config.requireEmail && <span className="required">*</span>}
             </label>
             <input
               type="email"
-              id={`flowchat-fallback-email-${instanceId}`}
+              id={`n8n-chat-fallback-email-${instanceId}`}
               name="email"
               value={formData.email}
               onChange={handleChange}
@@ -149,11 +149,11 @@ export const FallbackForm: React.FC<FallbackFormProps> = ({
         )}
 
         {showField('phone') && (
-          <div className="flowchat-fallback-form__field">
-            <label htmlFor={`flowchat-fallback-phone-${instanceId}`}>Phone</label>
+          <div className="n8n-chat-fallback-form__field">
+            <label htmlFor={`n8n-chat-fallback-phone-${instanceId}`}>Phone</label>
             <input
               type="tel"
-              id={`flowchat-fallback-phone-${instanceId}`}
+              id={`n8n-chat-fallback-phone-${instanceId}`}
               name="phone"
               value={formData.phone}
               onChange={handleChange}
@@ -163,12 +163,12 @@ export const FallbackForm: React.FC<FallbackFormProps> = ({
           </div>
         )}
 
-        <div className="flowchat-fallback-form__field">
-          <label htmlFor={`flowchat-fallback-message-${instanceId}`}>
+        <div className="n8n-chat-fallback-form__field">
+          <label htmlFor={`n8n-chat-fallback-message-${instanceId}`}>
             Message <span className="required">*</span>
           </label>
           <textarea
-            id={`flowchat-fallback-message-${instanceId}`}
+            id={`n8n-chat-fallback-message-${instanceId}`}
             name="message"
             value={formData.message}
             onChange={handleChange}
@@ -180,15 +180,15 @@ export const FallbackForm: React.FC<FallbackFormProps> = ({
         </div>
 
         {status === 'error' && (
-          <div className="flowchat-fallback-form__error" role="alert">
+          <div className="n8n-chat-fallback-form__error" role="alert">
             {errorMessage}
           </div>
         )}
 
-        <div className="flowchat-fallback-form__actions">
+        <div className="n8n-chat-fallback-form__actions">
           <button
             type="submit"
-            className="flowchat-fallback-form__button flowchat-fallback-form__button--primary"
+            className="n8n-chat-fallback-form__button n8n-chat-fallback-form__button--primary"
             disabled={status === 'submitting'}
           >
             {status === 'submitting' ? (
@@ -204,7 +204,7 @@ export const FallbackForm: React.FC<FallbackFormProps> = ({
           {onCancel && (
             <button
               type="button"
-              className="flowchat-fallback-form__button flowchat-fallback-form__button--text"
+              className="n8n-chat-fallback-form__button n8n-chat-fallback-form__button--text"
               onClick={onCancel}
               disabled={status === 'submitting'}
             >
@@ -219,7 +219,7 @@ export const FallbackForm: React.FC<FallbackFormProps> = ({
 
 const LoadingSpinner: React.FC = () => (
   <svg
-    className="flowchat-fallback-form__spinner"
+    className="n8n-chat-fallback-form__spinner"
     width="16"
     height="16"
     viewBox="0 0 24 24"

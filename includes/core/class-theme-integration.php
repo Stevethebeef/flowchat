@@ -1,14 +1,14 @@
 <?php
 /**
- * Theme Integration for FlowChat
+ * Theme Integration for n8n Chat
  *
  * Extracts colors and styles from the active WordPress theme
  * to automatically style the chat widget.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 defined('ABSPATH') || exit;
 
@@ -58,7 +58,7 @@ class Theme_Integration {
         }
 
         // Check transient cache
-        $cached = get_transient('flowchat_theme_colors');
+        $cached = get_transient('n8n_chat_theme_colors');
         if (!$force_refresh && $cached !== false) {
             $this->cached_colors = $cached;
             return $cached;
@@ -68,7 +68,7 @@ class Theme_Integration {
         $colors = $this->extract_theme_colors();
 
         // Cache for 24 hours
-        set_transient('flowchat_theme_colors', $colors, DAY_IN_SECONDS);
+        set_transient('n8n_chat_theme_colors', $colors, DAY_IN_SECONDS);
         $this->cached_colors = $colors;
 
         return $colors;
@@ -444,14 +444,14 @@ class Theme_Integration {
         $text = $instance_config['text_color'] ?? $theme_colors['text'];
 
         $vars = [
-            '--flowchat-primary' => $primary,
-            '--flowchat-primary-light' => $this->lighten_color($primary, 0.9),
-            '--flowchat-primary-dark' => $this->darken_color($primary, 0.2),
-            '--flowchat-background' => $background,
-            '--flowchat-text' => $text,
-            '--flowchat-text-muted' => $this->lighten_color($text, 0.4),
-            '--flowchat-border' => $theme_colors['border'],
-            '--flowchat-contrast' => $this->get_contrast_color($primary),
+            '--n8n-chat-primary' => $primary,
+            '--n8n-chat-primary-light' => $this->lighten_color($primary, 0.9),
+            '--n8n-chat-primary-dark' => $this->darken_color($primary, 0.2),
+            '--n8n-chat-background' => $background,
+            '--n8n-chat-text' => $text,
+            '--n8n-chat-text-muted' => $this->lighten_color($text, 0.4),
+            '--n8n-chat-border' => $theme_colors['border'],
+            '--n8n-chat-contrast' => $this->get_contrast_color($primary),
         ];
 
         $css = ':root {' . PHP_EOL;
@@ -467,7 +467,7 @@ class Theme_Integration {
      * Clear theme colors cache
      */
     public function clear_cache(): void {
-        delete_transient('flowchat_theme_colors');
+        delete_transient('n8n_chat_theme_colors');
         $this->cached_colors = null;
     }
 

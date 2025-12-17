@@ -1,8 +1,8 @@
 <?php
 /**
- * FlowChat Block Server-Side Render
+ * n8n Chat Block Server-Side Render
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
 defined('ABSPATH') || exit;
@@ -84,11 +84,11 @@ if ($custom_class) {
 }
 
 // Build shortcode string
-$shortcode = '[flowchat ' . implode(' ', $shortcode_atts) . ']';
+$shortcode = '[n8n_chat ' . implode(' ', $shortcode_atts) . ']';
 
 // Get wrapper attributes
 $wrapper_attributes = get_block_wrapper_attributes([
-    'class' => 'flowchat-block-wrapper',
+    'class' => 'n8n-chat-block-wrapper',
 ]);
 
 // Render

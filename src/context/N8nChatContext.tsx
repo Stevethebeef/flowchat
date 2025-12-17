@@ -1,7 +1,7 @@
 /**
- * FlowChat Context Provider
+ * N8n Chat Context Provider
  *
- * Provides global state and utilities for FlowChat components.
+ * Provides global state and utilities for n8n Chat components.
  */
 
 import React, {
@@ -12,9 +12,9 @@ import React, {
   useEffect,
   type ReactNode,
 } from 'react';
-import type { FlowChatConfig, ChatContext as ChatContextData, ChatMessage } from '../types';
+import type { N8nChatConfig, ChatContext as ChatContextData, ChatMessage } from '../types';
 
-interface FlowChatState {
+interface N8nChatState {
   isOpen: boolean;
   isMinimized: boolean;
   isLoading: boolean;
@@ -23,21 +23,23 @@ interface FlowChatState {
   hasInteracted: boolean;
 }
 
-interface FlowChatContextValue {
+interface N8nChatContextValue {
   // Config
-  config: FlowChatConfig | null;
+  config: N8nChatConfig | null;
   context: ChatContextData | null;
   webhookUrl: string | null;
   sessionId: string | null;
+  apiUrl: string | null;
 
   // State
-  state: FlowChatState;
+  state: N8nChatState;
 
   // Actions
-  setConfig: (config: FlowChatConfig) => void;
+  setConfig: (config: N8nChatConfig) => void;
   setContext: (context: ChatContextData) => void;
   setWebhookUrl: (url: string) => void;
   setSessionId: (id: string) => void;
+  setApiUrl: (url: string) => void;
   setOpen: (isOpen: boolean) => void;
   setMinimized: (isMinimized: boolean) => void;
   setLoading: (isLoading: boolean) => void;
@@ -47,29 +49,32 @@ interface FlowChatContextValue {
   markInteracted: () => void;
 }
 
-const FlowChatContext = createContext<FlowChatContextValue | null>(null);
+const N8nChatContext = createContext<N8nChatContextValue | null>(null);
 
-interface FlowChatProviderProps {
+interface N8nChatProviderProps {
   children: ReactNode;
-  initialConfig?: FlowChatConfig;
+  initialConfig?: N8nChatConfig;
   initialContext?: ChatContextData;
   initialWebhookUrl?: string;
   initialSessionId?: string;
+  initialApiUrl?: string;
 }
 
-export function FlowChatProvider({
+export function N8nChatProvider({
   children,
   initialConfig,
   initialContext,
   initialWebhookUrl,
   initialSessionId,
-}: FlowChatProviderProps) {
-  const [config, setConfig] = useState<FlowChatConfig | null>(initialConfig || null);
+  initialApiUrl,
+}: N8nChatProviderProps) {
+  const [config, setConfig] = useState<N8nChatConfig | null>(initialConfig || null);
   const [context, setContext] = useState<ChatContextData | null>(initialContext || null);
   const [webhookUrl, setWebhookUrl] = useState<string | null>(initialWebhookUrl || null);
   const [sessionId, setSessionId] = useState<string | null>(initialSessionId || null);
+  const [apiUrl, setApiUrl] = useState<string | null>(initialApiUrl || null);
 
-  const [state, setState] = useState<FlowChatState>({
+  const [state, setState] = useState<N8nChatState>({
     isOpen: false,
     isMinimized: false,
     isLoading: false,
@@ -117,7 +122,7 @@ export function FlowChatProvider({
   useEffect(() => {
     if (state.hasInteracted && sessionId) {
       try {
-        sessionStorage.setItem(`flowchat_interacted_${sessionId}`, 'true');
+        sessionStorage.setItem(`n8n-chat_interacted_${sessionId}`, 'true');
       } catch {
         // Ignore storage errors
       }
@@ -128,7 +133,7 @@ export function FlowChatProvider({
   useEffect(() => {
     if (sessionId) {
       try {
-        const interacted = sessionStorage.getItem(`flowchat_interacted_${sessionId}`);
+        const interacted = sessionStorage.getItem(`n8n-chat_interacted_${sessionId}`);
         if (interacted === 'true') {
           setState((prev) => ({ ...prev, hasInteracted: true }));
         }
@@ -138,16 +143,18 @@ export function FlowChatProvider({
     }
   }, [sessionId]);
 
-  const value: FlowChatContextValue = {
+  const value: N8nChatContextValue = {
     config,
     context,
     webhookUrl,
     sessionId,
+    apiUrl,
     state,
     setConfig,
     setContext,
     setWebhookUrl,
     setSessionId,
+    setApiUrl,
     setOpen,
     setMinimized,
     setLoading,
@@ -158,18 +165,18 @@ export function FlowChatProvider({
   };
 
   return (
-    <FlowChatContext.Provider value={value}>{children}</FlowChatContext.Provider>
+    <N8nChatContext.Provider value={value}>{children}</N8nChatContext.Provider>
   );
 }
 
 /**
- * Hook to access FlowChat context
+ * Hook to access n8n Chat context
  */
-export function useFlowChat(): FlowChatContextValue {
-  const context = useContext(FlowChatContext);
+export function useN8nChat(): N8nChatContextValue {
+  const context = useContext(N8nChatContext);
 
   if (!context) {
-    throw new Error('useFlowChat must be used within a FlowChatProvider');
+    throw new Error('useN8nChat must be used within a N8nChatProvider');
   }
 
   return context;
@@ -178,8 +185,8 @@ export function useFlowChat(): FlowChatContextValue {
 /**
  * Hook to access just the config
  */
-export function useFlowChatConfig(): FlowChatConfig | null {
-  const { config } = useFlowChat();
+export function useN8nChatConfig(): N8nChatConfig | null {
+  const { config } = useN8nChat();
   return config;
 }
 
@@ -187,7 +194,7 @@ export function useFlowChatConfig(): FlowChatConfig | null {
  * Hook to access bubble state
  */
 export function useBubbleState() {
-  const { state, setOpen, setMinimized, clearUnread, markInteracted } = useFlowChat();
+  const { state, setOpen, setMinimized, clearUnread, markInteracted } = useN8nChat();
 
   const toggle = useCallback(() => {
     setOpen(!state.isOpen);
@@ -225,4 +232,4 @@ export function useBubbleState() {
   };
 }
 
-export default FlowChatContext;
+export default N8nChatContext;

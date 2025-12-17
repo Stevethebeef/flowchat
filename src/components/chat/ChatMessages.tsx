@@ -21,8 +21,8 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
   avatarUrl,
 }) => {
   return (
-    <ThreadPrimitive.Root className="flowchat-messages">
-      <ThreadPrimitive.Viewport className="flowchat-messages-viewport">
+    <ThreadPrimitive.Root className="n8n-chat-messages">
+      <ThreadPrimitive.Viewport className="n8n-chat-messages-viewport">
         {/* Welcome message */}
         {welcomeMessage && (
           <ThreadPrimitive.Empty>
@@ -60,7 +60,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
       </ThreadPrimitive.Viewport>
 
       {/* Scroll to bottom button */}
-      <ThreadPrimitive.ScrollToBottom className="flowchat-scroll-to-bottom">
+      <ThreadPrimitive.ScrollToBottom className="n8n-chat-scroll-to-bottom">
         <ScrollDownIcon />
       </ThreadPrimitive.ScrollToBottom>
     </ThreadPrimitive.Root>
@@ -76,8 +76,8 @@ interface WelcomeMessageProps {
 
 const WelcomeMessage: React.FC<WelcomeMessageProps> = ({ message }) => {
   return (
-    <div className="flowchat-welcome">
-      <div className="flowchat-welcome-content">
+    <div className="n8n-chat-welcome">
+      <div className="n8n-chat-welcome-content">
         <p>{message}</p>
       </div>
     </div>

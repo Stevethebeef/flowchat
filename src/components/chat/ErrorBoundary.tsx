@@ -1,5 +1,5 @@
 /**
- * Error Boundary Component for FlowChat
+ * Error Boundary Component for n8n Chat
  *
  * Catches React errors and displays fallback UI.
  */
@@ -30,7 +30,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // Log error
-    console.error('[FlowChat] Error caught by boundary:', error, errorInfo);
+    console.error('[n8n Chat] Error caught by boundary:', error, errorInfo);
 
     // Call optional error handler
     this.props.onError?.(error, errorInfo);
@@ -48,9 +48,9 @@ export class ErrorBoundary extends Component<Props, State> {
       }
 
       return (
-        <div className="flowchat-error-boundary">
-          <div className="flowchat-error-boundary__content">
-            <div className="flowchat-error-boundary__icon">
+        <div className="n8n-chat-error-boundary">
+          <div className="n8n-chat-error-boundary__content">
+            <div className="n8n-chat-error-boundary__icon">
               <svg
                 width="48"
                 height="48"
@@ -66,12 +66,12 @@ export class ErrorBoundary extends Component<Props, State> {
                 <line x1="12" y1="16" x2="12.01" y2="16" />
               </svg>
             </div>
-            <h3 className="flowchat-error-boundary__title">Something went wrong</h3>
-            <p className="flowchat-error-boundary__message">
+            <h3 className="n8n-chat-error-boundary__title">Something went wrong</h3>
+            <p className="n8n-chat-error-boundary__message">
               The chat encountered an unexpected error. Please try again.
             </p>
             <button
-              className="flowchat-error-boundary__button"
+              className="n8n-chat-error-boundary__button"
               onClick={this.handleReset}
               type="button"
             >

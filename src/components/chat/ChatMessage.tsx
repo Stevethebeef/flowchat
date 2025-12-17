@@ -24,12 +24,12 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
   return (
     <MessagePrimitive.Root
-      className={`flowchat-message flowchat-message-${role}`}
+      className={`n8n-chat-message n8n-chat-message-${role}`}
     >
-      <div className="flowchat-message-wrapper">
+      <div className="n8n-chat-message-wrapper">
         {/* Avatar */}
         {showAvatar && (
-          <div className="flowchat-message-avatar">
+          <div className="n8n-chat-message-avatar">
             {isUser ? (
               <UserAvatar />
             ) : (
@@ -39,7 +39,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
         )}
 
         {/* Content */}
-        <div className="flowchat-message-content">
+        <div className="n8n-chat-message-content">
           <MessagePrimitive.Content
             components={{
               Text: ({ text }) => <MessageText text={text} />,
@@ -49,7 +49,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
           {/* Timestamp */}
           {showTimestamp && (
-            <div className="flowchat-message-timestamp">
+            <div className="n8n-chat-message-timestamp">
               <MessageTimestamp />
             </div>
           )}
@@ -58,7 +58,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
 
       {/* Actions for assistant messages */}
       {!isUser && (
-        <div className="flowchat-message-actions">
+        <div className="n8n-chat-message-actions">
           <MessagePrimitive.If hasBranches>
             <BranchNav />
           </MessagePrimitive.If>
@@ -73,7 +73,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
  * User avatar
  */
 const UserAvatar: React.FC = () => (
-  <div className="flowchat-avatar flowchat-avatar-user">
+  <div className="n8n-chat-avatar n8n-chat-avatar-user">
     <svg
       width="20"
       height="20"
@@ -95,14 +95,14 @@ interface AssistantAvatarProps {
 const AssistantAvatar: React.FC<AssistantAvatarProps> = ({ url }) => {
   if (url) {
     return (
-      <div className="flowchat-avatar flowchat-avatar-assistant">
+      <div className="n8n-chat-avatar n8n-chat-avatar-assistant">
         <img src={url} alt="Assistant" />
       </div>
     );
   }
 
   return (
-    <div className="flowchat-avatar flowchat-avatar-assistant">
+    <div className="n8n-chat-avatar n8n-chat-avatar-assistant">
       <svg
         width="20"
         height="20"
@@ -130,7 +130,7 @@ const MessageText: React.FC<MessageTextProps> = ({ text }) => {
   // Simple markdown-like rendering
   // In production, you'd want to use a proper markdown renderer
   return (
-    <div className="flowchat-message-text">
+    <div className="n8n-chat-message-text">
       {text.split('\n').map((line, i) => (
         <p key={i}>{line || '\u00A0'}</p>
       ))}
@@ -147,7 +147,7 @@ interface MessageImageProps {
 
 const MessageImage: React.FC<MessageImageProps> = ({ image }) => {
   return (
-    <div className="flowchat-message-image">
+    <div className="n8n-chat-message-image">
       <img src={image} alt="Attached" loading="lazy" />
     </div>
   );
@@ -167,34 +167,34 @@ const MessageTimestamp: React.FC = () => {
 
 /**
  * Branch navigation for message alternatives
+ * Note: BranchPicker may not be available in all versions of @assistant-ui/react
  */
 const BranchNav: React.FC = () => {
-  return (
-    <div className="flowchat-branch-nav">
-      <MessagePrimitive.BranchPicker.Previous className="flowchat-branch-button">
-        <ChevronLeftIcon />
-      </MessagePrimitive.BranchPicker.Previous>
-
-      <span className="flowchat-branch-count">
-        <MessagePrimitive.BranchPicker.Number /> /{' '}
-        <MessagePrimitive.BranchPicker.Count />
-      </span>
-
-      <MessagePrimitive.BranchPicker.Next className="flowchat-branch-button">
-        <ChevronRightIcon />
-      </MessagePrimitive.BranchPicker.Next>
-    </div>
-  );
+  // BranchPicker removed - not available in current version
+  return null;
 };
 
 /**
  * Copy button
  */
 const CopyButton: React.FC = () => {
+  const handleCopy = () => {
+    // Find the parent message content and copy it
+    const messageEl = document.querySelector('.n8n-chat-message-text');
+    if (messageEl) {
+      navigator.clipboard.writeText(messageEl.textContent || '');
+    }
+  };
+
   return (
-    <MessagePrimitive.ActionBar.Copy className="flowchat-copy-button">
+    <button
+      className="n8n-chat-copy-button"
+      onClick={handleCopy}
+      title="Copy message"
+      type="button"
+    >
       <CopyIcon />
-    </MessagePrimitive.ActionBar.Copy>
+    </button>
   );
 };
 

@@ -83,7 +83,7 @@ export function useAutoOpen({
     // Check once per session
     if (oncePerSession) {
       try {
-        const key = `flowchat_autoopen_${sessionKey}`;
+        const key = `n8n_chat_autoopen_${sessionKey}`;
         if (sessionStorage.getItem(key)) return true;
       } catch {
         // Ignore storage errors
@@ -93,7 +93,7 @@ export function useAutoOpen({
     // Check once per day
     if (oncePerDay) {
       try {
-        const key = `flowchat_autoopen_day_${sessionKey}`;
+        const key = `n8n_chat_autoopen_day_${sessionKey}`;
         const lastOpen = localStorage.getItem(key);
         if (lastOpen) {
           const lastDate = new Date(lastOpen).toDateString();
@@ -114,7 +114,7 @@ export function useAutoOpen({
 
     if (oncePerSession) {
       try {
-        sessionStorage.setItem(`flowchat_autoopen_${sessionKey}`, 'true');
+        sessionStorage.setItem(`n8n_chat_autoopen_${sessionKey}`, 'true');
       } catch {
         // Ignore storage errors
       }
@@ -122,7 +122,7 @@ export function useAutoOpen({
 
     if (oncePerDay) {
       try {
-        localStorage.setItem(`flowchat_autoopen_day_${sessionKey}`, new Date().toISOString());
+        localStorage.setItem(`n8n_chat_autoopen_day_${sessionKey}`, new Date().toISOString());
       } catch {
         // Ignore storage errors
       }
@@ -141,8 +141,8 @@ export function useAutoOpen({
   const reset = useCallback(() => {
     hasTriggeredRef.current = false;
     try {
-      sessionStorage.removeItem(`flowchat_autoopen_${sessionKey}`);
-      localStorage.removeItem(`flowchat_autoopen_day_${sessionKey}`);
+      sessionStorage.removeItem(`n8n_chat_autoopen_${sessionKey}`);
+      localStorage.removeItem(`n8n_chat_autoopen_day_${sessionKey}`);
     } catch {
       // Ignore storage errors
     }

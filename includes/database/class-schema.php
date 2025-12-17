@@ -4,10 +4,10 @@
  *
  * Handles database table creation and migrations.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Database;
+namespace N8nChat\Database;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -27,9 +27,9 @@ class Schema {
      * Table names (without prefix)
      */
     private const TABLES = [
-        'sessions' => 'flowchat_sessions',
-        'messages' => 'flowchat_messages',
-        'fallback' => 'flowchat_fallback_messages',
+        'sessions' => 'n8n_chat_sessions',
+        'messages' => 'n8n_chat_messages',
+        'fallback' => 'n8n_chat_fallback_messages',
     ];
 
     /**
@@ -107,7 +107,7 @@ class Schema {
         dbDelta($fallback_sql);
 
         // Update schema version
-        update_option('flowchat_db_version', self::VERSION);
+        update_option('n8n_chat_db_version', self::VERSION);
     }
 
     /**
@@ -120,7 +120,7 @@ class Schema {
             $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}{$table}");
         }
 
-        delete_option('flowchat_db_version');
+        delete_option('n8n_chat_db_version');
     }
 
     /**
@@ -151,7 +151,7 @@ class Schema {
      * @return bool
      */
     public static function needs_update(): bool {
-        $installed_version = get_option('flowchat_db_version', '0.0.0');
+        $installed_version = get_option('n8n_chat_db_version', '0.0.0');
         return version_compare($installed_version, self::VERSION, '<');
     }
 
@@ -159,7 +159,7 @@ class Schema {
      * Run schema migrations
      */
     public static function migrate(): void {
-        $installed_version = get_option('flowchat_db_version', '0.0.0');
+        $installed_version = get_option('n8n_chat_db_version', '0.0.0');
 
         // Run migrations based on version
         // Example:

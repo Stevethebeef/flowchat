@@ -6,6 +6,8 @@
 
 import React, { useState, useEffect } from 'react';
 import type { AdminInstance } from '../../../types';
+import { useAdminI18n } from '../../../hooks/useAdminI18n';
+import { InfoIcon } from '../shared/InfoIcon';
 
 interface AppearanceTabProps {
   instance: Partial<AdminInstance>;
@@ -53,6 +55,7 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
   instance,
   updateField,
 }) => {
+  const { t } = useAdminI18n();
   const [stylePresets, setStylePresets] = useState<StylePreset[]>([]);
   const [loadingPresets, setLoadingPresets] = useState(true);
   const [showCustomCss, setShowCustomCss] = useState(false);
@@ -65,10 +68,10 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
     const fetchPresets = async () => {
       try {
         const response = await fetch(
-          `${(window as any).flowchatAdmin.apiUrl}/style-presets`,
+          `${(window as any).n8nChatAdmin.apiUrl}/style-presets`,
           {
             headers: {
-              'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+              'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
             },
           }
         );
@@ -99,23 +102,23 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
   };
 
   return (
-    <div className="flowchat-tab-content">
+    <div className="n8n-chat-tab-content">
       {/* Color Source */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Color Scheme</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">{t('colorScheme', 'Color Scheme')}</h2>
 
-        <div className="flowchat-color-source-selector">
+        <div className="n8n-chat-color-source-selector">
           {COLOR_SOURCES.map((source) => (
-            <label key={source.id} className="flowchat-color-source-option">
+            <label key={source.id} className="n8n-chat-color-source-option">
               <input
                 type="radio"
                 name="colorSource"
                 checked={colorSource === source.id}
                 onChange={() => updateField('colorSource', source.id)}
               />
-              <div className="flowchat-color-source-content">
-                <span className="flowchat-color-source-label">{source.label}</span>
-                <span className="flowchat-color-source-desc">{source.description}</span>
+              <div className="n8n-chat-color-source-content">
+                <span className="n8n-chat-color-source-label">{t(`colorSource_${source.id}`, source.label)}</span>
+                <span className="n8n-chat-color-source-desc">{t(`colorSourceDesc_${source.id}`, source.description)}</span>
               </div>
             </label>
           ))}
@@ -124,50 +127,50 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
 
       {/* Style Presets - only show if preset selected */}
       {colorSource === 'preset' && (
-        <div className="flowchat-section">
-          <h2 className="flowchat-section-title">Style Presets</h2>
+        <div className="n8n-chat-section">
+          <h2 className="n8n-chat-section-title">{t('stylePresets', 'Style Presets')}</h2>
 
           {loadingPresets ? (
-            <div className="flowchat-loading-inline">
+            <div className="n8n-chat-loading-inline">
               <span className="spinner is-active"></span>
-              Loading presets...
+              {t('loadingPresets', 'Loading presets...')}
             </div>
           ) : (
-            <div className="flowchat-presets-grid">
+            <div className="n8n-chat-presets-grid">
               {stylePresets.map((preset) => (
                 <div
                   key={preset.id}
-                  className={`flowchat-preset-card ${instance.stylePreset === preset.id ? 'is-selected' : ''}`}
+                  className={`n8n-chat-preset-card ${instance.stylePreset === preset.id ? 'is-selected' : ''}`}
                   onClick={() => applyPreset(preset)}
                 >
                   <div
-                    className="flowchat-preset-preview"
+                    className="n8n-chat-preset-preview"
                     style={{
                       backgroundColor: preset.colors.background,
                       borderRadius: `${preset.borderRadius}px`,
                     }}
                   >
                     <div
-                      className="flowchat-preset-header"
+                      className="n8n-chat-preset-header"
                       style={{ backgroundColor: preset.colors.header }}
                     />
-                    <div className="flowchat-preset-messages">
+                    <div className="n8n-chat-preset-messages">
                       <div
-                        className="flowchat-preset-msg bot"
+                        className="n8n-chat-preset-msg bot"
                         style={{ backgroundColor: preset.colors.botBubble }}
                       />
                       <div
-                        className="flowchat-preset-msg user"
+                        className="n8n-chat-preset-msg user"
                         style={{ backgroundColor: preset.colors.userBubble }}
                       />
                     </div>
                   </div>
-                  <div className="flowchat-preset-info">
+                  <div className="n8n-chat-preset-info">
                     <h4>{preset.name}</h4>
                     <p>{preset.description}</p>
                   </div>
                   {instance.stylePreset === preset.id && (
-                    <div className="flowchat-preset-check">
+                    <div className="n8n-chat-preset-check">
                       <span className="dashicons dashicons-yes"></span>
                     </div>
                   )}
@@ -180,14 +183,14 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
 
       {/* Custom Colors */}
       {colorSource === 'custom' && (
-        <div className="flowchat-section">
-          <h2 className="flowchat-section-title">Custom Colors</h2>
+        <div className="n8n-chat-section">
+          <h2 className="n8n-chat-section-title">{t('customColors', 'Custom Colors')}</h2>
 
-          <div className="flowchat-color-grid">
+          <div className="n8n-chat-color-grid">
             {/* Primary Color */}
-            <div className="flowchat-color-field">
-              <label htmlFor="fc-color-primary">Primary Color</label>
-              <div className="flowchat-color-input">
+            <div className="n8n-chat-color-field">
+              <label htmlFor="fc-color-primary">{t('primaryColor', 'Primary Color')}</label>
+              <div className="n8n-chat-color-input">
                 <input
                   type="color"
                   id="fc-color-primary"
@@ -205,9 +208,9 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
             </div>
 
             {/* User Bubble Color */}
-            <div className="flowchat-color-field">
-              <label htmlFor="fc-color-user-bubble">User Bubble</label>
-              <div className="flowchat-color-input">
+            <div className="n8n-chat-color-field">
+              <label htmlFor="fc-color-user-bubble">{t('userBubble', 'User Bubble')}</label>
+              <div className="n8n-chat-color-input">
                 <input
                   type="color"
                   id="fc-color-user-bubble"
@@ -224,9 +227,9 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
             </div>
 
             {/* Bot Bubble Color */}
-            <div className="flowchat-color-field">
-              <label htmlFor="fc-color-bot-bubble">Bot Bubble</label>
-              <div className="flowchat-color-input">
+            <div className="n8n-chat-color-field">
+              <label htmlFor="fc-color-bot-bubble">{t('botBubble', 'Bot Bubble')}</label>
+              <div className="n8n-chat-color-input">
                 <input
                   type="color"
                   id="fc-color-bot-bubble"
@@ -243,9 +246,9 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
             </div>
 
             {/* Background Color */}
-            <div className="flowchat-color-field">
-              <label htmlFor="fc-color-background">Background</label>
-              <div className="flowchat-color-input">
+            <div className="n8n-chat-color-field">
+              <label htmlFor="fc-color-background">{t('background', 'Background')}</label>
+              <div className="n8n-chat-color-input">
                 <input
                   type="color"
                   id="fc-color-background"
@@ -262,9 +265,9 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
             </div>
 
             {/* Text Color */}
-            <div className="flowchat-color-field">
-              <label htmlFor="fc-color-text">Text Color</label>
-              <div className="flowchat-color-input">
+            <div className="n8n-chat-color-field">
+              <label htmlFor="fc-color-text">{t('textColor', 'Text Color')}</label>
+              <div className="n8n-chat-color-input">
                 <input
                   type="color"
                   id="fc-color-text"
@@ -281,9 +284,9 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
             </div>
 
             {/* Header Background */}
-            <div className="flowchat-color-field">
-              <label htmlFor="fc-color-header">Header</label>
-              <div className="flowchat-color-input">
+            <div className="n8n-chat-color-field">
+              <label htmlFor="fc-color-header">{t('header', 'Header')}</label>
+              <div className="n8n-chat-color-input">
                 <input
                   type="color"
                   id="fc-color-header"
@@ -304,17 +307,16 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
 
       {/* Theme Colors Info */}
       {colorSource === 'theme' && (
-        <div className="flowchat-section">
-          <div className="flowchat-info-box">
+        <div className="n8n-chat-section">
+          <div className="n8n-chat-info-box">
             <span className="dashicons dashicons-info"></span>
             <div>
               <p>
-                <strong>Theme Integration Active</strong>
+                <strong>{t('themeIntegrationActive', 'Theme Integration Active')}</strong>
               </p>
               <p>
-                Colors will be automatically extracted from your WordPress theme.
-                This includes colors from theme.json, customizer settings, and CSS
-                variables.
+                {t('themeColorsDesc', 'Colors will be automatically extracted from your WordPress theme. This includes colors from theme.json, customizer settings, and CSS variables.')}
+                <InfoIcon tooltip={t('tooltipThemeColors', 'Extracts colors from theme.json (block themes), Customizer settings, or CSS variables like --wp--preset--color--primary.')} />
               </p>
             </div>
           </div>
@@ -322,13 +324,13 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
       )}
 
       {/* Typography */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Typography</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">{t('typography', 'Typography')}</h2>
 
-        <div className="flowchat-field-row">
+        <div className="n8n-chat-field-row">
           {/* Font Family */}
-          <div className="flowchat-field">
-            <label htmlFor="fc-font-family">Font Family</label>
+          <div className="n8n-chat-field">
+            <label htmlFor="fc-font-family">{t('fontFamily', 'Font Family')}</label>
             <select
               id="fc-font-family"
               value={appearance.fontFamily || 'system'}
@@ -344,8 +346,8 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
           </div>
 
           {/* Font Size */}
-          <div className="flowchat-field">
-            <label htmlFor="fc-font-size">Font Size</label>
+          <div className="n8n-chat-field">
+            <label htmlFor="fc-font-size">{t('fontSize', 'Font Size')}</label>
             <select
               id="fc-font-size"
               value={appearance.fontSize || 'medium'}
@@ -362,9 +364,9 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
         </div>
 
         {/* Border Radius */}
-        <div className="flowchat-field">
-          <label htmlFor="fc-border-radius">Border Radius</label>
-          <div className="flowchat-slider-field">
+        <div className="n8n-chat-field">
+          <label htmlFor="fc-border-radius">{t('borderRadius', 'Border Radius')}</label>
+          <div className="n8n-chat-slider-field">
             <input
               type="range"
               id="fc-border-radius"
@@ -373,18 +375,18 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
               value={appearance.borderRadius || 12}
               onChange={(e) => updateField('appearance.borderRadius', parseInt(e.target.value, 10))}
             />
-            <span className="flowchat-slider-value">{appearance.borderRadius || 12}px</span>
+            <span className="n8n-chat-slider-value">{appearance.borderRadius || 12}px</span>
           </div>
         </div>
       </div>
 
       {/* Bot Avatar */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Bot Avatar</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">{t('botAvatar', 'Bot Avatar')}</h2>
 
-        <div className="flowchat-field">
-          <label htmlFor="fc-avatar-url">Avatar Image URL</label>
-          <div className="flowchat-media-field">
+        <div className="n8n-chat-field">
+          <label htmlFor="fc-avatar-url">{t('avatarImageUrl', 'Avatar Image URL')}</label>
+          <div className="n8n-chat-media-field">
             <input
               type="url"
               id="fc-avatar-url"
@@ -399,8 +401,8 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
               onClick={() => {
                 // WordPress media library integration
                 const frame = (window as any).wp?.media?.({
-                  title: 'Select Bot Avatar',
-                  button: { text: 'Use as Avatar' },
+                  title: t('selectBotAvatar', 'Select Bot Avatar'),
+                  button: { text: t('useAsAvatar', 'Use as Avatar') },
                   multiple: false,
                   library: { type: 'image' },
                 });
@@ -414,55 +416,54 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
               }}
             >
               <span className="dashicons dashicons-format-image"></span>
-              Choose Image
+              {t('chooseImage', 'Choose Image')}
             </button>
           </div>
           <p className="description">
-            Leave empty to use the default bot icon. Recommended size: 80x80px.
+            {t('avatarDesc', 'Leave empty to use the default bot icon. Recommended size: 80x80px.')}
           </p>
         </div>
 
         {instance.avatarUrl && (
-          <div className="flowchat-avatar-preview">
-            <img src={instance.avatarUrl} alt="Bot avatar preview" />
+          <div className="n8n-chat-avatar-preview">
+            <img src={instance.avatarUrl} alt={t('botAvatarPreview', 'Bot avatar preview')} />
             <button
               type="button"
-              className="button-link flowchat-remove-btn"
+              className="button-link n8n-chat-remove-btn"
               onClick={() => updateField('avatarUrl', '')}
             >
-              Remove
+              {t('remove', 'Remove')}
             </button>
           </div>
         )}
       </div>
 
       {/* Custom CSS */}
-      <div className="flowchat-section">
+      <div className="n8n-chat-section">
         <button
           type="button"
-          className="flowchat-toggle-advanced"
+          className="n8n-chat-toggle-advanced"
           onClick={() => setShowCustomCss(!showCustomCss)}
           aria-expanded={showCustomCss}
         >
           <span className={`dashicons ${showCustomCss ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-right-alt2'}`}></span>
-          {showCustomCss ? 'Hide' : 'Show'} Custom CSS
+          {showCustomCss ? t('hide', 'Hide') : t('show', 'Show')} {t('customCss', 'Custom CSS')}
         </button>
 
         {showCustomCss && (
-          <div className="flowchat-advanced-content">
-            <div className="flowchat-field">
-              <label htmlFor="fc-custom-css">Custom CSS</label>
+          <div className="n8n-chat-advanced-content">
+            <div className="n8n-chat-field">
+              <label htmlFor="fc-custom-css">{t('customCss', 'Custom CSS')}</label>
               <textarea
                 id="fc-custom-css"
                 value={instance.customCss || ''}
                 onChange={(e) => updateField('customCss', e.target.value)}
                 rows={10}
                 className="large-text code"
-                placeholder={`.flowchat-widget {\n  /* Your custom styles */\n}`}
+                placeholder={`.n8n-chat-widget {\n  /* Your custom styles */\n}`}
               />
               <p className="description">
-                Add custom CSS to further customize the chat appearance.
-                All styles are scoped to <code>.flowchat-widget</code>.
+                {t('customCssDesc', 'Add custom CSS to further customize the chat appearance. All styles are scoped to')} <code>.n8n-chat-widget</code>.
               </p>
             </div>
           </div>

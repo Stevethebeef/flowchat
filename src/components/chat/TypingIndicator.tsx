@@ -8,11 +8,11 @@ import React from 'react';
 
 export const TypingIndicator: React.FC = () => {
   return (
-    <div className="flowchat-typing-indicator">
-      <div className="flowchat-typing-dots">
-        <span className="flowchat-typing-dot" />
-        <span className="flowchat-typing-dot" />
-        <span className="flowchat-typing-dot" />
+    <div className="n8n-chat-typing-indicator">
+      <div className="n8n-chat-typing-dots">
+        <span className="n8n-chat-typing-dot" />
+        <span className="n8n-chat-typing-dot" />
+        <span className="n8n-chat-typing-dot" />
       </div>
     </div>
   );

@@ -2,12 +2,12 @@
 /**
  * Admin Handler
  *
- * Main admin controller for FlowChat.
+ * Main admin controller for n8n Chat.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Admin;
+namespace N8nChat\Admin;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -33,8 +33,8 @@ class Admin {
      * @param string $hook Current admin page hook
      */
     public function enqueue_assets(string $hook): void {
-        // Only load on FlowChat admin pages
-        if (strpos($hook, 'flowchat') === false) {
+        // Only load on n8n Chat admin pages
+        if (strpos($hook, 'n8n-chat') === false) {
             return;
         }
 
@@ -42,11 +42,11 @@ class Admin {
         wp_enqueue_style('wp-components');
 
         // Enqueue admin scripts
-        wp_enqueue_script('flowchat-admin');
-        wp_enqueue_style('flowchat-admin');
+        wp_enqueue_script('n8n-chat-admin');
+        wp_enqueue_style('n8n-chat-admin');
 
         // Enqueue media uploader for avatar selection
-        if (strpos($hook, 'flowchat-instances') !== false) {
+        if (strpos($hook, 'n8n-chat-instances') !== false) {
             wp_enqueue_media();
         }
     }
@@ -55,11 +55,11 @@ class Admin {
      * Check plugin version and run updates if needed
      */
     public function check_version(): void {
-        $installed_version = get_option('flowchat_version', '0.0.0');
+        $installed_version = get_option('n8n_chat_version', '0.0.0');
 
-        if (version_compare($installed_version, FLOWCHAT_VERSION, '<')) {
+        if (version_compare($installed_version, N8N_CHAT_VERSION, '<')) {
             $this->run_updates($installed_version);
-            update_option('flowchat_version', FLOWCHAT_VERSION);
+            update_option('n8n_chat_version', N8N_CHAT_VERSION);
         }
     }
 
@@ -79,14 +79,14 @@ class Admin {
      * Display admin notices
      */
     public function display_notices(): void {
-        // Check if we're on a FlowChat page
+        // Check if we're on an n8n Chat page
         $screen = get_current_screen();
-        if (!$screen || strpos($screen->id, 'flowchat') === false) {
+        if (!$screen || strpos($screen->id, 'n8n-chat') === false) {
             return;
         }
 
         // Check for missing webhook configuration
-        $instances = get_option('flowchat_instances', []);
+        $instances = get_option('n8n_chat_instances', []);
         $has_enabled_without_webhook = false;
 
         foreach ($instances as $instance) {
@@ -98,18 +98,18 @@ class Admin {
 
         if ($has_enabled_without_webhook) {
             $this->render_notice(
-                __('One or more enabled chat instances do not have a webhook URL configured. They will not function until a webhook URL is set.', 'flowchat'),
+                __('One or more enabled chat instances do not have a webhook URL configured. They will not function until a webhook URL is set.', 'n8n-chat'),
                 'warning'
             );
         }
 
         // Display stored notices
-        $notices = get_transient('flowchat_admin_notices');
+        $notices = get_transient('n8n_chat_admin_notices');
         if ($notices) {
             foreach ($notices as $notice) {
                 $this->render_notice($notice['message'], $notice['type']);
             }
-            delete_transient('flowchat_admin_notices');
+            delete_transient('n8n_chat_admin_notices');
         }
     }
 
@@ -135,12 +135,12 @@ class Admin {
      * @param string $type Notice type
      */
     public static function add_notice(string $message, string $type = 'info'): void {
-        $notices = get_transient('flowchat_admin_notices') ?: [];
+        $notices = get_transient('n8n_chat_admin_notices') ?: [];
         $notices[] = [
             'message' => $message,
             'type' => $type,
         ];
-        set_transient('flowchat_admin_notices', $notices, 60);
+        set_transient('n8n_chat_admin_notices', $notices, 60);
     }
 
     /**
@@ -151,10 +151,10 @@ class Admin {
      * @return string
      */
     public static function get_page_url(string $page = '', array $args = []): string {
-        $base = admin_url('admin.php?page=flowchat');
+        $base = admin_url('admin.php?page=n8n-chat');
 
         if ($page) {
-            $base = admin_url('admin.php?page=flowchat-' . $page);
+            $base = admin_url('admin.php?page=n8n-chat-' . $page);
         }
 
         if (!empty($args)) {

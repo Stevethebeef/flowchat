@@ -1,12 +1,16 @@
 /**
  * ChatInput Component
  *
- * Input area for composing and sending messages.
+ * Input area for composing and sending messages with file upload and voice input support.
  */
 
-import React, { useRef, useState, useCallback } from 'react';
-import { ComposerPrimitive } from '@assistant-ui/react';
-import type { ChatInputProps } from '../../types';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
+import { useThreadRuntime } from '@assistant-ui/react';
+import { useN8nChat } from '../../context/N8nChatContext';
+import { uploadFiles } from '../../services/FileUploadService';
+import { VoiceInputButton } from './VoiceInputButton';
+import { useFrontendI18n } from '../../hooks/useFrontendI18n';
+import type { ChatInputProps, UploadResponse } from '../../types';
 
 export const ChatInput: React.FC<ChatInputProps> = ({
   placeholder,
@@ -15,13 +19,26 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   fileTypes = [],
   maxFileSize = 10485760, // 10MB
 }) => {
+  const { config, apiUrl } = useN8nChat();
+  const { t } = useFrontendI18n();
+  const threadRuntime = useThreadRuntime();
+
+  const [inputValue, setInputValue] = useState('');
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const textInputRef = useRef<HTMLTextAreaElement>(null);
+
+  // Check if voice input is supported and enabled
+  const voiceInputEnabled = config?.features?.voiceInput !== false;
 
   // Handle file selection
   const handleFileSelect = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(event.target.files || []);
+      setUploadError(null);
 
       // Validate files
       const validFiles = files.filter((file) => {
@@ -56,22 +73,128 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     fileInputRef.current?.click();
   }, []);
 
+  // Handle voice transcript
+  const handleVoiceTranscript = useCallback((text: string) => {
+    setInputValue((prev) => prev + (prev ? ' ' : '') + text);
+    // Focus the text input after voice input
+    textInputRef.current?.focus();
+  }, []);
+
+  // Handle text input change
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(e.target.value);
+  }, []);
+
+  // Handle key press (Enter to send)
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  }, []);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textInputRef.current) {
+      textInputRef.current.style.height = 'auto';
+      textInputRef.current.style.height = `${Math.min(textInputRef.current.scrollHeight, 120)}px`;
+    }
+  }, [inputValue]);
+
+  // Handle send message
+  const handleSend = useCallback(async () => {
+    const text = inputValue.trim();
+    if (!text && selectedFiles.length === 0) return;
+    if (isUploading || disabled) return;
+
+    setUploadError(null);
+    setIsUploading(true);
+
+    try {
+      let uploadedFiles: UploadResponse[] = [];
+
+      // Upload files if any
+      if (selectedFiles.length > 0 && apiUrl && config) {
+        try {
+          uploadedFiles = await uploadFiles(
+            selectedFiles,
+            config.instanceId,
+            apiUrl
+          );
+        } catch (error) {
+          setUploadError(error instanceof Error ? error.message : 'File upload failed');
+          setIsUploading(false);
+          return;
+        }
+      }
+
+      // Build message content
+      const content: Array<
+        | { type: 'text'; text: string }
+        | { type: 'image' | 'file'; url: string; filename: string; mimeType: string }
+      > = [];
+
+      if (text) {
+        content.push({ type: 'text', text });
+      }
+
+      for (const file of uploadedFiles) {
+        content.push({
+          type: file.mimeType.startsWith('image/') ? 'image' : 'file',
+          url: file.url,
+          filename: file.filename,
+          mimeType: file.mimeType,
+        });
+      }
+
+      // Send message via thread runtime
+      threadRuntime.append({
+        role: 'user',
+        content,
+      });
+
+      // Clear state
+      setInputValue('');
+      setSelectedFiles([]);
+    } finally {
+      setIsUploading(false);
+    }
+  }, [inputValue, selectedFiles, isUploading, disabled, apiUrl, config, threadRuntime]);
+
+  const canSend = (inputValue.trim() || selectedFiles.length > 0) && !isUploading && !disabled;
+
   return (
-    <ComposerPrimitive.Root className="flowchat-input-container">
+    <div className="n8n-chat-input-container">
+      {/* Upload error */}
+      {uploadError && (
+        <div className="n8n-chat-upload-error" role="alert">
+          {uploadError}
+          <button
+            type="button"
+            onClick={() => setUploadError(null)}
+            className="n8n-chat-upload-error-dismiss"
+            aria-label={t('dismissError', 'Dismiss error')}
+          >
+            <CloseIcon />
+          </button>
+        </div>
+      )}
+
       {/* File previews */}
       {selectedFiles.length > 0 && (
-        <div className="flowchat-file-previews">
+        <div className="n8n-chat-file-previews">
           {selectedFiles.map((file, index) => (
             <FilePreview
               key={`${file.name}-${index}`}
               file={file}
               onRemove={() => removeFile(index)}
+              disabled={isUploading}
             />
           ))}
         </div>
       )}
 
-      <div className="flowchat-input-wrapper">
+      <div className="n8n-chat-input-wrapper">
         {/* File upload button */}
         {fileUpload && (
           <>
@@ -81,15 +204,15 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               multiple
               accept={fileTypes.join(',')}
               onChange={handleFileSelect}
-              className="flowchat-file-input-hidden"
+              className="n8n-chat-file-input-hidden"
               aria-hidden="true"
             />
             <button
               type="button"
-              className="flowchat-attachment-button"
+              className="n8n-chat-attachment-button"
               onClick={triggerFileInput}
-              disabled={disabled}
-              aria-label="Attach file"
+              disabled={disabled || isUploading}
+              aria-label={t('attachFile', 'Attach file')}
             >
               <AttachmentIcon />
             </button>
@@ -97,28 +220,39 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         )}
 
         {/* Text input */}
-        <ComposerPrimitive.Input
+        <textarea
+          ref={textInputRef}
+          value={inputValue}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
           placeholder={placeholder}
-          disabled={disabled}
-          className="flowchat-input"
-          autoFocus
+          disabled={disabled || isUploading}
+          className="n8n-chat-input"
+          rows={1}
+          aria-label={t('messageInput', 'Message input')}
         />
 
-        {/* Send button */}
-        <ComposerPrimitive.Send
-          disabled={disabled}
-          className="flowchat-send-button"
-        >
-          <SendIcon />
-        </ComposerPrimitive.Send>
-      </div>
+        {/* Voice input button */}
+        {voiceInputEnabled && (
+          <VoiceInputButton
+            onTranscript={handleVoiceTranscript}
+            disabled={disabled || isUploading}
+            className="n8n-chat-voice-input-button"
+          />
+        )}
 
-      {/* Cancel button (shown while generating) */}
-      <ComposerPrimitive.Cancel className="flowchat-cancel-button">
-        <StopIcon />
-        <span>Stop generating</span>
-      </ComposerPrimitive.Cancel>
-    </ComposerPrimitive.Root>
+        {/* Send button */}
+        <button
+          type="button"
+          onClick={handleSend}
+          disabled={!canSend}
+          className="n8n-chat-send-button"
+          aria-label={t('send', 'Send message')}
+        >
+          {isUploading ? <LoadingIcon /> : <SendIcon />}
+        </button>
+      </div>
+    </div>
   );
 };
 
@@ -128,14 +262,15 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 interface FilePreviewProps {
   file: File;
   onRemove: () => void;
+  disabled?: boolean;
 }
 
-const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove }) => {
+const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove, disabled }) => {
   const isImage = file.type.startsWith('image/');
   const previewUrl = isImage ? URL.createObjectURL(file) : null;
 
   // Cleanup URL on unmount
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
@@ -144,19 +279,20 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove }) => {
   }, [previewUrl]);
 
   return (
-    <div className="flowchat-file-preview">
+    <div className="n8n-chat-file-preview">
       {isImage && previewUrl ? (
-        <img src={previewUrl} alt={file.name} className="flowchat-file-preview-image" />
+        <img src={previewUrl} alt={file.name} className="n8n-chat-file-preview-image" />
       ) : (
-        <div className="flowchat-file-preview-icon">
+        <div className="n8n-chat-file-preview-icon">
           <FileIcon />
         </div>
       )}
-      <span className="flowchat-file-preview-name">{file.name}</span>
+      <span className="n8n-chat-file-preview-name">{file.name}</span>
       <button
         type="button"
-        className="flowchat-file-preview-remove"
+        className="n8n-chat-file-preview-remove"
         onClick={onRemove}
+        disabled={disabled}
         aria-label={`Remove ${file.name}`}
       >
         <CloseIcon />
@@ -194,14 +330,15 @@ const SendIcon: React.FC = () => (
   </svg>
 );
 
-const StopIcon: React.FC = () => (
+const LoadingIcon: React.FC = () => (
   <svg
-    width="16"
-    height="16"
-    viewBox="0 0 16 16"
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
     fill="currentColor"
+    className="n8n-chat-loading-spinner"
   >
-    <rect x="3" y="3" width="10" height="10" rx="1" />
+    <path d="M10 3a7 7 0 0 1 7 7h-2a5 5 0 0 0-5-5V3z" />
   </svg>
 );
 

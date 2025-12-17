@@ -23,10 +23,10 @@ export interface AvatarProps {
 }
 
 const SIZE_CLASSES: Record<NonNullable<AvatarProps['size']>, string> = {
-  xs: 'flowchat-avatar-xs',
-  sm: 'flowchat-avatar-sm',
-  md: 'flowchat-avatar-md',
-  lg: 'flowchat-avatar-lg',
+  xs: 'n8n-chat-avatar-xs',
+  sm: 'n8n-chat-avatar-sm',
+  md: 'n8n-chat-avatar-md',
+  lg: 'n8n-chat-avatar-lg',
 };
 
 /**
@@ -62,8 +62,8 @@ export function Avatar({
   const showImage = src && !imageError;
 
   const classes = [
-    'flowchat-avatar',
-    `flowchat-avatar-${type}`,
+    'n8n-chat-avatar',
+    `n8n-chat-avatar-${type}`,
     SIZE_CLASSES[size],
     className,
   ]
@@ -77,10 +77,10 @@ export function Avatar({
           src={src}
           alt={alt}
           onError={() => setImageError(true)}
-          className="flowchat-avatar-image"
+          className="n8n-chat-avatar-image"
         />
       ) : (
-        <span className="flowchat-avatar-fallback">{fallbackText}</span>
+        <span className="n8n-chat-avatar-fallback">{fallbackText}</span>
       )}
     </div>
   );

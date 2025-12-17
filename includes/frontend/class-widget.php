@@ -1,35 +1,35 @@
 <?php
 /**
- * FlowChat WordPress Widget
+ * n8n Chat WordPress Widget
  *
  * Allows embedding chat in widget areas (sidebars).
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Frontend;
+namespace N8nChat\Frontend;
 
-use FlowChat\Core\Instance_Manager;
+use N8nChat\Core\Instance_Manager;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
- * Class FlowChat_Widget
+ * Class N8nChat_Widget
  */
-class FlowChat_Widget extends \WP_Widget {
+class N8nChat_Widget extends \WP_Widget {
 
     /**
      * Constructor
      */
     public function __construct() {
         parent::__construct(
-            'flowchat_widget',
-            __('FlowChat', 'flowchat'),
+            'n8n_chat_widget',
+            __('n8n Chat', 'n8n-chat'),
             [
-                'description' => __('Display an AI chat widget powered by n8n.', 'flowchat'),
-                'classname' => 'flowchat-widget',
+                'description' => __('Display an AI chat widget powered by n8n.', 'n8n-chat'),
+                'classname' => 'n8n-chat-widget',
             ]
         );
     }
@@ -66,7 +66,7 @@ class FlowChat_Widget extends \WP_Widget {
         $shortcode_atts[] = 'mode="inline"';
         $shortcode_atts[] = 'width="100%"';
 
-        $shortcode = '[flowchat ' . implode(' ', $shortcode_atts) . ']';
+        $shortcode = '[n8n_chat' . implode(' ', $shortcode_atts) . ']';
 
         echo do_shortcode($shortcode);
 
@@ -92,7 +92,7 @@ class FlowChat_Widget extends \WP_Widget {
 
         <p>
             <label for="<?php echo esc_attr($this->get_field_id('title')); ?>">
-                <?php esc_html_e('Title:', 'flowchat'); ?>
+                <?php esc_html_e('Title:', 'n8n-chat'); ?>
             </label>
             <input
                 class="widefat"
@@ -105,19 +105,19 @@ class FlowChat_Widget extends \WP_Widget {
 
         <p>
             <label for="<?php echo esc_attr($this->get_field_id('instance_id')); ?>">
-                <?php esc_html_e('Chat Instance:', 'flowchat'); ?>
+                <?php esc_html_e('Chat Instance:', 'n8n-chat'); ?>
             </label>
             <select
                 class="widefat"
                 id="<?php echo esc_attr($this->get_field_id('instance_id')); ?>"
                 name="<?php echo esc_attr($this->get_field_name('instance_id')); ?>"
             >
-                <option value=""><?php esc_html_e('— Select Instance —', 'flowchat'); ?></option>
+                <option value=""><?php esc_html_e('— Select Instance —', 'n8n-chat'); ?></option>
                 <?php foreach ($instances as $inst): ?>
                     <option value="<?php echo esc_attr($inst['id']); ?>" <?php selected($instance_id, $inst['id']); ?>>
                         <?php echo esc_html($inst['name']); ?>
                         <?php if (!$inst['isEnabled']): ?>
-                            (<?php esc_html_e('disabled', 'flowchat'); ?>)
+                            (<?php esc_html_e('disabled', 'n8n-chat'); ?>)
                         <?php endif; ?>
                     </option>
                 <?php endforeach; ?>
@@ -126,7 +126,7 @@ class FlowChat_Widget extends \WP_Widget {
 
         <p>
             <label for="<?php echo esc_attr($this->get_field_id('height')); ?>">
-                <?php esc_html_e('Height:', 'flowchat'); ?>
+                <?php esc_html_e('Height:', 'n8n-chat'); ?>
             </label>
             <input
                 class="widefat"
@@ -136,21 +136,21 @@ class FlowChat_Widget extends \WP_Widget {
                 value="<?php echo esc_attr($height); ?>"
                 placeholder="400px"
             />
-            <small><?php esc_html_e('CSS value (e.g., 400px, 50vh)', 'flowchat'); ?></small>
+            <small><?php esc_html_e('CSS value (e.g., 400px, 50vh)', 'n8n-chat'); ?></small>
         </p>
 
         <p>
             <label for="<?php echo esc_attr($this->get_field_id('theme')); ?>">
-                <?php esc_html_e('Theme:', 'flowchat'); ?>
+                <?php esc_html_e('Theme:', 'n8n-chat'); ?>
             </label>
             <select
                 class="widefat"
                 id="<?php echo esc_attr($this->get_field_id('theme')); ?>"
                 name="<?php echo esc_attr($this->get_field_name('theme')); ?>"
             >
-                <option value="light" <?php selected($theme, 'light'); ?>><?php esc_html_e('Light', 'flowchat'); ?></option>
-                <option value="dark" <?php selected($theme, 'dark'); ?>><?php esc_html_e('Dark', 'flowchat'); ?></option>
-                <option value="auto" <?php selected($theme, 'auto'); ?>><?php esc_html_e('Auto (System)', 'flowchat'); ?></option>
+                <option value="light" <?php selected($theme, 'light'); ?>><?php esc_html_e('Light', 'n8n-chat'); ?></option>
+                <option value="dark" <?php selected($theme, 'dark'); ?>><?php esc_html_e('Dark', 'n8n-chat'); ?></option>
+                <option value="auto" <?php selected($theme, 'auto'); ?>><?php esc_html_e('Auto (System)', 'n8n-chat'); ?></option>
             </select>
         </p>
 
@@ -163,7 +163,7 @@ class FlowChat_Widget extends \WP_Widget {
                 <?php checked($show_header); ?>
             />
             <label for="<?php echo esc_attr($this->get_field_id('show_header')); ?>">
-                <?php esc_html_e('Show chat header', 'flowchat'); ?>
+                <?php esc_html_e('Show chat header', 'n8n-chat'); ?>
             </label>
         </p>
 
@@ -171,9 +171,9 @@ class FlowChat_Widget extends \WP_Widget {
             <p class="description" style="color: #d63638;">
                 <?php
                 printf(
-                    /* translators: %s: URL to FlowChat instances page */
-                    esc_html__('No chat instances found. %sCreate one first%s.', 'flowchat'),
-                    '<a href="' . esc_url(admin_url('admin.php?page=flowchat-instances')) . '">',
+                    /* translators: %s: URL to n8n Chat instances page */
+                    esc_html__('No chat instances found. %sCreate one first%s.', 'n8n-chat'),
+                    '<a href="' . esc_url(admin_url('admin.php?page=n8n-chat-instances')) . '">',
                     '</a>'
                 );
                 ?>
@@ -218,7 +218,7 @@ class FlowChat_Widget extends \WP_Widget {
 /**
  * Register the widget
  */
-function flowchat_register_widget(): void {
-    register_widget(FlowChat_Widget::class);
+function n8n_chat_register_widget(): void {
+    register_widget(N8nChat_Widget::class);
 }
-add_action('widgets_init', __NAMESPACE__ . '\flowchat_register_widget');
+add_action('widgets_init', __NAMESPACE__ . '\n8n_chat_register_widget');

@@ -1,7 +1,7 @@
 /**
- * FlowChat Gutenberg Block
+ * n8n Chat Gutenberg Block
  *
- * Block editor component for embedding FlowChat instances.
+ * Block editor component for embedding n8n Chat instances.
  */
 
 import { registerBlockType } from '@wordpress/blocks';
@@ -29,7 +29,7 @@ import metadata from './block.json';
 /**
  * Block Edit Component
  */
-function FlowChatEdit({ attributes, setAttributes }) {
+function N8nChatEdit({ attributes, setAttributes }) {
     const {
         instanceId,
         mode,
@@ -59,7 +59,7 @@ function FlowChatEdit({ attributes, setAttributes }) {
         const fetchInstances = async () => {
             try {
                 const response = await wp.apiFetch({
-                    path: '/flowchat/v1/admin/instances',
+                    path: '/n8n-chat/v1/admin/instances',
                 });
                 setInstances(response || []);
                 setLoading(false);
@@ -72,12 +72,12 @@ function FlowChatEdit({ attributes, setAttributes }) {
     }, []);
 
     const blockProps = useBlockProps({
-        className: `flowchat-block flowchat-mode-${mode} ${customClass}`.trim(),
+        className: `n8n-chat-block n8n-chat-mode-${mode} ${customClass}`.trim(),
     });
 
     // Instance options for select
     const instanceOptions = [
-        { label: __('Select an instance...', 'flowchat'), value: '' },
+        { label: __('Select an instance...', 'n8n-chat'), value: '' },
         ...instances.map((inst) => ({
             label: inst.name,
             value: inst.id,
@@ -91,21 +91,21 @@ function FlowChatEdit({ attributes, setAttributes }) {
         <>
             <InspectorControls>
                 {/* Instance Selection */}
-                <PanelBody title={__('Chat Instance', 'flowchat')} initialOpen={true}>
+                <PanelBody title={__('Chat Instance', 'n8n-chat')} initialOpen={true}>
                     <SelectControl
-                        label={__('Instance', 'flowchat')}
+                        label={__('Instance', 'n8n-chat')}
                         value={instanceId}
                         options={instanceOptions}
                         onChange={(value) => setAttributes({ instanceId: value })}
-                        help={__('Select which chat instance to display.', 'flowchat')}
+                        help={__('Select which chat instance to display.', 'n8n-chat')}
                     />
                     <SelectControl
-                        label={__('Display Mode', 'flowchat')}
+                        label={__('Display Mode', 'n8n-chat')}
                         value={mode}
                         options={[
-                            { label: __('Inline', 'flowchat'), value: 'inline' },
-                            { label: __('Bubble', 'flowchat'), value: 'bubble' },
-                            { label: __('Fullscreen', 'flowchat'), value: 'fullscreen' },
+                            { label: __('Inline', 'n8n-chat'), value: 'inline' },
+                            { label: __('Bubble', 'n8n-chat'), value: 'bubble' },
+                            { label: __('Fullscreen', 'n8n-chat'), value: 'fullscreen' },
                         ]}
                         onChange={(value) => setAttributes({ mode: value })}
                     />
@@ -113,14 +113,14 @@ function FlowChatEdit({ attributes, setAttributes }) {
 
                 {/* Dimensions (for inline mode) */}
                 {mode === 'inline' && (
-                    <PanelBody title={__('Dimensions', 'flowchat')} initialOpen={false}>
+                    <PanelBody title={__('Dimensions', 'n8n-chat')} initialOpen={false}>
                         <UnitControl
-                            label={__('Width', 'flowchat')}
+                            label={__('Width', 'n8n-chat')}
                             value={width}
                             onChange={(value) => setAttributes({ width: value })}
                         />
                         <UnitControl
-                            label={__('Height', 'flowchat')}
+                            label={__('Height', 'n8n-chat')}
                             value={height}
                             onChange={(value) => setAttributes({ height: value })}
                         />
@@ -128,19 +128,19 @@ function FlowChatEdit({ attributes, setAttributes }) {
                 )}
 
                 {/* Appearance */}
-                <PanelBody title={__('Appearance', 'flowchat')} initialOpen={false}>
+                <PanelBody title={__('Appearance', 'n8n-chat')} initialOpen={false}>
                     <SelectControl
-                        label={__('Theme', 'flowchat')}
+                        label={__('Theme', 'n8n-chat')}
                         value={theme}
                         options={[
-                            { label: __('Light', 'flowchat'), value: 'light' },
-                            { label: __('Dark', 'flowchat'), value: 'dark' },
-                            { label: __('Auto (System)', 'flowchat'), value: 'auto' },
+                            { label: __('Light', 'n8n-chat'), value: 'light' },
+                            { label: __('Dark', 'n8n-chat'), value: 'dark' },
+                            { label: __('Auto (System)', 'n8n-chat'), value: 'auto' },
                         ]}
                         onChange={(value) => setAttributes({ theme: value })}
                     />
-                    <div className="flowchat-color-control">
-                        <label>{__('Primary Color (optional)', 'flowchat')}</label>
+                    <div className="n8n-chat-color-control">
+                        <label>{__('Primary Color (optional)', 'n8n-chat')}</label>
                         <ColorPicker
                             color={primaryColor}
                             onChange={(value) => setAttributes({ primaryColor: value })}
@@ -151,27 +151,27 @@ function FlowChatEdit({ attributes, setAttributes }) {
                                 className="components-button is-secondary is-small"
                                 onClick={() => setAttributes({ primaryColor: '' })}
                             >
-                                {__('Reset', 'flowchat')}
+                                {__('Reset', 'n8n-chat')}
                             </button>
                         )}
                     </div>
                 </PanelBody>
 
                 {/* Content Overrides */}
-                <PanelBody title={__('Content', 'flowchat')} initialOpen={false}>
+                <PanelBody title={__('Content', 'n8n-chat')} initialOpen={false}>
                     <TextControl
-                        label={__('Title Override', 'flowchat')}
+                        label={__('Title Override', 'n8n-chat')}
                         value={title}
                         onChange={(value) => setAttributes({ title: value })}
-                        help={__('Leave empty to use instance default.', 'flowchat')}
+                        help={__('Leave empty to use instance default.', 'n8n-chat')}
                     />
                     <TextControl
-                        label={__('Welcome Message Override', 'flowchat')}
+                        label={__('Welcome Message Override', 'n8n-chat')}
                         value={welcomeMessage}
                         onChange={(value) => setAttributes({ welcomeMessage: value })}
                     />
                     <TextControl
-                        label={__('Placeholder Override', 'flowchat')}
+                        label={__('Placeholder Override', 'n8n-chat')}
                         value={placeholder}
                         onChange={(value) => setAttributes({ placeholder: value })}
                     />
@@ -179,24 +179,24 @@ function FlowChatEdit({ attributes, setAttributes }) {
 
                 {/* Bubble Settings */}
                 {mode === 'bubble' && (
-                    <PanelBody title={__('Bubble Settings', 'flowchat')} initialOpen={false}>
+                    <PanelBody title={__('Bubble Settings', 'n8n-chat')} initialOpen={false}>
                         <SelectControl
-                            label={__('Position', 'flowchat')}
+                            label={__('Position', 'n8n-chat')}
                             value={bubblePosition}
                             options={[
-                                { label: __('Bottom Right', 'flowchat'), value: 'bottom-right' },
-                                { label: __('Bottom Left', 'flowchat'), value: 'bottom-left' },
+                                { label: __('Bottom Right', 'n8n-chat'), value: 'bottom-right' },
+                                { label: __('Bottom Left', 'n8n-chat'), value: 'bottom-left' },
                             ]}
                             onChange={(value) => setAttributes({ bubblePosition: value })}
                         />
                         <ToggleControl
-                            label={__('Auto Open', 'flowchat')}
+                            label={__('Auto Open', 'n8n-chat')}
                             checked={autoOpen}
                             onChange={(value) => setAttributes({ autoOpen: value })}
                         />
                         {autoOpen && (
                             <RangeControl
-                                label={__('Auto Open Delay (ms)', 'flowchat')}
+                                label={__('Auto Open Delay (ms)', 'n8n-chat')}
                                 value={autoOpenDelay}
                                 onChange={(value) => setAttributes({ autoOpenDelay: value })}
                                 min={0}
@@ -208,37 +208,37 @@ function FlowChatEdit({ attributes, setAttributes }) {
                 )}
 
                 {/* Display Options */}
-                <PanelBody title={__('Display Options', 'flowchat')} initialOpen={false}>
+                <PanelBody title={__('Display Options', 'n8n-chat')} initialOpen={false}>
                     <ToggleControl
-                        label={__('Show Header', 'flowchat')}
+                        label={__('Show Header', 'n8n-chat')}
                         checked={showHeader}
                         onChange={(value) => setAttributes({ showHeader: value })}
                     />
                     <ToggleControl
-                        label={__('Show Timestamps', 'flowchat')}
+                        label={__('Show Timestamps', 'n8n-chat')}
                         checked={showTimestamp}
                         onChange={(value) => setAttributes({ showTimestamp: value })}
                     />
                     <ToggleControl
-                        label={__('Show Avatars', 'flowchat')}
+                        label={__('Show Avatars', 'n8n-chat')}
                         checked={showAvatar}
                         onChange={(value) => setAttributes({ showAvatar: value })}
                     />
                 </PanelBody>
 
                 {/* Access Control */}
-                <PanelBody title={__('Access Control', 'flowchat')} initialOpen={false}>
+                <PanelBody title={__('Access Control', 'n8n-chat')} initialOpen={false}>
                     <ToggleControl
-                        label={__('Require Login', 'flowchat')}
+                        label={__('Require Login', 'n8n-chat')}
                         checked={requireLogin}
                         onChange={(value) => setAttributes({ requireLogin: value })}
                     />
                 </PanelBody>
 
                 {/* Advanced */}
-                <PanelBody title={__('Advanced', 'flowchat')} initialOpen={false}>
+                <PanelBody title={__('Advanced', 'n8n-chat')} initialOpen={false}>
                     <TextControl
-                        label={__('Custom CSS Class', 'flowchat')}
+                        label={__('Custom CSS Class', 'n8n-chat')}
                         value={customClass}
                         onChange={(value) => setAttributes({ customClass: value })}
                     />
@@ -247,19 +247,19 @@ function FlowChatEdit({ attributes, setAttributes }) {
 
             <div {...blockProps}>
                 {loading ? (
-                    <Placeholder icon={chatIcon} label={__('FlowChat', 'flowchat')}>
+                    <Placeholder icon={chatIcon} label={__('n8n Chat', 'n8n-chat')}>
                         <Spinner />
-                        <p>{__('Loading instances...', 'flowchat')}</p>
+                        <p>{__('Loading instances...', 'n8n-chat')}</p>
                     </Placeholder>
                 ) : error ? (
-                    <Placeholder icon={chatIcon} label={__('FlowChat', 'flowchat')}>
-                        <p className="flowchat-block-error">{error}</p>
+                    <Placeholder icon={chatIcon} label={__('n8n Chat', 'n8n-chat')}>
+                        <p className="n8n-chat-block-error">{error}</p>
                     </Placeholder>
                 ) : !instanceId ? (
                     <Placeholder
                         icon={chatIcon}
-                        label={__('FlowChat', 'flowchat')}
-                        instructions={__('Select a chat instance to display.', 'flowchat')}
+                        label={__('n8n Chat', 'n8n-chat')}
+                        instructions={__('Select a chat instance to display.', 'n8n-chat')}
                     >
                         <SelectControl
                             value={instanceId}
@@ -268,24 +268,24 @@ function FlowChatEdit({ attributes, setAttributes }) {
                         />
                     </Placeholder>
                 ) : (
-                    <div className="flowchat-block-preview">
-                        <div className="flowchat-block-preview-header">
-                            <span className="flowchat-block-icon">💬</span>
-                            <span className="flowchat-block-title">
-                                {title || selectedInstance?.name || __('FlowChat', 'flowchat')}
+                    <div className="n8n-chat-block-preview">
+                        <div className="n8n-chat-block-preview-header">
+                            <span className="n8n-chat-block-icon">💬</span>
+                            <span className="n8n-chat-block-title">
+                                {title || selectedInstance?.name || __('n8n Chat', 'n8n-chat')}
                             </span>
-                            <span className="flowchat-block-mode">{mode}</span>
+                            <span className="n8n-chat-block-mode">{mode}</span>
                         </div>
-                        <div className="flowchat-block-preview-body">
-                            <p className="flowchat-block-welcome">
-                                {welcomeMessage || selectedInstance?.welcomeMessage || __('Welcome message preview', 'flowchat')}
+                        <div className="n8n-chat-block-preview-body">
+                            <p className="n8n-chat-block-welcome">
+                                {welcomeMessage || selectedInstance?.welcomeMessage || __('Welcome message preview', 'n8n-chat')}
                             </p>
-                            <div className="flowchat-block-input-preview">
-                                <span>{placeholder || selectedInstance?.placeholderText || __('Type your message...', 'flowchat')}</span>
+                            <div className="n8n-chat-block-input-preview">
+                                <span>{placeholder || selectedInstance?.placeholderText || __('Type your message...', 'n8n-chat')}</span>
                             </div>
                         </div>
                         {mode === 'inline' && (
-                            <div className="flowchat-block-dimensions">
+                            <div className="n8n-chat-block-dimensions">
                                 {width} × {height}
                             </div>
                         )}
@@ -301,6 +301,6 @@ function FlowChatEdit({ attributes, setAttributes }) {
  */
 registerBlockType(metadata.name, {
     icon: chatIcon,
-    edit: FlowChatEdit,
+    edit: N8nChatEdit,
     save: () => null, // Dynamic block, rendered via PHP
 });

@@ -28,7 +28,7 @@ export const BubblePanel: React.FC<BubblePanelProps> = ({
       ) {
         // Check if click is on the trigger button
         const target = event.target as HTMLElement;
-        if (target.closest('.flowchat-bubble-trigger')) {
+        if (target.closest('.n8n-chat-bubble-trigger')) {
           return;
         }
         onClose();
@@ -66,12 +66,12 @@ export const BubblePanel: React.FC<BubblePanelProps> = ({
   return (
     <div
       ref={panelRef}
-      className={`flowchat-bubble-panel flowchat-bubble-panel-${position}`}
+      className={`n8n-chat-bubble-panel n8n-chat-bubble-panel-${position}`}
       role="dialog"
       aria-modal="true"
       aria-label="Chat"
     >
-      <div className="flowchat-bubble-panel-inner">
+      <div className="n8n-chat-bubble-panel-inner">
         {children}
       </div>
     </div>

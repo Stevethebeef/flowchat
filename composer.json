@@ -1,18 +1,18 @@
 {
-    "name": "flowchat/flowchat",
-    "description": "AI Chat for WordPress via n8n automation workflows",
+    "name": "n8chat/n8n-chat",
+    "description": "Beautiful chat widget for n8n workflows in WordPress",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
     "authors": [
         {
-            "name": "FlowChat",
-            "email": "support@flowchat.dev"
+            "name": "n8.chat",
+            "homepage": "https://n8.chat"
         }
     ],
     "minimum-stability": "stable",
     "prefer-stable": true,
     "require": {
-        "php": ">=8.0"
+        "php": ">=7.4"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",
@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "FlowChat\\": "includes/"
+            "N8nChat\\": "includes/"
         }
     },
     "config": {
@@ -31,8 +31,8 @@
         }
     },
     "scripts": {
-        "lint": "phpcs --standard=WordPress src/",
-        "lint:fix": "phpcbf --standard=WordPress src/",
+        "lint": "phpcs --standard=WordPress includes/",
+        "lint:fix": "phpcbf --standard=WordPress includes/",
         "test": "phpunit"
     }
 }

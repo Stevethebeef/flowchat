@@ -52,7 +52,7 @@ export const InstanceSwitcher: React.FC<InstanceSwitcherProps> = ({
 
   // Default: tabs layout
   return (
-    <div className="flowchat-instance-switcher flowchat-instance-switcher--tabs">
+    <div className="n8n-chat-instance-switcher n8n-chat-instance-switcher--tabs">
       {instances.map((instance) => {
         const isActive = instance.id === activeInstanceId;
         const unreadCount = unreadCounts[instance.id] || 0;
@@ -61,15 +61,15 @@ export const InstanceSwitcher: React.FC<InstanceSwitcherProps> = ({
           <button
             key={instance.id}
             type="button"
-            className={`flowchat-instance-tab ${isActive ? 'flowchat-instance-tab--active' : ''}`}
+            className={`n8n-chat-instance-tab ${isActive ? 'n8n-chat-instance-tab--active' : ''}`}
             onClick={() => onSwitch(instance.id)}
             aria-current={isActive ? 'true' : undefined}
             aria-label={`Switch to ${instance.name}${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
           >
             <InstanceAvatar instance={instance} />
-            <span className="flowchat-instance-tab__name">{instance.name}</span>
+            <span className="n8n-chat-instance-tab__name">{instance.name}</span>
             {unreadCount > 0 && (
-              <span className="flowchat-instance-tab__badge">{unreadCount}</span>
+              <span className="n8n-chat-instance-tab__badge">{unreadCount}</span>
             )}
           </button>
         );
@@ -111,23 +111,23 @@ const InstanceSwitcherDropdown: React.FC<InstanceSwitcherProps> = ({
   }, [isOpen]);
 
   return (
-    <div className="flowchat-instance-switcher flowchat-instance-switcher--dropdown" ref={dropdownRef}>
+    <div className="n8n-chat-instance-switcher n8n-chat-instance-switcher--dropdown" ref={dropdownRef}>
       <button
         type="button"
-        className="flowchat-instance-dropdown__trigger"
+        className="n8n-chat-instance-dropdown__trigger"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-haspopup="listbox"
       >
         {activeInstance && <InstanceAvatar instance={activeInstance} />}
-        <span className="flowchat-instance-dropdown__name">
+        <span className="n8n-chat-instance-dropdown__name">
           {activeInstance?.name || 'Select Chat'}
         </span>
         {totalUnread > 0 && (
-          <span className="flowchat-instance-dropdown__badge">{totalUnread}</span>
+          <span className="n8n-chat-instance-dropdown__badge">{totalUnread}</span>
         )}
         <svg
-          className={`flowchat-instance-dropdown__arrow ${isOpen ? 'flowchat-instance-dropdown__arrow--open' : ''}`}
+          className={`n8n-chat-instance-dropdown__arrow ${isOpen ? 'n8n-chat-instance-dropdown__arrow--open' : ''}`}
           width="12"
           height="12"
           viewBox="0 0 12 12"
@@ -144,7 +144,7 @@ const InstanceSwitcherDropdown: React.FC<InstanceSwitcherProps> = ({
       </button>
 
       {isOpen && (
-        <div className="flowchat-instance-dropdown__menu" role="listbox">
+        <div className="n8n-chat-instance-dropdown__menu" role="listbox">
           {instances.map((instance) => {
             const isActive = instance.id === activeInstanceId;
             const unreadCount = unreadCounts[instance.id] || 0;
@@ -153,7 +153,7 @@ const InstanceSwitcherDropdown: React.FC<InstanceSwitcherProps> = ({
               <button
                 key={instance.id}
                 type="button"
-                className={`flowchat-instance-dropdown__item ${isActive ? 'flowchat-instance-dropdown__item--active' : ''}`}
+                className={`n8n-chat-instance-dropdown__item ${isActive ? 'n8n-chat-instance-dropdown__item--active' : ''}`}
                 onClick={() => {
                   onSwitch(instance.id);
                   setIsOpen(false);
@@ -162,13 +162,13 @@ const InstanceSwitcherDropdown: React.FC<InstanceSwitcherProps> = ({
                 aria-selected={isActive}
               >
                 <InstanceAvatar instance={instance} />
-                <span className="flowchat-instance-dropdown__item-name">{instance.name}</span>
+                <span className="n8n-chat-instance-dropdown__item-name">{instance.name}</span>
                 {unreadCount > 0 && (
-                  <span className="flowchat-instance-dropdown__item-badge">{unreadCount}</span>
+                  <span className="n8n-chat-instance-dropdown__item-badge">{unreadCount}</span>
                 )}
                 {isActive && (
                   <svg
-                    className="flowchat-instance-dropdown__check"
+                    className="n8n-chat-instance-dropdown__check"
                     width="16"
                     height="16"
                     viewBox="0 0 16 16"
@@ -202,7 +202,7 @@ const InstanceSwitcherIcons: React.FC<InstanceSwitcherProps> = ({
   unreadCounts,
 }) => {
   return (
-    <div className="flowchat-instance-switcher flowchat-instance-switcher--icons">
+    <div className="n8n-chat-instance-switcher n8n-chat-instance-switcher--icons">
       {instances.map((instance) => {
         const isActive = instance.id === activeInstanceId;
         const unreadCount = unreadCounts[instance.id] || 0;
@@ -211,7 +211,7 @@ const InstanceSwitcherIcons: React.FC<InstanceSwitcherProps> = ({
           <button
             key={instance.id}
             type="button"
-            className={`flowchat-instance-icon ${isActive ? 'flowchat-instance-icon--active' : ''}`}
+            className={`n8n-chat-instance-icon ${isActive ? 'n8n-chat-instance-icon--active' : ''}`}
             onClick={() => onSwitch(instance.id)}
             aria-current={isActive ? 'true' : undefined}
             aria-label={`Switch to ${instance.name}${unreadCount > 0 ? `, ${unreadCount} unread` : ''}`}
@@ -219,7 +219,7 @@ const InstanceSwitcherIcons: React.FC<InstanceSwitcherProps> = ({
           >
             <InstanceAvatar instance={instance} size="small" />
             {unreadCount > 0 && (
-              <span className="flowchat-instance-icon__badge">{unreadCount}</span>
+              <span className="n8n-chat-instance-icon__badge">{unreadCount}</span>
             )}
           </button>
         );
@@ -242,20 +242,20 @@ const InstanceAvatar: React.FC<InstanceAvatarProps> = ({ instance, size = 'mediu
   const initial = instance.name.charAt(0).toUpperCase();
 
   const sizeClasses = {
-    small: 'flowchat-instance-avatar--small',
-    medium: 'flowchat-instance-avatar--medium',
-    large: 'flowchat-instance-avatar--large',
+    small: 'n8n-chat-instance-avatar--small',
+    medium: 'n8n-chat-instance-avatar--medium',
+    large: 'n8n-chat-instance-avatar--large',
   };
 
   return (
     <div
-      className={`flowchat-instance-avatar ${sizeClasses[size]}`}
+      className={`n8n-chat-instance-avatar ${sizeClasses[size]}`}
       style={{ backgroundColor: avatarUrl ? 'transparent' : primaryColor }}
     >
       {avatarUrl ? (
-        <img src={avatarUrl} alt="" className="flowchat-instance-avatar__image" />
+        <img src={avatarUrl} alt="" className="n8n-chat-instance-avatar__image" />
       ) : (
-        <span className="flowchat-instance-avatar__initial">{initial}</span>
+        <span className="n8n-chat-instance-avatar__initial">{initial}</span>
       )}
     </div>
   );

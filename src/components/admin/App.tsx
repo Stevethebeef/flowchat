@@ -49,11 +49,11 @@ export const AdminApp: React.FC<AdminAppProps> = ({ initialPage }) => {
   const handleNavigate = (newPage: string, params?: Record<string, string>) => {
     // Handle WordPress admin page navigation
     const wpPageMap: Record<string, string> = {
-      dashboard: 'flowchat',
-      instances: 'flowchat-instances',
-      templates: 'flowchat-templates',
-      settings: 'flowchat-settings',
-      tools: 'flowchat-tools',
+      dashboard: 'n8n-chat',
+      instances: 'n8n-chat-instances',
+      templates: 'n8n-chat-templates',
+      settings: 'n8n-chat-settings',
+      tools: 'n8n-chat-tools',
     };
 
     const wpPage = wpPageMap[newPage] || wpPageMap.dashboard;
@@ -152,7 +152,7 @@ export const AdminApp: React.FC<AdminAppProps> = ({ initialPage }) => {
   };
 
   return (
-    <div className="flowchat-admin">
+    <div className="n8n-chat-admin">
       {error && (
         <div className="notice notice-error is-dismissible">
           <p>{error}</p>
@@ -167,12 +167,12 @@ export const AdminApp: React.FC<AdminAppProps> = ({ initialPage }) => {
       )}
 
       {loading && (
-        <div className="flowchat-admin-loading">
-          <div className="flowchat-loading-spinner" />
+        <div className="n8n-chat-admin-loading">
+          <div className="n8n-chat-loading-spinner" />
         </div>
       )}
 
-      <div className="flowchat-admin-content">
+      <div className="n8n-chat-admin-content">
         {renderContent()}
       </div>
     </div>

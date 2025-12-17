@@ -13,16 +13,16 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
   onMinimize,
 }) => {
   return (
-    <header className="flowchat-header">
-      <div className="flowchat-header-content">
-        <h2 className="flowchat-header-title">{title}</h2>
+    <header className="n8n-chat-header">
+      <div className="n8n-chat-header-content">
+        <h2 className="n8n-chat-header-title">{title}</h2>
       </div>
 
-      <div className="flowchat-header-actions">
+      <div className="n8n-chat-header-actions">
         {onMinimize && (
           <button
             type="button"
-            className="flowchat-header-button flowchat-minimize-button"
+            className="n8n-chat-header-button n8n-chat-minimize-button"
             onClick={onMinimize}
             aria-label="Minimize chat"
           >
@@ -33,7 +33,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
         {onClose && (
           <button
             type="button"
-            className="flowchat-header-button flowchat-close-button"
+            className="n8n-chat-header-button n8n-chat-close-button"
             onClick={onClose}
             aria-label="Close chat"
           >

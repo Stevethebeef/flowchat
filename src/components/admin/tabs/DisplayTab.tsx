@@ -48,56 +48,60 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
   const handleModeChange = (mode: string) => {
     if (mode === 'bubble') {
       updateField('bubble.enabled', true);
+      // Default to showing on all pages when bubble mode is first enabled
+      if (!bubble.showOnAllPages) {
+        updateField('bubble.showOnAllPages', true);
+      }
     } else {
       updateField('bubble.enabled', false);
     }
   };
 
   return (
-    <div className="flowchat-tab-content">
+    <div className="n8n-chat-tab-content">
       {/* Display Mode */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Display Mode</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">Display Mode</h2>
 
-        <div className="flowchat-mode-selector">
+        <div className="n8n-chat-mode-selector">
           {/* Bubble Mode */}
           <div
-            className={`flowchat-mode-card ${displayMode === 'bubble' ? 'is-selected' : ''}`}
+            className={`n8n-chat-mode-card ${displayMode === 'bubble' ? 'is-selected' : ''}`}
             onClick={() => handleModeChange('bubble')}
           >
-            <div className="flowchat-mode-preview">
-              <div className="flowchat-mode-preview-bubble">
+            <div className="n8n-chat-mode-preview">
+              <div className="n8n-chat-mode-preview-bubble">
                 <span>💬</span>
               </div>
             </div>
-            <div className="flowchat-mode-info">
+            <div className="n8n-chat-mode-info">
               <h4>Floating Bubble</h4>
               <p>Shows as a floating button that expands into a chat window.</p>
             </div>
-            <div className="flowchat-mode-check">
+            <div className="n8n-chat-mode-check">
               <span className="dashicons dashicons-yes"></span>
             </div>
           </div>
 
           {/* Inline Mode */}
           <div
-            className={`flowchat-mode-card ${displayMode === 'inline' ? 'is-selected' : ''}`}
+            className={`n8n-chat-mode-card ${displayMode === 'inline' ? 'is-selected' : ''}`}
             onClick={() => handleModeChange('inline')}
           >
-            <div className="flowchat-mode-preview">
-              <div className="flowchat-mode-preview-inline">
-                <div className="flowchat-mode-preview-header"></div>
-                <div className="flowchat-mode-preview-messages">
-                  <div className="flowchat-mode-preview-msg"></div>
-                  <div className="flowchat-mode-preview-msg user"></div>
+            <div className="n8n-chat-mode-preview">
+              <div className="n8n-chat-mode-preview-inline">
+                <div className="n8n-chat-mode-preview-header"></div>
+                <div className="n8n-chat-mode-preview-messages">
+                  <div className="n8n-chat-mode-preview-msg"></div>
+                  <div className="n8n-chat-mode-preview-msg user"></div>
                 </div>
               </div>
             </div>
-            <div className="flowchat-mode-info">
+            <div className="n8n-chat-mode-info">
               <h4>Inline Widget</h4>
               <p>Embeds directly in page content using shortcode placement.</p>
             </div>
-            <div className="flowchat-mode-check">
+            <div className="n8n-chat-mode-check">
               <span className="dashicons dashicons-yes"></span>
             </div>
           </div>
@@ -106,43 +110,62 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
 
       {/* Bubble Settings - only show if bubble mode */}
       {displayMode === 'bubble' && (
-        <div className="flowchat-section">
-          <h2 className="flowchat-section-title">Bubble Settings</h2>
+        <div className="n8n-chat-section">
+          <h2 className="n8n-chat-section-title">Bubble Settings</h2>
+
+          {/* Show on All Pages - Site-wide toggle */}
+          <div className="n8n-chat-field n8n-chat-toggle-field n8n-chat-highlight-field">
+            <label className="n8n-chat-toggle">
+              <input
+                type="checkbox"
+                checked={bubble.showOnAllPages === true}
+                onChange={(e) => updateField('bubble.showOnAllPages', e.target.checked)}
+              />
+              <span className="n8n-chat-toggle-slider"></span>
+              <span className="n8n-chat-toggle-label">
+                <strong>Show on all pages</strong>
+                <span className="n8n-chat-toggle-description">
+                  Enable this to display the chat bubble on every page of your site automatically.
+                  No shortcode needed!
+                </span>
+              </span>
+            </label>
+          </div>
 
           {/* Position */}
-          <div className="flowchat-field">
+          <div className="n8n-chat-field">
             <label>Position</label>
-            <div className="flowchat-position-selector">
+            <div className="n8n-chat-position-selector">
               {POSITION_OPTIONS.map((pos) => (
-                <label key={pos.id} className="flowchat-position-option">
+                <label key={pos.id} className="n8n-chat-position-option">
                   <input
                     type="radio"
                     name="position"
                     checked={bubble.position === pos.id}
                     onChange={() => updateField('bubble.position', pos.id)}
                   />
-                  <span className={`flowchat-position-preview ${pos.id}`}>
-                    <span className="flowchat-position-dot"></span>
+                  <span className={`n8n-chat-position-preview ${pos.id}`}>
+                    <span className="n8n-chat-position-dot"></span>
                   </span>
-                  <span className="flowchat-position-label">{pos.label}</span>
+                  <span className="n8n-chat-position-label">{pos.label}</span>
                 </label>
               ))}
             </div>
           </div>
 
           {/* Icon */}
-          <div className="flowchat-field">
+          <div className="n8n-chat-field">
             <label>Bubble Icon</label>
-            <div className="flowchat-icon-selector">
+            <div className="n8n-chat-icon-selector">
               {BUBBLE_ICONS.map((icon) => (
                 <button
                   key={icon.id}
                   type="button"
-                  className={`flowchat-icon-option ${bubble.icon === icon.id ? 'is-selected' : ''}`}
+                  className={`n8n-chat-icon-option ${bubble.icon === icon.id ? 'is-selected' : ''}`}
                   onClick={() => updateField('bubble.icon', icon.id)}
                   title={icon.label}
                 >
-                  <span className="flowchat-icon-preview">{icon.icon}</span>
+                  <span className="n8n-chat-icon-preview">{icon.icon}</span>
                 </button>
               ))}
             </div>
@@ -150,7 +173,7 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
 
           {/* Custom Icon URL */}
           {bubble.icon === 'custom' && (
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-custom-icon">Custom Icon URL</label>
               <input
                 type="url"
@@ -164,19 +187,19 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
           )}
 
           {/* Size */}
-          <div className="flowchat-field">
+          <div className="n8n-chat-field">
             <label>Bubble Size</label>
-            <div className="flowchat-size-selector">
+            <div className="n8n-chat-size-selector">
               {SIZE_OPTIONS.map((size) => (
-                <label key={size.id} className="flowchat-size-option">
+                <label key={size.id} className="n8n-chat-size-option">
                   <input
                     type="radio"
                     name="size"
                     checked={bubble.size === size.id}
                     onChange={() => updateField('bubble.size', size.id)}
                   />
-                  <span className="flowchat-size-preview">
-                    <span className={`flowchat-size-circle ${size.id}`}></span>
+                  <span className="n8n-chat-size-preview">
+                    <span className={`n8n-chat-size-circle ${size.id}`}></span>
                     <span>{size.label}</span>
                   </span>
                 </label>
@@ -185,7 +208,7 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
           </div>
 
           {/* Bubble Text */}
-          <div className="flowchat-field">
+          <div className="n8n-chat-field">
             <label htmlFor="fc-bubble-text">Bubble Text (Optional)</label>
             <input
               type="text"
@@ -201,8 +224,8 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
           </div>
 
           {/* Bubble Options */}
-          <div className="flowchat-field">
-            <label className="flowchat-checkbox">
+          <div className="n8n-chat-field">
+            <label className="n8n-chat-checkbox">
               <input
                 type="checkbox"
                 checked={bubble.pulseAnimation !== false}
@@ -212,8 +235,8 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
             </label>
           </div>
 
-          <div className="flowchat-field">
-            <label className="flowchat-checkbox">
+          <div className="n8n-chat-field">
+            <label className="n8n-chat-checkbox">
               <input
                 type="checkbox"
                 checked={bubble.showUnreadBadge !== false}
@@ -224,10 +247,10 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
           </div>
 
           {/* Offset */}
-          <div className="flowchat-field-row">
-            <div className="flowchat-field">
+          <div className="n8n-chat-field-row">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-offset-x">Horizontal Offset</label>
-              <div className="flowchat-slider-field">
+              <div className="n8n-chat-slider-field">
                 <input
                   type="range"
                   id="fc-offset-x"
@@ -236,12 +259,12 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
                   value={bubble.offsetX || 24}
                   onChange={(e) => updateField('bubble.offsetX', parseInt(e.target.value, 10))}
                 />
-                <span className="flowchat-slider-value">{bubble.offsetX || 24}px</span>
+                <span className="n8n-chat-slider-value">{bubble.offsetX || 24}px</span>
               </div>
             </div>
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-offset-y">Vertical Offset</label>
-              <div className="flowchat-slider-field">
+              <div className="n8n-chat-slider-field">
                 <input
                   type="range"
                   id="fc-offset-y"
@@ -250,7 +273,7 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
                   value={bubble.offsetY || 24}
                   onChange={(e) => updateField('bubble.offsetY', parseInt(e.target.value, 10))}
                 />
-                <span className="flowchat-slider-value">{bubble.offsetY || 24}px</span>
+                <span className="n8n-chat-slider-value">{bubble.offsetY || 24}px</span>
               </div>
             </div>
           </div>
@@ -258,13 +281,13 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
       )}
 
       {/* Window Size */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Chat Window Size</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">Chat Window Size</h2>
 
-        <div className="flowchat-field-row">
-          <div className="flowchat-field">
+        <div className="n8n-chat-field-row">
+          <div className="n8n-chat-field">
             <label htmlFor="fc-window-width">Width</label>
-            <div className="flowchat-slider-field">
+            <div className="n8n-chat-slider-field">
               <input
                 type="range"
                 id="fc-window-width"
@@ -274,12 +297,12 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
                 value={windowSettings.width || 400}
                 onChange={(e) => updateField('window.width', parseInt(e.target.value, 10))}
               />
-              <span className="flowchat-slider-value">{windowSettings.width || 400}px</span>
+              <span className="n8n-chat-slider-value">{windowSettings.width || 400}px</span>
             </div>
           </div>
-          <div className="flowchat-field">
+          <div className="n8n-chat-field">
             <label htmlFor="fc-window-height">Height</label>
-            <div className="flowchat-slider-field">
+            <div className="n8n-chat-slider-field">
               <input
                 type="range"
                 id="fc-window-height"
@@ -289,7 +312,7 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
                 value={windowSettings.height || 600}
                 onChange={(e) => updateField('window.height', parseInt(e.target.value, 10))}
               />
-              <span className="flowchat-slider-value">{windowSettings.height || 600}px</span>
+              <span className="n8n-chat-slider-value">{windowSettings.height || 600}px</span>
             </div>
           </div>
         </div>
@@ -297,11 +320,11 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
 
       {/* Auto-Open Behavior */}
       {displayMode === 'bubble' && (
-        <div className="flowchat-section">
-          <h2 className="flowchat-section-title">Auto-Open Behavior</h2>
+        <div className="n8n-chat-section">
+          <h2 className="n8n-chat-section-title">Auto-Open Behavior</h2>
 
-          <div className="flowchat-field">
-            <label className="flowchat-checkbox">
+          <div className="n8n-chat-field">
+            <label className="n8n-chat-checkbox">
               <input
                 type="checkbox"
                 checked={autoOpen.enabled || false}
@@ -314,42 +337,42 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
           {autoOpen.enabled && (
             <>
               {/* Trigger Type */}
-              <div className="flowchat-field">
+              <div className="n8n-chat-field">
                 <label>Trigger</label>
-                <div className="flowchat-radio-group">
-                  <label className="flowchat-radio">
+                <div className="n8n-chat-radio-group">
+                  <label className="n8n-chat-radio">
                     <input
                       type="radio"
                       name="autoOpenTrigger"
                       checked={autoOpen.trigger === 'delay'}
                       onChange={() => updateField('autoOpen.trigger', 'delay')}
                     />
-                    <span className="flowchat-radio-label">Time Delay</span>
+                    <span className="n8n-chat-radio-label">Time Delay</span>
                   </label>
-                  <label className="flowchat-radio">
+                  <label className="n8n-chat-radio">
                     <input
                       type="radio"
                       name="autoOpenTrigger"
                       checked={autoOpen.trigger === 'scroll'}
                       onChange={() => updateField('autoOpen.trigger', 'scroll')}
                     />
-                    <span className="flowchat-radio-label">Scroll Position</span>
+                    <span className="n8n-chat-radio-label">Scroll Position</span>
                   </label>
-                  <label className="flowchat-radio">
+                  <label className="n8n-chat-radio">
                     <input
                       type="radio"
                       name="autoOpenTrigger"
                       checked={autoOpen.trigger === 'idle'}
                       onChange={() => updateField('autoOpen.trigger', 'idle')}
                     />
-                    <span className="flowchat-radio-label">User Idle</span>
+                    <span className="n8n-chat-radio-label">User Idle</span>
                   </label>
                 </div>
               </div>
 
               {/* Delay (ms) */}
               {autoOpen.trigger === 'delay' && (
-                <div className="flowchat-field">
+                <div className="n8n-chat-field">
                   <label htmlFor="fc-auto-delay">Delay (seconds)</label>
                   <input
                     type="number"
@@ -365,9 +388,9 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
 
               {/* Scroll Percentage */}
               {autoOpen.trigger === 'scroll' && (
-                <div className="flowchat-field">
+                <div className="n8n-chat-field">
                   <label htmlFor="fc-auto-scroll">Scroll Percentage</label>
-                  <div className="flowchat-slider-field">
+                  <div className="n8n-chat-slider-field">
                     <input
                       type="range"
                       id="fc-auto-scroll"
@@ -377,14 +400,14 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
                       value={autoOpen.scrollPercentage || 50}
                       onChange={(e) => updateField('autoOpen.scrollPercentage', parseInt(e.target.value, 10))}
                     />
-                    <span className="flowchat-slider-value">{autoOpen.scrollPercentage || 50}%</span>
+                    <span className="n8n-chat-slider-value">{autoOpen.scrollPercentage || 50}%</span>
                   </div>
                 </div>
               )}
 
               {/* Idle Time */}
               {autoOpen.trigger === 'idle' && (
-                <div className="flowchat-field">
+                <div className="n8n-chat-field">
                   <label htmlFor="fc-auto-idle">Idle Time (seconds)</label>
                   <input
                     type="number"
@@ -401,7 +424,7 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
               {/* Advanced Conditions */}
               <button
                 type="button"
-                className="flowchat-toggle-advanced"
+                className="n8n-chat-toggle-advanced"
                 onClick={() => setShowBehaviorAdvanced(!showBehaviorAdvanced)}
                 aria-expanded={showBehaviorAdvanced}
               >
@@ -410,9 +433,9 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
               </button>
 
               {showBehaviorAdvanced && (
-                <div className="flowchat-advanced-content">
-                  <div className="flowchat-field">
-                    <label className="flowchat-checkbox">
+                <div className="n8n-chat-advanced-content">
+                  <div className="n8n-chat-field">
+                    <label className="n8n-chat-checkbox">
                       <input
                         type="checkbox"
                         checked={autoOpen.conditions?.oncePerSession !== false}
@@ -422,8 +445,8 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
                     </label>
                   </div>
 
-                  <div className="flowchat-field">
-                    <label className="flowchat-checkbox">
+                  <div className="n8n-chat-field">
+                    <label className="n8n-chat-checkbox">
                       <input
                         type="checkbox"
                         checked={autoOpen.conditions?.oncePerDay || false}
@@ -433,8 +456,8 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
                     </label>
                   </div>
 
-                  <div className="flowchat-field">
-                    <label className="flowchat-checkbox">
+                  <div className="n8n-chat-field">
+                    <label className="n8n-chat-checkbox">
                       <input
                         type="checkbox"
                         checked={autoOpen.conditions?.skipIfInteracted !== false}
@@ -444,8 +467,8 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
                     </label>
                   </div>
 
-                  <div className="flowchat-field">
-                    <label className="flowchat-checkbox">
+                  <div className="n8n-chat-field">
+                    <label className="n8n-chat-checkbox">
                       <input
                         type="checkbox"
                         checked={autoOpen.conditions?.excludeMobile || false}

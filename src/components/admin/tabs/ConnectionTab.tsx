@@ -6,6 +6,8 @@
 
 import React, { useState } from 'react';
 import type { AdminInstance } from '../../../types';
+import { useAdminI18n } from '../../../hooks/useAdminI18n';
+import { InfoIcon } from '../shared/InfoIcon';
 
 interface ConnectionTabProps {
   instance: Partial<AdminInstance>;
@@ -23,6 +25,7 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
   instance,
   updateField,
 }) => {
+  const { t } = useAdminI18n();
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [testing, setTesting] = useState(false);
@@ -45,12 +48,12 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/test-webhook`,
+        `${(window as any).n8nChatAdmin.apiUrl}/test-webhook`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
           body: JSON.stringify({
             url: instance.webhookUrl,
@@ -80,14 +83,15 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
   };
 
   return (
-    <div className="flowchat-tab-content">
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">n8n Connection</h2>
+    <div className="n8n-chat-tab-content">
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">n8n Connection</h2>
 
         {/* Webhook URL */}
-        <div className="flowchat-field">
+        <div className="n8n-chat-field">
           <label htmlFor="fc-webhook-url">
-            n8n Webhook URL <span className="required">*</span>
+            {t('webhookUrl', 'n8n Webhook URL')} <span className="required">*</span>
+            <InfoIcon tooltip={t('tooltipWebhookUrl', 'Copy this from your n8n Chat Trigger node. Open n8n → Chat Trigger node → Production URL')} />
           </label>
           <input
             type="url"
@@ -98,48 +102,48 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
             placeholder="https://your-n8n.example.com/webhook/abc123"
           />
           <p className="description">
-            The production webhook URL from your n8n Chat Trigger node.
+            {t('webhookUrlDesc', 'The production webhook URL from your n8n Chat Trigger node.')}
           </p>
         </div>
 
         {/* Authentication */}
-        <div className="flowchat-field">
+        <div className="n8n-chat-field">
           <label>Authentication</label>
-          <div className="flowchat-radio-group flowchat-radio-group-vertical">
-            <label className="flowchat-radio">
+          <div className="n8n-chat-radio-group n8n-chat-radio-group-vertical">
+            <label className="n8n-chat-radio">
               <input
                 type="radio"
                 name="auth"
                 checked={authType === 'none'}
                 onChange={() => updateField('connection.auth', 'none')}
               />
-              <span className="flowchat-radio-label">None (Public)</span>
+              <span className="n8n-chat-radio-label">None (Public)</span>
             </label>
-            <label className="flowchat-radio">
+            <label className="n8n-chat-radio">
               <input
                 type="radio"
                 name="auth"
                 checked={authType === 'basic'}
                 onChange={() => updateField('connection.auth', 'basic')}
               />
-              <span className="flowchat-radio-label">Basic Auth</span>
+              <span className="n8n-chat-radio-label">Basic Auth</span>
             </label>
-            <label className="flowchat-radio">
+            <label className="n8n-chat-radio">
               <input
                 type="radio"
                 name="auth"
                 checked={authType === 'bearer'}
                 onChange={() => updateField('connection.auth', 'bearer')}
               />
-              <span className="flowchat-radio-label">Bearer Token</span>
+              <span className="n8n-chat-radio-label">Bearer Token</span>
             </label>
           </div>
         </div>
 
         {/* Basic Auth Fields */}
         {authType === 'basic' && (
-          <div className="flowchat-auth-fields">
-            <div className="flowchat-field">
+          <div className="n8n-chat-auth-fields">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-auth-username">Username</label>
               <input
                 type="text"
@@ -149,9 +153,9 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
                 className="regular-text"
               />
             </div>
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-auth-password">Password</label>
-              <div className="flowchat-password-field">
+              <div className="n8n-chat-password-field">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="fc-auth-password"
@@ -161,7 +165,7 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
                 />
                 <button
                   type="button"
-                  className="button button-small flowchat-toggle-password"
+                  className="button button-small n8n-chat-toggle-password"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
@@ -174,10 +178,10 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
 
         {/* Bearer Token Field */}
         {authType === 'bearer' && (
-          <div className="flowchat-auth-fields">
-            <div className="flowchat-field">
+          <div className="n8n-chat-auth-fields">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-auth-token">Bearer Token</label>
-              <div className="flowchat-password-field">
+              <div className="n8n-chat-password-field">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   id="fc-auth-token"
@@ -188,7 +192,7 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
                 />
                 <button
                   type="button"
-                  className="button button-small flowchat-toggle-password"
+                  className="button button-small n8n-chat-toggle-password"
                   onClick={() => setShowPassword(!showPassword)}
                   aria-label={showPassword ? 'Hide token' : 'Show token'}
                 >
@@ -201,46 +205,42 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
       </div>
 
       {/* Streaming */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Streaming</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">{t('streaming', 'Streaming')}</h2>
 
-        <div className="flowchat-field">
-          <label className="flowchat-checkbox">
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
             <input
               type="checkbox"
               checked={connection.enableStreaming !== false}
               onChange={(e) => updateField('connection.enableStreaming', e.target.checked)}
             />
-            <span>Stream responses in real-time</span>
+            <span>{t('streamResponses', 'Stream responses in real-time')}</span>
+            <InfoIcon tooltip={t('tooltipStreaming', 'Enable Server-Sent Events for real-time responses. Your n8n Chat Trigger must also have streaming enabled.')} />
           </label>
           <p className="description">
-            Show AI responses word-by-word as they are generated.
-            <br />
-            <span className="flowchat-info-badge">
-              <span className="dashicons dashicons-info"></span>
-              Requires streaming enabled in your n8n Chat Trigger.
-            </span>
+            {t('streamingDesc', 'Show AI responses word-by-word as they are generated.')}
           </p>
         </div>
       </div>
 
       {/* Connection Test */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Connection Test</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">{t('connectionTest', 'Connection Test')}</h2>
 
-        <div className="flowchat-connection-test">
+        <div className="n8n-chat-connection-test">
           {testResult && (
-            <div className={`flowchat-test-result ${testResult.success ? 'is-success' : 'is-error'}`}>
-              <div className="flowchat-test-status">
+            <div className={`n8n-chat-test-result ${testResult.success ? 'is-success' : 'is-error'}`}>
+              <div className="n8n-chat-test-status">
                 <span className={`dashicons ${testResult.success ? 'dashicons-yes-alt' : 'dashicons-warning'}`}></span>
-                <span className="flowchat-test-message">
-                  {testResult.success ? 'Connected' : 'Connection Failed'}
+                <span className="n8n-chat-test-message">
+                  {testResult.success ? t('connected', 'Connected') : t('connectionFailed', 'Connection Failed')}
                 </span>
               </div>
               <p>{testResult.message}</p>
               {testResult.responseTime && (
-                <p className="flowchat-test-meta">
-                  Response time: {testResult.responseTime}ms
+                <p className="n8n-chat-test-meta">
+                  {t('responseTime', 'Response time')}: {testResult.responseTime}ms
                 </p>
               )}
             </div>
@@ -255,32 +255,32 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
             {testing ? (
               <>
                 <span className="spinner is-active"></span>
-                Testing...
+                {t('testing', 'Testing...')}
               </>
             ) : (
-              'Test Connection Now'
+              t('testConnectionNow', 'Test Connection Now')
             )}
           </button>
         </div>
       </div>
 
       {/* Advanced Settings */}
-      <div className="flowchat-section">
+      <div className="n8n-chat-section">
         <button
           type="button"
-          className="flowchat-toggle-advanced"
+          className="n8n-chat-toggle-advanced"
           onClick={() => setShowAdvanced(!showAdvanced)}
           aria-expanded={showAdvanced}
         >
           <span className={`dashicons ${showAdvanced ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-right-alt2'}`}></span>
-          {showAdvanced ? 'Hide' : 'Show'} Advanced Connection Settings
+          {showAdvanced ? t('hide', 'Hide') : t('show', 'Show')} {t('advancedConnectionSettings', 'Advanced Connection Settings')}
         </button>
 
         {showAdvanced && (
-          <div className="flowchat-advanced-content">
+          <div className="n8n-chat-advanced-content">
             {/* Timeout */}
-            <div className="flowchat-field">
-              <label htmlFor="fc-timeout">Timeout (seconds)</label>
+            <div className="n8n-chat-field">
+              <label htmlFor="fc-timeout">{t('timeout', 'Timeout')} ({t('seconds', 'seconds')})</label>
               <input
                 type="number"
                 id="fc-timeout"
@@ -291,13 +291,16 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
                 className="small-text"
               />
               <p className="description">
-                How long to wait for a response before timing out.
+                {t('timeoutDesc', 'How long to wait for a response before timing out.')}
               </p>
             </div>
 
             {/* Chat Input Key */}
-            <div className="flowchat-field">
-              <label htmlFor="fc-chat-input-key">Chat Input Key</label>
+            <div className="n8n-chat-field">
+              <label htmlFor="fc-chat-input-key">
+                {t('chatInputKey', 'Chat Input Key')}
+                <InfoIcon tooltip={t('tooltipChatInputKey', 'The JSON key n8n expects for the user\'s message. Only change if your n8n workflow uses a different key name.')} />
+              </label>
               <input
                 type="text"
                 id="fc-chat-input-key"
@@ -306,13 +309,16 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
                 className="regular-text code"
               />
               <p className="description">
-                The key name for the user message in n8n. Default: <code>chatInput</code>
+                {t('chatInputKeyDesc', 'The key name for the user message in n8n.')} {t('default', 'Default')}: <code>chatInput</code>
               </p>
             </div>
 
             {/* Session Key */}
-            <div className="flowchat-field">
-              <label htmlFor="fc-session-key">Session Key</label>
+            <div className="n8n-chat-field">
+              <label htmlFor="fc-session-key">
+                {t('sessionKey', 'Session Key')}
+                <InfoIcon tooltip={t('tooltipSessionKey', 'The JSON key for session tracking. Enables conversation history in n8n.')} />
+              </label>
               <input
                 type="text"
                 id="fc-session-key"
@@ -321,7 +327,7 @@ export const ConnectionTab: React.FC<ConnectionTabProps> = ({
                 className="regular-text code"
               />
               <p className="description">
-                The key name for session ID in n8n. Default: <code>sessionId</code>
+                {t('sessionKeyDesc', 'The key name for session ID in n8n.')} {t('default', 'Default')}: <code>sessionId</code>
               </p>
             </div>
           </div>

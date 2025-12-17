@@ -6,6 +6,7 @@
 
 import React from 'react';
 import { useVoiceInput } from '../../hooks/useVoiceInput';
+import { useFrontendI18n } from '../../hooks/useFrontendI18n';
 
 export interface VoiceInputButtonProps {
   /** Callback when final transcript is ready */
@@ -27,6 +28,7 @@ export function VoiceInputButton({
   disabled = false,
   className = '',
 }: VoiceInputButtonProps) {
+  const { t } = useFrontendI18n();
   const {
     isSupported,
     isListening,
@@ -58,24 +60,24 @@ export function VoiceInputButton({
   };
 
   const buttonClasses = [
-    'flowchat-voice-button',
-    isListening ? 'flowchat-voice-listening' : '',
-    disabled ? 'flowchat-voice-disabled' : '',
-    error ? 'flowchat-voice-error' : '',
+    'n8n-chat-voice-button',
+    isListening ? 'n8n-chat-voice-listening' : '',
+    disabled ? 'n8n-chat-voice-disabled' : '',
+    error ? 'n8n-chat-voice-error' : '',
     className,
   ]
     .filter(Boolean)
     .join(' ');
 
   return (
-    <div className="flowchat-voice-input">
+    <div className="n8n-chat-voice-input">
       <button
         type="button"
         className={buttonClasses}
         onClick={handleClick}
         disabled={disabled}
-        aria-label={isListening ? 'Stop listening' : 'Start voice input'}
-        title={error || (isListening ? 'Listening... Click to stop' : 'Click to speak')}
+        aria-label={isListening ? t('voiceStopListening', 'Stop listening') : t('voiceStartInput', 'Start voice input')}
+        title={error || (isListening ? t('voiceListening', 'Listening... Click to stop') : t('voiceClickToSpeak', 'Click to speak'))}
       >
         {isListening ? (
           // Listening icon (animated)
@@ -88,14 +90,14 @@ export function VoiceInputButton({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="flowchat-voice-icon flowchat-voice-icon-listening"
+            className="n8n-chat-voice-icon n8n-chat-voice-icon-listening"
           >
             <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
             <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
             <line x1="12" y1="19" x2="12" y2="23" />
             <line x1="8" y1="23" x2="16" y2="23" />
             {/* Animated waves */}
-            <circle cx="12" cy="12" r="10" className="flowchat-voice-wave" />
+            <circle cx="12" cy="12" r="10" className="n8n-chat-voice-wave" />
           </svg>
         ) : (
           // Microphone icon
@@ -108,7 +110,7 @@ export function VoiceInputButton({
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="flowchat-voice-icon"
+            className="n8n-chat-voice-icon"
           >
             <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
             <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
@@ -120,14 +122,14 @@ export function VoiceInputButton({
 
       {/* Interim transcript display */}
       {isListening && transcript && (
-        <div className="flowchat-voice-transcript" aria-live="polite">
+        <div className="n8n-chat-voice-transcript" aria-live="polite">
           {transcript}
         </div>
       )}
 
       {/* Error display */}
       {error && (
-        <div className="flowchat-voice-error-message" role="alert">
+        <div className="n8n-chat-voice-error-message" role="alert">
           {error}
         </div>
       )}

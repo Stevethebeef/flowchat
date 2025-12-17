@@ -5,20 +5,20 @@
  */
 
 export {
-  FlowChatEventBus,
+  N8nChatEventBus,
   emitEvent,
   onEvent,
   onAnyEvent,
-  useFlowChatEvent,
+  useN8nChatEvent,
   useInstanceEvents,
   default as globalEventBus,
-} from './FlowChatEventBus';
+} from './N8nChatEventBus';
 
 export type {
-  FlowChatEventType,
-  FlowChatEvent,
-  FlowChatEventListener,
-  FlowChatEventMap,
+  N8nChatEventType,
+  N8nChatEvent,
+  N8nChatEventListener,
+  N8nChatEventMap,
   InstanceReadyEvent,
   InstanceDestroyedEvent,
   MessageSentEvent,
@@ -28,4 +28,4 @@ export type {
   InstanceSwitchedEvent,
   ConnectionErrorEvent,
   ErrorEvent,
-} from './FlowChatEventBus';
+} from './N8nChatEventBus';

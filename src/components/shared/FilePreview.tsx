@@ -73,9 +73,9 @@ export function FilePreview({
   const isImage = mimeType.startsWith('image/') && !imageError;
 
   const classes = [
-    'flowchat-file-preview',
-    isUploading ? 'flowchat-file-uploading' : '',
-    isImage ? 'flowchat-file-image' : 'flowchat-file-generic',
+    'n8n-chat-file-preview',
+    isUploading ? 'n8n-chat-file-uploading' : '',
+    isImage ? 'n8n-chat-file-image' : 'n8n-chat-file-generic',
     className,
   ]
     .filter(Boolean)
@@ -84,45 +84,45 @@ export function FilePreview({
   return (
     <div className={classes}>
       {/* Image preview or file icon */}
-      <div className="flowchat-file-preview-media">
+      <div className="n8n-chat-file-preview-media">
         {isImage ? (
           <img
             src={url}
             alt={filename}
             onError={() => setImageError(true)}
-            className="flowchat-file-preview-image"
+            className="n8n-chat-file-preview-image"
           />
         ) : (
-          <span className="flowchat-file-preview-icon" role="img" aria-label="File icon">
+          <span className="n8n-chat-file-preview-icon" role="img" aria-label="File icon">
             {getFileIcon(mimeType)}
           </span>
         )}
 
         {/* Upload progress overlay */}
         {isUploading && (
-          <div className="flowchat-file-upload-overlay">
+          <div className="n8n-chat-file-upload-overlay">
             <div
-              className="flowchat-file-upload-progress"
+              className="n8n-chat-file-upload-progress"
               style={{ width: `${uploadProgress}%` }}
             />
-            <span className="flowchat-file-upload-text">{uploadProgress}%</span>
+            <span className="n8n-chat-file-upload-text">{uploadProgress}%</span>
           </div>
         )}
       </div>
 
       {/* File info */}
-      <div className="flowchat-file-preview-info">
+      <div className="n8n-chat-file-preview-info">
         <a
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flowchat-file-preview-name"
+          className="n8n-chat-file-preview-name"
           title={filename}
         >
           {filename}
         </a>
         {size !== undefined && (
-          <span className="flowchat-file-preview-size">{formatFileSize(size)}</span>
+          <span className="n8n-chat-file-preview-size">{formatFileSize(size)}</span>
         )}
       </div>
 
@@ -130,7 +130,7 @@ export function FilePreview({
       {removable && onRemove && !isUploading && (
         <button
           type="button"
-          className="flowchat-file-preview-remove"
+          className="n8n-chat-file-preview-remove"
           onClick={onRemove}
           aria-label={`Remove ${filename}`}
         >

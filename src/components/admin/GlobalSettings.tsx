@@ -102,10 +102,10 @@ export const GlobalSettings: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/settings`,
+        `${(window as any).n8nChatAdmin.apiUrl}/settings`,
         {
           headers: {
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
         }
       );
@@ -130,12 +130,12 @@ export const GlobalSettings: React.FC = () => {
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/settings`,
+        `${(window as any).n8nChatAdmin.apiUrl}/settings`,
         {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
           body: JSON.stringify(settings),
         }
@@ -159,10 +159,10 @@ export const GlobalSettings: React.FC = () => {
   };
 
   const renderGeneralTab = () => (
-    <div className="flowchat-settings-section">
+    <div className="n8n-chat-settings-section">
       <h2>n8n Configuration</h2>
 
-      <div className="flowchat-field">
+      <div className="n8n-chat-field">
         <label htmlFor="fc-n8n-base-url">n8n Base URL (Optional)</label>
         <input
           type="url"
@@ -178,7 +178,7 @@ export const GlobalSettings: React.FC = () => {
         </p>
       </div>
 
-      <div className="flowchat-field">
+      <div className="n8n-chat-field">
         <label htmlFor="fc-default-timeout">Default Timeout (seconds)</label>
         <input
           type="number"
@@ -195,12 +195,12 @@ export const GlobalSettings: React.FC = () => {
       </div>
 
       <h2>Context Data (Sent to n8n)</h2>
-      <p className="flowchat-settings-description">
+      <p className="n8n-chat-settings-description">
         Choose what information is automatically included with each chat message.
       </p>
 
-      <div className="flowchat-checkbox-grid">
-        <label className="flowchat-checkbox">
+      <div className="n8n-chat-checkbox-grid">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.includeSiteName}
@@ -209,7 +209,7 @@ export const GlobalSettings: React.FC = () => {
           <span>Site Name</span>
         </label>
 
-        <label className="flowchat-checkbox">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.includePageTitle}
@@ -218,7 +218,7 @@ export const GlobalSettings: React.FC = () => {
           <span>Page Title</span>
         </label>
 
-        <label className="flowchat-checkbox">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.includePageUrl}
@@ -227,7 +227,7 @@ export const GlobalSettings: React.FC = () => {
           <span>Page URL</span>
         </label>
 
-        <label className="flowchat-checkbox">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.includeDateTime}
@@ -236,7 +236,7 @@ export const GlobalSettings: React.FC = () => {
           <span>Date/Time</span>
         </label>
 
-        <label className="flowchat-checkbox">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.includeUserName}
@@ -245,7 +245,7 @@ export const GlobalSettings: React.FC = () => {
           <span>User Name (if logged in)</span>
         </label>
 
-        <label className="flowchat-checkbox">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.includeUserEmail}
@@ -254,7 +254,7 @@ export const GlobalSettings: React.FC = () => {
           <span>User Email (if logged in)</span>
         </label>
 
-        <label className="flowchat-checkbox">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.includeUserRole}
@@ -266,8 +266,8 @@ export const GlobalSettings: React.FC = () => {
 
       <h2>Logging</h2>
 
-      <div className="flowchat-field">
-        <label className="flowchat-checkbox">
+      <div className="n8n-chat-field">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.enableLogging}
@@ -283,11 +283,11 @@ export const GlobalSettings: React.FC = () => {
   );
 
   const renderPerformanceTab = () => (
-    <div className="flowchat-settings-section">
+    <div className="n8n-chat-settings-section">
       <h2>Widget Loading</h2>
 
-      <div className="flowchat-field">
-        <label className="flowchat-checkbox">
+      <div className="n8n-chat-field">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.lazyLoadWidget}
@@ -300,8 +300,8 @@ export const GlobalSettings: React.FC = () => {
         </p>
       </div>
 
-      <div className="flowchat-field">
-        <label className="flowchat-checkbox">
+      <div className="n8n-chat-field">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.preconnectWebhook}
@@ -316,8 +316,8 @@ export const GlobalSettings: React.FC = () => {
 
       <h2>Response Caching</h2>
 
-      <div className="flowchat-field">
-        <label className="flowchat-checkbox">
+      <div className="n8n-chat-field">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.cacheResponses}
@@ -332,7 +332,7 @@ export const GlobalSettings: React.FC = () => {
       </div>
 
       {settings.cacheResponses && (
-        <div className="flowchat-field">
+        <div className="n8n-chat-field">
           <label htmlFor="fc-cache-duration">Cache Duration (seconds)</label>
           <input
             type="number"
@@ -349,67 +349,67 @@ export const GlobalSettings: React.FC = () => {
   );
 
   const renderPrivacyTab = () => (
-    <div className="flowchat-settings-section">
+    <div className="n8n-chat-settings-section">
       <h2>Chat History Storage</h2>
 
-      <div className="flowchat-field">
+      <div className="n8n-chat-field">
         <label>Where to store chat history</label>
-        <div className="flowchat-radio-group flowchat-radio-group-vertical">
-          <label className="flowchat-radio">
+        <div className="n8n-chat-radio-group n8n-chat-radio-group-vertical">
+          <label className="n8n-chat-radio">
             <input
               type="radio"
               name="historyStorage"
               checked={settings.historyStorage === 'none'}
               onChange={() => updateSetting('historyStorage', 'none')}
             />
-            <div className="flowchat-radio-content">
-              <span className="flowchat-radio-label">None</span>
-              <span className="flowchat-radio-desc">
+            <div className="n8n-chat-radio-content">
+              <span className="n8n-chat-radio-label">None</span>
+              <span className="n8n-chat-radio-desc">
                 No history saved. Chat resets on each visit.
               </span>
             </div>
           </label>
 
-          <label className="flowchat-radio">
+          <label className="n8n-chat-radio">
             <input
               type="radio"
               name="historyStorage"
               checked={settings.historyStorage === 'session'}
               onChange={() => updateSetting('historyStorage', 'session')}
             />
-            <div className="flowchat-radio-content">
-              <span className="flowchat-radio-label">Session Storage</span>
-              <span className="flowchat-radio-desc">
+            <div className="n8n-chat-radio-content">
+              <span className="n8n-chat-radio-label">Session Storage</span>
+              <span className="n8n-chat-radio-desc">
                 History kept until browser tab closes.
               </span>
             </div>
           </label>
 
-          <label className="flowchat-radio">
+          <label className="n8n-chat-radio">
             <input
               type="radio"
               name="historyStorage"
               checked={settings.historyStorage === 'local'}
               onChange={() => updateSetting('historyStorage', 'local')}
             />
-            <div className="flowchat-radio-content">
-              <span className="flowchat-radio-label">Local Storage</span>
-              <span className="flowchat-radio-desc">
+            <div className="n8n-chat-radio-content">
+              <span className="n8n-chat-radio-label">Local Storage</span>
+              <span className="n8n-chat-radio-desc">
                 History persists across visits (browser only).
               </span>
             </div>
           </label>
 
-          <label className="flowchat-radio">
+          <label className="n8n-chat-radio">
             <input
               type="radio"
               name="historyStorage"
               checked={settings.historyStorage === 'database'}
               onChange={() => updateSetting('historyStorage', 'database')}
             />
-            <div className="flowchat-radio-content">
-              <span className="flowchat-radio-label">Database</span>
-              <span className="flowchat-radio-desc">
+            <div className="n8n-chat-radio-content">
+              <span className="n8n-chat-radio-label">Database</span>
+              <span className="n8n-chat-radio-desc">
                 History saved server-side. Enables analytics and export.
               </span>
             </div>
@@ -418,7 +418,7 @@ export const GlobalSettings: React.FC = () => {
       </div>
 
       {settings.historyStorage === 'database' && (
-        <div className="flowchat-field">
+        <div className="n8n-chat-field">
           <label htmlFor="fc-retention">Data Retention (days)</label>
           <input
             type="number"
@@ -437,8 +437,8 @@ export const GlobalSettings: React.FC = () => {
 
       <h2>Privacy Options</h2>
 
-      <div className="flowchat-field">
-        <label className="flowchat-checkbox">
+      <div className="n8n-chat-field">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.anonymizeData}
@@ -451,8 +451,8 @@ export const GlobalSettings: React.FC = () => {
         </p>
       </div>
 
-      <div className="flowchat-field">
-        <label className="flowchat-checkbox">
+      <div className="n8n-chat-field">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.respectDnt}
@@ -465,8 +465,8 @@ export const GlobalSettings: React.FC = () => {
         </p>
       </div>
 
-      <div className="flowchat-field">
-        <label className="flowchat-checkbox">
+      <div className="n8n-chat-field">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.cookieConsent}
@@ -482,11 +482,11 @@ export const GlobalSettings: React.FC = () => {
   );
 
   const renderAdvancedTab = () => (
-    <div className="flowchat-settings-section">
+    <div className="n8n-chat-settings-section">
       <h2>Debug Mode</h2>
 
-      <div className="flowchat-field">
-        <label className="flowchat-checkbox">
+      <div className="n8n-chat-field">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.debugMode}
@@ -502,7 +502,7 @@ export const GlobalSettings: React.FC = () => {
 
       <h2>Webhook Settings</h2>
 
-      <div className="flowchat-field">
+      <div className="n8n-chat-field">
         <label htmlFor="fc-retries">Retry Attempts</label>
         <input
           type="number"
@@ -518,7 +518,7 @@ export const GlobalSettings: React.FC = () => {
         </p>
       </div>
 
-      <div className="flowchat-field">
+      <div className="n8n-chat-field">
         <label htmlFor="fc-retry-delay">Retry Delay (ms)</label>
         <input
           type="number"
@@ -535,7 +535,7 @@ export const GlobalSettings: React.FC = () => {
         </p>
       </div>
 
-      <div className="flowchat-field">
+      <div className="n8n-chat-field">
         <label htmlFor="fc-custom-headers">Custom Headers (JSON)</label>
         <textarea
           id="fc-custom-headers"
@@ -552,8 +552,8 @@ export const GlobalSettings: React.FC = () => {
 
       <h2>Fallback Settings</h2>
 
-      <div className="flowchat-field">
-        <label className="flowchat-checkbox">
+      <div className="n8n-chat-field">
+        <label className="n8n-chat-checkbox">
           <input
             type="checkbox"
             checked={settings.enableFallback}
@@ -567,7 +567,7 @@ export const GlobalSettings: React.FC = () => {
       </div>
 
       {settings.enableFallback && (
-        <div className="flowchat-field">
+        <div className="n8n-chat-field">
           <label htmlFor="fc-fallback-email">Fallback Notification Email</label>
           <input
             type="email"
@@ -582,8 +582,8 @@ export const GlobalSettings: React.FC = () => {
 
       <h2>Data Management</h2>
 
-      <div className="flowchat-field">
-        <label className="flowchat-checkbox flowchat-checkbox-danger">
+      <div className="n8n-chat-field">
+        <label className="n8n-chat-checkbox n8n-chat-checkbox-danger">
           <input
             type="checkbox"
             checked={settings.deleteDataOnUninstall}
@@ -591,7 +591,7 @@ export const GlobalSettings: React.FC = () => {
           />
           <span>Delete all data when plugin is uninstalled</span>
         </label>
-        <p className="description flowchat-warning">
+        <p className="description n8n-chat-warning">
           This will permanently delete all chat instances, history, and settings.
         </p>
       </div>
@@ -615,9 +615,9 @@ export const GlobalSettings: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flowchat-settings">
-        <div className="flowchat-loading">
-          <div className="flowchat-loading-spinner" />
+      <div className="n8n-chat-settings">
+        <div className="n8n-chat-loading">
+          <div className="n8n-chat-loading-spinner" />
           <p>Loading settings...</p>
         </div>
       </div>
@@ -625,11 +625,11 @@ export const GlobalSettings: React.FC = () => {
   }
 
   return (
-    <div className="flowchat-settings">
+    <div className="n8n-chat-settings">
       {/* Header */}
-      <div className="flowchat-page-header">
+      <div className="n8n-chat-page-header">
         <h1>Settings</h1>
-        <p>Configure global FlowChat settings.</p>
+        <p>Configure global n8n Chat settings.</p>
       </div>
 
       {error && (
@@ -644,13 +644,13 @@ export const GlobalSettings: React.FC = () => {
         </div>
       )}
 
-      <div className="flowchat-settings-layout">
+      <div className="n8n-chat-settings-layout">
         {/* Tabs */}
-        <div className="flowchat-settings-tabs">
+        <div className="n8n-chat-settings-tabs">
           {SETTINGS_TABS.map((tab) => (
             <button
               key={tab.id}
-              className={`flowchat-settings-tab ${activeTab === tab.id ? 'is-active' : ''}`}
+              className={`n8n-chat-settings-tab ${activeTab === tab.id ? 'is-active' : ''}`}
               onClick={() => setActiveTab(tab.id)}
             >
               <span className={`dashicons dashicons-${tab.icon}`}></span>
@@ -660,10 +660,10 @@ export const GlobalSettings: React.FC = () => {
         </div>
 
         {/* Content */}
-        <div className="flowchat-settings-content">
+        <div className="n8n-chat-settings-content">
           {renderTabContent()}
 
-          <div className="flowchat-settings-footer">
+          <div className="n8n-chat-settings-footer">
             <button
               className="button button-primary button-large"
               onClick={handleSave}

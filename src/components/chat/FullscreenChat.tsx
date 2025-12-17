@@ -7,11 +7,11 @@
 
 import React, { useEffect, useState } from 'react';
 import { ChatWidget } from './ChatWidget';
-import type { FlowChatConfig } from '../../types';
+import type { N8nChatConfig } from '../../types';
 
 export interface FullscreenChatProps {
   /** Instance configuration */
-  config: FlowChatConfig;
+  config: N8nChatConfig;
   /** Webhook URL for n8n */
   webhookUrl: string;
   /** Session ID */
@@ -70,9 +70,9 @@ export function FullscreenChat({
   };
 
   const containerClasses = [
-    'flowchat-fullscreen',
-    isExiting ? 'flowchat-fullscreen-exiting' : '',
-    config.appearance?.theme === 'dark' ? 'flowchat-fullscreen-dark' : '',
+    'n8n-chat-fullscreen',
+    isExiting ? 'n8n-chat-fullscreen-exiting' : '',
+    config.appearance?.theme === 'dark' ? 'n8n-chat-fullscreen-dark' : '',
     className,
   ]
     .filter(Boolean)
@@ -81,13 +81,13 @@ export function FullscreenChat({
   return (
     <div className={containerClasses} role="dialog" aria-modal="true" aria-label="Chat">
       {/* Background overlay */}
-      <div className="flowchat-fullscreen-backdrop" />
+      <div className="n8n-chat-fullscreen-backdrop" />
 
       {/* Exit button */}
       {showExitButton && onExit && (
         <button
           type="button"
-          className="flowchat-fullscreen-exit"
+          className="n8n-chat-fullscreen-exit"
           onClick={handleExit}
           aria-label="Exit fullscreen chat"
         >
@@ -108,17 +108,17 @@ export function FullscreenChat({
       )}
 
       {/* Chat container */}
-      <div className="flowchat-fullscreen-container">
+      <div className="n8n-chat-fullscreen-container">
         {/* Header with branding */}
-        <div className="flowchat-fullscreen-header">
+        <div className="n8n-chat-fullscreen-header">
           {config.appearance?.avatarUrl && (
             <img
               src={config.appearance.avatarUrl}
               alt=""
-              className="flowchat-fullscreen-avatar"
+              className="n8n-chat-fullscreen-avatar"
             />
           )}
-          <div className="flowchat-fullscreen-title">
+          <div className="n8n-chat-fullscreen-title">
             <h1>{config.messages?.title || 'Chat'}</h1>
             {config.messages?.subtitle && (
               <p>{config.messages.subtitle}</p>
@@ -127,7 +127,7 @@ export function FullscreenChat({
         </div>
 
         {/* Chat widget */}
-        <div className="flowchat-fullscreen-chat">
+        <div className="n8n-chat-fullscreen-chat">
           <ChatWidget
             config={{
               ...config,

@@ -1,14 +1,14 @@
 /**
- * Error Message Component for FlowChat
+ * Error Message Component for n8n Chat
  *
  * Displays user-friendly error messages with recovery actions.
  */
 
 import React from 'react';
-import { FlowChatError, formatErrorForDisplay } from '../../errors';
+import { N8nChatError, formatErrorForDisplay } from '../../errors';
 
 interface ErrorMessageProps {
-  error: FlowChatError;
+  error: N8nChatError;
   onRetry?: () => void;
   onRefresh?: () => void;
   onDismiss?: () => void;
@@ -25,19 +25,19 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
   const display = formatErrorForDisplay(error);
 
   return (
-    <div className={`flowchat-error-message ${className}`} role="alert">
-      <div className="flowchat-error-message__icon">
+    <div className={`n8n-chat-error-message ${className}`} role="alert">
+      <div className="n8n-chat-error-message__icon">
         <ErrorIcon category={error.category} />
       </div>
 
-      <div className="flowchat-error-message__content">
-        <h4 className="flowchat-error-message__title">{display.title}</h4>
-        <p className="flowchat-error-message__text">{display.message}</p>
+      <div className="n8n-chat-error-message__content">
+        <h4 className="n8n-chat-error-message__title">{display.title}</h4>
+        <p className="n8n-chat-error-message__text">{display.message}</p>
 
-        <div className="flowchat-error-message__actions">
+        <div className="n8n-chat-error-message__actions">
           {display.showRetry && onRetry && (
             <button
-              className="flowchat-error-message__button flowchat-error-message__button--primary"
+              className="n8n-chat-error-message__button n8n-chat-error-message__button--primary"
               onClick={onRetry}
               type="button"
             >
@@ -48,7 +48,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
 
           {display.showRefresh && onRefresh && (
             <button
-              className="flowchat-error-message__button flowchat-error-message__button--secondary"
+              className="n8n-chat-error-message__button n8n-chat-error-message__button--secondary"
               onClick={onRefresh}
               type="button"
             >
@@ -60,7 +60,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
           {display.showLogin && (
             <a
               href={getLoginUrl()}
-              className="flowchat-error-message__button flowchat-error-message__button--primary"
+              className="n8n-chat-error-message__button n8n-chat-error-message__button--primary"
             >
               <LoginIcon />
               Log In
@@ -69,7 +69,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
 
           {onDismiss && (
             <button
-              className="flowchat-error-message__button flowchat-error-message__button--text"
+              className="n8n-chat-error-message__button n8n-chat-error-message__button--text"
               onClick={onDismiss}
               type="button"
             >
@@ -81,7 +81,7 @@ export const ErrorMessage: React.FC<ErrorMessageProps> = ({
 
       {onDismiss && (
         <button
-          className="flowchat-error-message__close"
+          className="n8n-chat-error-message__close"
           onClick={onDismiss}
           type="button"
           aria-label="Dismiss error"
@@ -187,8 +187,8 @@ const CloseIcon: React.FC = () => (
 
 function getLoginUrl(): string {
   // Get WordPress login URL from global or default
-  if (typeof window !== 'undefined' && (window as unknown as { flowchatConfig?: { loginUrl?: string } }).flowchatConfig?.loginUrl) {
-    return (window as unknown as { flowchatConfig: { loginUrl: string } }).flowchatConfig.loginUrl;
+  if (typeof window !== 'undefined' && (window as unknown as { n8nChatConfig?: { loginUrl?: string } }).n8nChatConfig?.loginUrl) {
+    return (window as unknown as { n8nChatConfig: { loginUrl: string } }).n8nChatConfig.loginUrl;
   }
   return '/wp-login.php';
 }

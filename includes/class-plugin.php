@@ -2,10 +2,10 @@
 /**
  * Main Plugin Class
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat;
+namespace N8nChat;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -84,18 +84,20 @@ class Plugin {
         // Public API endpoints
         new API\Public_Endpoints();
 
-        // Admin components (only in admin context)
+        // Admin UI components (only in admin context)
         if (is_admin()) {
             new Admin\Admin();
             new Admin\Menu();
-            new API\Admin_Endpoints();
-
-            // Register template endpoints
-            add_action('rest_api_init', function() {
-                $template_endpoints = new API\Template_Endpoints();
-                $template_endpoints->register_routes();
-            });
         }
+
+        // Admin API endpoints (must be outside is_admin() for REST API to work)
+        new API\Admin_Endpoints();
+
+        // Register template endpoints
+        add_action('rest_api_init', function() {
+            $template_endpoints = new API\Template_Endpoints();
+            $template_endpoints->register_routes();
+        });
     }
 
     /**
@@ -110,7 +112,7 @@ class Plugin {
 
         // Plugin action links
         add_filter(
-            'plugin_action_links_' . FLOWCHAT_PLUGIN_BASENAME,
+            'plugin_action_links_' . N8N_CHAT_PLUGIN_BASENAME,
             [$this, 'add_action_links']
         );
     }
@@ -124,7 +126,7 @@ class Plugin {
             return;
         }
 
-        $block_path = FLOWCHAT_PLUGIN_DIR . 'blocks/flowchat';
+        $block_path = N8N_CHAT_PLUGIN_DIR . 'blocks/n8n-chat';
 
         // Check if block.json exists
         if (!file_exists($block_path . '/block.json')) {
@@ -139,9 +141,9 @@ class Plugin {
      */
     public function load_textdomain(): void {
         load_plugin_textdomain(
-            'flowchat',
+            'n8n-chat',
             false,
-            dirname(FLOWCHAT_PLUGIN_BASENAME) . '/languages'
+            dirname(N8N_CHAT_PLUGIN_BASENAME) . '/languages'
         );
     }
 
@@ -153,8 +155,8 @@ class Plugin {
      */
     public function add_action_links(array $links): array {
         $plugin_links = [
-            '<a href="' . admin_url('admin.php?page=flowchat') . '">' .
-                esc_html__('Settings', 'flowchat') . '</a>',
+            '<a href="' . admin_url('admin.php?page=n8n-chat') . '">' .
+                esc_html__('Settings', 'n8n-chat') . '</a>',
         ];
         return array_merge($plugin_links, $links);
     }
@@ -165,6 +167,6 @@ class Plugin {
      * @return string
      */
     public function get_version(): string {
-        return FLOWCHAT_VERSION;
+        return N8N_CHAT_VERSION;
     }
 }

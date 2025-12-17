@@ -10,8 +10,8 @@ export default defineConfig({
     emptyOutDir: true,
 
     lib: {
-      entry: resolve(__dirname, 'src/index.ts'),
-      name: 'FlowChat',
+      entry: resolve(__dirname, 'src/index.tsx'),
+      name: 'N8nChat',
       formats: ['iife'],
       fileName: () => 'chat.js',
     },

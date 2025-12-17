@@ -45,19 +45,19 @@ function highlightCode(code: string, language: string): string {
   // Highlight strings (single and double quotes)
   highlighted = highlighted.replace(
     /(&quot;[^&]*&quot;|&#039;[^&]*&#039;|"[^"]*"|'[^']*')/g,
-    '<span class="flowchat-hl-string">$1</span>'
+    '<span class="n8n-chat-hl-string">$1</span>'
   );
 
   // Highlight comments (// and /* */ and #)
   highlighted = highlighted.replace(
     /(\/\/[^\n]*|\/\*[\s\S]*?\*\/|#[^\n]*)/g,
-    '<span class="flowchat-hl-comment">$1</span>'
+    '<span class="n8n-chat-hl-comment">$1</span>'
   );
 
   // Highlight numbers
   highlighted = highlighted.replace(
     /\b(\d+\.?\d*)\b/g,
-    '<span class="flowchat-hl-number">$1</span>'
+    '<span class="n8n-chat-hl-number">$1</span>'
   );
 
   // Highlight keywords
@@ -65,14 +65,14 @@ function highlightCode(code: string, language: string): string {
     const keywordRegex = new RegExp(`\\b(${langKeywords.join('|')})\\b`, 'g');
     highlighted = highlighted.replace(
       keywordRegex,
-      '<span class="flowchat-hl-keyword">$1</span>'
+      '<span class="n8n-chat-hl-keyword">$1</span>'
     );
   }
 
   // Highlight function calls
   highlighted = highlighted.replace(
     /\b([a-zA-Z_][a-zA-Z0-9_]*)\s*\(/g,
-    '<span class="flowchat-hl-function">$1</span>('
+    '<span class="n8n-chat-hl-function">$1</span>('
   );
 
   return highlighted;
@@ -107,13 +107,13 @@ function parseMarkdown(text: string, inline: boolean = false, syntaxHighlight: b
         ? highlightCode(code.trim(), lang)
         : escapeHtml(code.trim());
       const langClass = lang ? ` language-${lang}` : '';
-      return `<pre class="flowchat-code-block${langClass}" data-language="${lang}"><code>${highlightedCode}</code></pre>`;
+      return `<pre class="n8n-chat-code-block${langClass}" data-language="${lang}"><code>${highlightedCode}</code></pre>`;
     });
   }
 
   // Now escape remaining HTML (but not our inserted tags)
   // Split on code blocks to avoid double-escaping
-  const parts = html.split(/(<pre class="flowchat-code-block[\s\S]*?<\/pre>)/);
+  const parts = html.split(/(<pre class="n8n-chat-code-block[\s\S]*?<\/pre>)/);
   html = parts.map((part, i) => {
     // Odd indices are code blocks, keep as-is
     if (i % 2 === 1) return part;
@@ -127,7 +127,7 @@ function parseMarkdown(text: string, inline: boolean = false, syntaxHighlight: b
   }).join('');
 
   // Inline code (`code`)
-  html = html.replace(/`([^`]+)`/g, '<code class="flowchat-inline-code">$1</code>');
+  html = html.replace(/`([^`]+)`/g, '<code class="n8n-chat-inline-code">$1</code>');
 
   // Bold (**text** or __text__)
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -143,33 +143,33 @@ function parseMarkdown(text: string, inline: boolean = false, syntaxHighlight: b
   // Links [text](url)
   html = html.replace(
     /\[([^\]]+)\]\(([^)]+)\)/g,
-    '<a href="$2" target="_blank" rel="noopener noreferrer" class="flowchat-link">$1</a>'
+    '<a href="$2" target="_blank" rel="noopener noreferrer" class="n8n-chat-link">$1</a>'
   );
 
   // Auto-link URLs (only plain URLs not already in markdown links)
   html = html.replace(
     /(?<!href="|">)(https?:\/\/[^\s<]+)/g,
-    '<a href="$1" target="_blank" rel="noopener noreferrer" class="flowchat-link">$1</a>'
+    '<a href="$1" target="_blank" rel="noopener noreferrer" class="n8n-chat-link">$1</a>'
   );
 
   if (!inline) {
     // Headings
-    html = html.replace(/^### (.+)$/gm, '<h3 class="flowchat-h3">$1</h3>');
-    html = html.replace(/^## (.+)$/gm, '<h2 class="flowchat-h2">$1</h2>');
-    html = html.replace(/^# (.+)$/gm, '<h1 class="flowchat-h1">$1</h1>');
+    html = html.replace(/^### (.+)$/gm, '<h3 class="n8n-chat-h3">$1</h3>');
+    html = html.replace(/^## (.+)$/gm, '<h2 class="n8n-chat-h2">$1</h2>');
+    html = html.replace(/^# (.+)$/gm, '<h1 class="n8n-chat-h1">$1</h1>');
 
     // Unordered lists
     html = html.replace(/^[\*\-] (.+)$/gm, '<li>$1</li>');
-    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul class="flowchat-list">$&</ul>');
+    html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul class="n8n-chat-list">$&</ul>');
 
     // Ordered lists
     html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
 
     // Blockquotes
-    html = html.replace(/^> (.+)$/gm, '<blockquote class="flowchat-blockquote">$1</blockquote>');
+    html = html.replace(/^> (.+)$/gm, '<blockquote class="n8n-chat-blockquote">$1</blockquote>');
 
     // Horizontal rules
-    html = html.replace(/^---$/gm, '<hr class="flowchat-hr">');
+    html = html.replace(/^---$/gm, '<hr class="n8n-chat-hr">');
 
     // Line breaks -> paragraphs
     html = html
@@ -208,8 +208,8 @@ export function Markdown({ content, inline = false, syntaxHighlight = true, clas
   const html = useMemo(() => parseMarkdown(content, inline, syntaxHighlight), [content, inline, syntaxHighlight]);
 
   const classes = [
-    'flowchat-markdown',
-    inline ? 'flowchat-markdown-inline' : '',
+    'n8n-chat-markdown',
+    inline ? 'n8n-chat-markdown-inline' : '',
     className,
   ]
     .filter(Boolean)

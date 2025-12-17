@@ -1,15 +1,15 @@
 <?php
 /**
- * Template API Endpoints for FlowChat
+ * Template API Endpoints for n8n Chat
  *
  * REST API endpoints for templates and style presets.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\API;
+namespace N8nChat\API;
 
-use FlowChat\Core\Template_Manager;
+use N8nChat\Core\Template_Manager;
 
 defined('ABSPATH') || exit;
 
@@ -21,7 +21,7 @@ class Template_Endpoints {
     /**
      * REST namespace
      */
-    const NAMESPACE = 'flowchat/v1';
+    const NAMESPACE = 'n8n-chat/v1';
 
     /**
      * Template Manager instance
@@ -215,7 +215,7 @@ class Template_Endpoints {
         if (!current_user_can('manage_options')) {
             return new \WP_Error(
                 'rest_forbidden',
-                __('You do not have permission to access this resource.', 'flowchat'),
+                __('You do not have permission to access this resource.', 'n8n-chat'),
                 ['status' => 403]
             );
         }
@@ -289,7 +289,7 @@ class Template_Endpoints {
                 'success' => false,
                 'error' => [
                     'code' => 'template_not_found',
-                    'message' => __('Template not found.', 'flowchat'),
+                    'message' => __('Template not found.', 'n8n-chat'),
                 ],
             ], 404);
         }
@@ -345,7 +345,7 @@ class Template_Endpoints {
             'success' => false,
             'error' => [
                 'code' => 'create_failed',
-                'message' => __('Failed to create template.', 'flowchat'),
+                'message' => __('Failed to create template.', 'n8n-chat'),
             ],
         ], 500);
     }
@@ -360,13 +360,13 @@ class Template_Endpoints {
         $id = $request->get_param('id');
 
         // Check if it's a custom template
-        $custom_templates = get_option('flowchat_custom_templates', []);
+        $custom_templates = get_option('n8n_chat_custom_templates', []);
         if (!isset($custom_templates[$id])) {
             return new \WP_REST_Response([
                 'success' => false,
                 'error' => [
                     'code' => 'not_editable',
-                    'message' => __('Built-in templates cannot be edited.', 'flowchat'),
+                    'message' => __('Built-in templates cannot be edited.', 'n8n-chat'),
                 ],
             ], 400);
         }
@@ -390,7 +390,7 @@ class Template_Endpoints {
             'success' => false,
             'error' => [
                 'code' => 'update_failed',
-                'message' => __('Failed to update template.', 'flowchat'),
+                'message' => __('Failed to update template.', 'n8n-chat'),
             ],
         ], 500);
     }
@@ -414,7 +414,7 @@ class Template_Endpoints {
             'success' => false,
             'error' => [
                 'code' => 'delete_failed',
-                'message' => __('Failed to delete template or template not found.', 'flowchat'),
+                'message' => __('Failed to delete template or template not found.', 'n8n-chat'),
             ],
         ], 400);
     }
@@ -434,7 +434,7 @@ class Template_Endpoints {
                 'success' => false,
                 'error' => [
                     'code' => 'template_not_found',
-                    'message' => __('Template not found.', 'flowchat'),
+                    'message' => __('Template not found.', 'n8n-chat'),
                 ],
             ], 404);
         }
@@ -442,7 +442,7 @@ class Template_Endpoints {
         return new \WP_REST_Response([
             'success' => true,
             'json' => $json,
-            'filename' => 'flowchat-template-' . sanitize_file_name($id) . '.json',
+            'filename' => 'n8n-chat-template-' . sanitize_file_name($id) . '.json',
         ]);
     }
 
@@ -461,7 +461,7 @@ class Template_Endpoints {
                 'success' => false,
                 'error' => [
                     'code' => 'import_failed',
-                    'message' => __('Failed to import template. Invalid format.', 'flowchat'),
+                    'message' => __('Failed to import template. Invalid format.', 'n8n-chat'),
                 ],
             ], 400);
         }
@@ -517,7 +517,7 @@ class Template_Endpoints {
                 'success' => false,
                 'error' => [
                     'code' => 'preset_not_found',
-                    'message' => __('Style preset not found.', 'flowchat'),
+                    'message' => __('Style preset not found.', 'n8n-chat'),
                 ],
             ], 404);
         }

@@ -1,12 +1,12 @@
 /**
- * FlowChat TypeScript Type Definitions
+ * n8n Chat TypeScript Type Definitions
  */
 
 // ============================================================================
 // Instance Configuration Types
 // ============================================================================
 
-export interface FlowChatConfig {
+export interface N8nChatConfig {
   instanceId: string;
   name: string;
   theme: 'light' | 'dark' | 'auto';
@@ -27,6 +27,7 @@ export interface FlowChatConfig {
 
 export interface BubbleConfig {
   enabled: boolean;
+  showOnAllPages?: boolean; // Site-wide floating bubble
   icon: 'chat' | 'message' | 'help' | 'custom';
   customIconUrl?: string;
   text?: string;
@@ -58,6 +59,7 @@ export interface FeaturesConfig {
   fileUpload: boolean;
   fileTypes: string[];
   maxFileSize: number;
+  voiceInput: boolean;
   showTypingIndicator: boolean;
   enableFeedback: boolean;
 }
@@ -209,7 +211,7 @@ export interface ChatSession {
 export interface InitResponse {
   webhookUrl: string;
   sessionId: string;
-  config: FlowChatConfig;
+  config: N8nChatConfig;
   context: ChatContext;
   messages: ChatMessage[];
 }
@@ -235,8 +237,9 @@ export interface ErrorResponse {
 export interface ChatWidgetProps {
   webhookUrl: string;
   sessionId: string;
-  config: FlowChatConfig;
+  config: N8nChatConfig;
   context: ChatContext;
+  apiUrl: string;
   isPreview?: boolean;
   onClose?: () => void;
 }
@@ -278,12 +281,12 @@ export interface ChatMessageProps {
 // Global Config Types
 // ============================================================================
 
-export interface FlowChatGlobalConfig {
+export interface N8nChatGlobalConfig {
   version: string;
   debug: boolean;
 }
 
-export interface FlowChatInitConfig {
+export interface N8nChatInitConfig {
   containerId: string;
   instanceId: string;
   mode: 'inline' | 'bubble' | 'both';
@@ -295,7 +298,7 @@ export interface FlowChatInitConfig {
 // Admin Types
 // ============================================================================
 
-export interface AdminInstance extends FlowChatConfig {
+export interface AdminInstance extends N8nChatConfig {
   id: string;
   webhookUrl: string;
   isEnabled: boolean;
@@ -346,12 +349,12 @@ export interface GlobalSettings {
 
 declare global {
   interface Window {
-    flowchatConfig: FlowChatGlobalConfig;
-    FlowChat: {
-      init: (config: FlowChatInitConfig) => Promise<void>;
+    n8nChatConfig: N8nChatGlobalConfig;
+    N8nChat: {
+      init: (config: N8nChatInitConfig) => Promise<void>;
     };
-    [key: `flowchatInit_${string}`]: FlowChatInitConfig;
-    [key: `flowchatBubble_${string}`]: FlowChatInitConfig;
+    [key: `n8nChatInit_${string}`]: N8nChatInitConfig;
+    [key: `n8nChatBubble_${string}`]: N8nChatInitConfig;
   }
 }
 

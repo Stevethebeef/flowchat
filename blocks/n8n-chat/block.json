@@ -1,14 +1,14 @@
 {
     "$schema": "https://schemas.wp.org/trunk/block.json",
     "apiVersion": 3,
-    "name": "flowchat/chat",
+    "name": "n8n-chat/chat",
     "version": "1.0.0",
-    "title": "FlowChat",
+    "title": "n8n Chat",
     "category": "widgets",
     "icon": "format-chat",
-    "description": "Embed an AI chat widget powered by n8n.",
-    "keywords": ["chat", "ai", "n8n", "assistant", "support", "bot"],
-    "textdomain": "flowchat",
+    "description": "Embed a beautiful chat widget powered by n8n workflows.",
+    "keywords": ["chat", "ai", "n8n", "assistant", "support", "bot", "chatbot"],
+    "textdomain": "n8n-chat",
     "attributes": {
         "instanceId": {
             "type": "string",

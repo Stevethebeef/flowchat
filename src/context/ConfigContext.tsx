@@ -6,14 +6,14 @@
  */
 
 import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
-import type { FlowChatConfig, ChatContext as ChatContextData } from '../types';
+import type { N8nChatConfig, ChatContext as ChatContextData } from '../types';
 
 interface ConfigContextValue {
   /** Current instance ID */
   instanceId: string;
 
   /** Instance configuration */
-  config: FlowChatConfig;
+  config: N8nChatConfig;
 
   /** WordPress context */
   wpContext: ChatContextData | null;
@@ -33,7 +33,7 @@ const ConfigContext = createContext<ConfigContextValue | null>(null);
 interface ConfigProviderProps {
   children: ReactNode;
   instanceId: string;
-  config: FlowChatConfig;
+  config: N8nChatConfig;
   wpContext?: ChatContextData;
   apiBase?: string;
   nonce?: string;
@@ -81,7 +81,7 @@ export function useConfig(): ConfigContextValue {
 /**
  * Hook to access just the instance config
  */
-export function useInstanceConfig(): FlowChatConfig {
+export function useInstanceConfig(): N8nChatConfig {
   const { config } = useConfig();
   return config;
 }

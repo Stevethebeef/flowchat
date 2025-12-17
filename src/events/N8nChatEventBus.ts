@@ -1,16 +1,16 @@
 /**
- * FlowChatEventBus
+ * N8nChatEventBus
  *
  * Cross-instance event communication system.
  * Allows instances to communicate with each other and external scripts
- * to hook into FlowChat events.
+ * to hook into n8n Chat events.
  */
 
 // ============================================================================
 // Event Types
 // ============================================================================
 
-export type FlowChatEventType =
+export type N8nChatEventType =
   | 'INSTANCE_READY'
   | 'INSTANCE_DESTROYED'
   | 'MESSAGE_SENT'
@@ -34,14 +34,14 @@ export type FlowChatEventType =
   | 'SESSION_ENDED'
   | 'ERROR';
 
-export interface FlowChatEvent {
-  type: FlowChatEventType;
+export interface N8nChatEvent {
+  type: N8nChatEventType;
   instanceId: string;
   timestamp: number;
   data?: Record<string, unknown>;
 }
 
-export interface InstanceReadyEvent extends FlowChatEvent {
+export interface InstanceReadyEvent extends N8nChatEvent {
   type: 'INSTANCE_READY';
   data: {
     containerId: string;
@@ -49,14 +49,14 @@ export interface InstanceReadyEvent extends FlowChatEvent {
   };
 }
 
-export interface InstanceDestroyedEvent extends FlowChatEvent {
+export interface InstanceDestroyedEvent extends N8nChatEvent {
   type: 'INSTANCE_DESTROYED';
   data: {
     containerId: string;
   };
 }
 
-export interface MessageSentEvent extends FlowChatEvent {
+export interface MessageSentEvent extends N8nChatEvent {
   type: 'MESSAGE_SENT';
   data: {
     messageId: string;
@@ -65,7 +65,7 @@ export interface MessageSentEvent extends FlowChatEvent {
   };
 }
 
-export interface MessageReceivedEvent extends FlowChatEvent {
+export interface MessageReceivedEvent extends N8nChatEvent {
   type: 'MESSAGE_RECEIVED';
   data: {
     messageId: string;
@@ -74,15 +74,15 @@ export interface MessageReceivedEvent extends FlowChatEvent {
   };
 }
 
-export interface BubbleOpenedEvent extends FlowChatEvent {
+export interface BubbleOpenedEvent extends N8nChatEvent {
   type: 'BUBBLE_OPENED';
 }
 
-export interface BubbleClosedEvent extends FlowChatEvent {
+export interface BubbleClosedEvent extends N8nChatEvent {
   type: 'BUBBLE_CLOSED';
 }
 
-export interface InstanceSwitchedEvent extends FlowChatEvent {
+export interface InstanceSwitchedEvent extends N8nChatEvent {
   type: 'INSTANCE_SWITCHED';
   data: {
     from: string | null;
@@ -90,7 +90,7 @@ export interface InstanceSwitchedEvent extends FlowChatEvent {
   };
 }
 
-export interface ConnectionErrorEvent extends FlowChatEvent {
+export interface ConnectionErrorEvent extends N8nChatEvent {
   type: 'CONNECTION_ERROR';
   data: {
     error: string;
@@ -99,7 +99,7 @@ export interface ConnectionErrorEvent extends FlowChatEvent {
   };
 }
 
-export interface ErrorEvent extends FlowChatEvent {
+export interface ErrorEvent extends N8nChatEvent {
   type: 'ERROR';
   data: {
     error: string;
@@ -112,9 +112,9 @@ export interface ErrorEvent extends FlowChatEvent {
 // Event Listener Types
 // ============================================================================
 
-export type FlowChatEventListener<T extends FlowChatEvent = FlowChatEvent> = (event: T) => void;
+export type N8nChatEventListener<T extends N8nChatEvent = N8nChatEvent> = (event: T) => void;
 
-export type FlowChatEventMap = {
+export type N8nChatEventMap = {
   INSTANCE_READY: InstanceReadyEvent;
   INSTANCE_DESTROYED: InstanceDestroyedEvent;
   MESSAGE_SENT: MessageSentEvent;
@@ -123,19 +123,19 @@ export type FlowChatEventMap = {
   MESSAGE_COMPLETE: MessageReceivedEvent;
   BUBBLE_OPENED: BubbleOpenedEvent;
   BUBBLE_CLOSED: BubbleClosedEvent;
-  BUBBLE_MINIMIZED: FlowChatEvent;
-  BUBBLE_RESTORED: FlowChatEvent;
+  BUBBLE_MINIMIZED: N8nChatEvent;
+  BUBBLE_RESTORED: N8nChatEvent;
   INSTANCE_SWITCHED: InstanceSwitchedEvent;
-  CONNECTION_ESTABLISHED: FlowChatEvent;
-  CONNECTION_LOST: FlowChatEvent;
+  CONNECTION_ESTABLISHED: N8nChatEvent;
+  CONNECTION_LOST: N8nChatEvent;
   CONNECTION_ERROR: ConnectionErrorEvent;
-  TYPING_STARTED: FlowChatEvent;
-  TYPING_STOPPED: FlowChatEvent;
-  FILE_UPLOAD_STARTED: FlowChatEvent;
-  FILE_UPLOAD_COMPLETED: FlowChatEvent;
-  FILE_UPLOAD_FAILED: FlowChatEvent;
-  SESSION_STARTED: FlowChatEvent;
-  SESSION_ENDED: FlowChatEvent;
+  TYPING_STARTED: N8nChatEvent;
+  TYPING_STOPPED: N8nChatEvent;
+  FILE_UPLOAD_STARTED: N8nChatEvent;
+  FILE_UPLOAD_COMPLETED: N8nChatEvent;
+  FILE_UPLOAD_FAILED: N8nChatEvent;
+  SESSION_STARTED: N8nChatEvent;
+  SESSION_ENDED: N8nChatEvent;
   ERROR: ErrorEvent;
 };
 
@@ -143,9 +143,9 @@ export type FlowChatEventMap = {
 // Event Bus Class
 // ============================================================================
 
-export class FlowChatEventBus {
-  private listeners: Map<string, Set<FlowChatEventListener>> = new Map();
-  private history: FlowChatEvent[] = [];
+export class N8nChatEventBus {
+  private listeners: Map<string, Set<N8nChatEventListener>> = new Map();
+  private history: N8nChatEvent[] = [];
   private maxHistorySize: number = 100;
   private debugMode: boolean = false;
 
@@ -157,26 +157,26 @@ export class FlowChatEventBus {
   /**
    * Subscribe to a specific event type
    */
-  subscribe<T extends FlowChatEventType>(
+  subscribe<T extends N8nChatEventType>(
     eventType: T,
-    callback: FlowChatEventListener<FlowChatEventMap[T]>
+    callback: N8nChatEventListener<N8nChatEventMap[T]>
   ): () => void {
     if (!this.listeners.has(eventType)) {
       this.listeners.set(eventType, new Set());
     }
 
-    this.listeners.get(eventType)!.add(callback as FlowChatEventListener);
+    this.listeners.get(eventType)!.add(callback as N8nChatEventListener);
 
     // Return unsubscribe function
     return () => {
-      this.listeners.get(eventType)?.delete(callback as FlowChatEventListener);
+      this.listeners.get(eventType)?.delete(callback as N8nChatEventListener);
     };
   }
 
   /**
    * Subscribe to all events
    */
-  subscribeAll(callback: FlowChatEventListener): () => void {
+  subscribeAll(callback: N8nChatEventListener): () => void {
     if (!this.listeners.has('*')) {
       this.listeners.set('*', new Set());
     }
@@ -193,7 +193,7 @@ export class FlowChatEventBus {
    */
   subscribeToInstance(
     instanceId: string,
-    callback: FlowChatEventListener
+    callback: N8nChatEventListener
   ): () => void {
     const key = `instance:${instanceId}`;
 
@@ -211,12 +211,12 @@ export class FlowChatEventBus {
   /**
    * Emit an event
    */
-  emit<T extends FlowChatEventType>(
+  emit<T extends N8nChatEventType>(
     type: T,
     instanceId: string,
-    data?: FlowChatEventMap[T]['data']
+    data?: N8nChatEventMap[T]['data']
   ): void {
-    const event: FlowChatEvent = {
+    const event: N8nChatEvent = {
       type,
       instanceId,
       timestamp: Date.now(),
@@ -228,7 +228,7 @@ export class FlowChatEventBus {
 
     // Debug logging
     if (this.debugMode) {
-      console.log('[FlowChat Event]', event);
+      console.log('[n8n Chat Event]', event);
     }
 
     // Notify type-specific listeners
@@ -236,7 +236,7 @@ export class FlowChatEventBus {
       try {
         callback(event);
       } catch (error) {
-        console.error(`[FlowChat] Event listener error for ${type}:`, error);
+        console.error(`[n8n Chat] Event listener error for ${type}:`, error);
       }
     });
 
@@ -245,7 +245,7 @@ export class FlowChatEventBus {
       try {
         callback(event);
       } catch (error) {
-        console.error('[FlowChat] Wildcard event listener error:', error);
+        console.error('[n8n Chat] Wildcard event listener error:', error);
       }
     });
 
@@ -255,7 +255,7 @@ export class FlowChatEventBus {
       try {
         callback(event);
       } catch (error) {
-        console.error(`[FlowChat] Instance listener error for ${instanceId}:`, error);
+        console.error(`[n8n Chat] Instance listener error for ${instanceId}:`, error);
       }
     });
   }
@@ -264,10 +264,10 @@ export class FlowChatEventBus {
    * Get event history
    */
   getHistory(options?: {
-    type?: FlowChatEventType;
+    type?: N8nChatEventType;
     instanceId?: string;
     limit?: number;
-  }): FlowChatEvent[] {
+  }): N8nChatEvent[] {
     let filtered = [...this.history];
 
     if (options?.type) {
@@ -295,7 +295,7 @@ export class FlowChatEventBus {
   /**
    * Remove all listeners
    */
-  removeAllListeners(eventType?: FlowChatEventType): void {
+  removeAllListeners(eventType?: N8nChatEventType): void {
     if (eventType) {
       this.listeners.delete(eventType);
     } else {
@@ -306,7 +306,7 @@ export class FlowChatEventBus {
   /**
    * Get listener count for debugging
    */
-  getListenerCount(eventType?: FlowChatEventType): number {
+  getListenerCount(eventType?: N8nChatEventType): number {
     if (eventType) {
       return this.listeners.get(eventType)?.size ?? 0;
     }
@@ -328,7 +328,7 @@ export class FlowChatEventBus {
   /**
    * Add event to history with size limit
    */
-  private addToHistory(event: FlowChatEvent): void {
+  private addToHistory(event: N8nChatEvent): void {
     this.history.push(event);
 
     // Trim history if exceeds max size
@@ -343,13 +343,13 @@ export class FlowChatEventBus {
 // ============================================================================
 
 // Create global event bus instance
-const globalEventBus = new FlowChatEventBus({
-  debugMode: (window as any).flowchatDebug === true,
+const globalEventBus = new N8nChatEventBus({
+  debugMode: (window as any).n8nChatDebug === true,
 });
 
 // Expose on window for external scripts
 if (typeof window !== 'undefined') {
-  (window as any).flowchatEvents = globalEventBus;
+  (window as any).n8nChatEvents = globalEventBus;
 }
 
 export default globalEventBus;
@@ -361,10 +361,10 @@ export default globalEventBus;
 /**
  * Convenience function to emit events
  */
-export function emitEvent<T extends FlowChatEventType>(
+export function emitEvent<T extends N8nChatEventType>(
   type: T,
   instanceId: string,
-  data?: FlowChatEventMap[T]['data']
+  data?: N8nChatEventMap[T]['data']
 ): void {
   globalEventBus.emit(type, instanceId, data);
 }
@@ -372,9 +372,9 @@ export function emitEvent<T extends FlowChatEventType>(
 /**
  * Convenience function to subscribe to events
  */
-export function onEvent<T extends FlowChatEventType>(
+export function onEvent<T extends N8nChatEventType>(
   type: T,
-  callback: FlowChatEventListener<FlowChatEventMap[T]>
+  callback: N8nChatEventListener<N8nChatEventMap[T]>
 ): () => void {
   return globalEventBus.subscribe(type, callback);
 }
@@ -382,7 +382,7 @@ export function onEvent<T extends FlowChatEventType>(
 /**
  * Convenience function to subscribe to all events
  */
-export function onAnyEvent(callback: FlowChatEventListener): () => void {
+export function onAnyEvent(callback: N8nChatEventListener): () => void {
   return globalEventBus.subscribeAll(callback);
 }
 
@@ -393,11 +393,11 @@ export function onAnyEvent(callback: FlowChatEventListener): () => void {
 import { useEffect, useRef } from 'react';
 
 /**
- * React hook for subscribing to FlowChat events
+ * React hook for subscribing to n8n Chat events
  */
-export function useFlowChatEvent<T extends FlowChatEventType>(
+export function useN8nChatEvent<T extends N8nChatEventType>(
   eventType: T,
-  callback: FlowChatEventListener<FlowChatEventMap[T]>,
+  callback: N8nChatEventListener<N8nChatEventMap[T]>,
   deps: React.DependencyList = []
 ): void {
   const callbackRef = useRef(callback);
@@ -405,7 +405,7 @@ export function useFlowChatEvent<T extends FlowChatEventType>(
 
   useEffect(() => {
     const unsubscribe = globalEventBus.subscribe(eventType, (event) => {
-      callbackRef.current(event as FlowChatEventMap[T]);
+      callbackRef.current(event as N8nChatEventMap[T]);
     });
 
     return unsubscribe;
@@ -418,7 +418,7 @@ export function useFlowChatEvent<T extends FlowChatEventType>(
  */
 export function useInstanceEvents(
   instanceId: string,
-  callback: FlowChatEventListener,
+  callback: N8nChatEventListener,
   deps: React.DependencyList = []
 ): void {
   const callbackRef = useRef(callback);

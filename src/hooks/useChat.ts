@@ -5,12 +5,12 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { ChatMessage, FlowChatConfig, ChatContext, UploadResponse } from '../types';
+import type { ChatMessage, N8nChatConfig, ChatContext, UploadResponse } from '../types';
 
 interface UseChatOptions {
   webhookUrl: string;
   sessionId: string;
-  config: FlowChatConfig;
+  config: N8nChatConfig;
   context: ChatContext;
   apiUrl: string;
   nonce: string;

@@ -1,7 +1,7 @@
 /**
- * FlowChat Admin Entry Point
+ * n8n Chat Admin Entry Point
  *
- * Admin React application for managing FlowChat instances and settings.
+ * Admin React application for managing n8n Chat instances and settings.
  */
 
 import { createRoot } from 'react-dom/client';
@@ -10,10 +10,10 @@ import './styles/admin.css';
 
 // Wait for DOM to be ready
 document.addEventListener('DOMContentLoaded', () => {
-  const container = document.getElementById('flowchat-admin-root');
+  const container = document.getElementById('n8n-chat-admin-root');
 
   if (!container) {
-    console.error('FlowChat Admin: Container not found');
+    console.error('n8n Chat Admin: Container not found');
     return;
   }
 

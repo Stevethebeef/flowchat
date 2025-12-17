@@ -4,15 +4,15 @@
  *
  * Handles admin-facing API endpoints for managing instances and settings.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\API;
+namespace N8nChat\API;
 
-use FlowChat\Core\Instance_Manager;
-use FlowChat\Core\Session_Manager;
-use FlowChat\Core\Context_Builder;
-use FlowChat\Core\File_Handler;
+use N8nChat\Core\Instance_Manager;
+use N8nChat\Core\Session_Manager;
+use N8nChat\Core\Context_Builder;
+use N8nChat\Core\File_Handler;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -26,7 +26,7 @@ class Admin_Endpoints {
     /**
      * API namespace
      */
-    private const NAMESPACE = 'flowchat/v1/admin';
+    private const NAMESPACE = 'n8n-chat/v1/admin';
 
     /**
      * Instance manager
@@ -46,8 +46,8 @@ class Admin_Endpoints {
      * Constructor
      */
     public function __construct() {
-        $this->instance_manager = new Instance_Manager();
-        $this->session_manager = new Session_Manager();
+        $this->instance_manager = Instance_Manager::get_instance();
+        $this->session_manager = Session_Manager::get_instance();
 
         add_action('rest_api_init', [$this, 'register_routes']);
     }
@@ -193,9 +193,17 @@ class Admin_Endpoints {
 
         // Export/Import
         register_rest_route(self::NAMESPACE, '/export', [
-            'methods' => 'POST',
+            'methods' => 'GET',
             'callback' => [$this, 'export_data'],
             'permission_callback' => [$this, 'check_admin_permission'],
+            'args' => [
+                'type' => [
+                    'required' => false,
+                    'type' => 'string',
+                    'default' => 'all',
+                    'enum' => ['all', 'instances', 'settings'],
+                ],
+            ],
         ]);
 
         register_rest_route(self::NAMESPACE, '/import', [
@@ -257,6 +265,13 @@ class Admin_Endpoints {
                 ],
             ],
         ]);
+
+        // Style presets
+        register_rest_route(self::NAMESPACE, '/style-presets', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_style_presets'],
+            'permission_callback' => [$this, 'check_admin_permission'],
+        ]);
     }
 
     /**
@@ -293,12 +308,12 @@ class Admin_Endpoints {
      */
     public function get_instance(\WP_REST_Request $request): \WP_REST_Response {
         $id = $request->get_param('id');
-        $instance = $this->instance_manager->get_instance($id);
+        $instance = $this->instance_manager->get($id);
 
         if (!$instance) {
             return new \WP_REST_Response([
                 'error' => 'not_found',
-                'message' => __('Instance not found.', 'flowchat'),
+                'message' => __('Instance not found.', 'n8n-chat'),
             ], 404);
         }
 
@@ -321,12 +336,12 @@ class Admin_Endpoints {
         if (empty($data['name'])) {
             return new \WP_REST_Response([
                 'error' => 'missing_name',
-                'message' => __('Instance name is required.', 'flowchat'),
+                'message' => __('Instance name is required.', 'n8n-chat'),
             ], 400);
         }
 
         $id = $this->instance_manager->create_instance($data);
-        $instance = $this->instance_manager->get_instance($id);
+        $instance = $this->instance_manager->get($id);
 
         return new \WP_REST_Response($instance, 201);
     }
@@ -341,11 +356,11 @@ class Admin_Endpoints {
         $id = $request->get_param('id');
         $data = $request->get_json_params();
 
-        $existing = $this->instance_manager->get_instance($id);
+        $existing = $this->instance_manager->get($id);
         if (!$existing) {
             return new \WP_REST_Response([
                 'error' => 'not_found',
-                'message' => __('Instance not found.', 'flowchat'),
+                'message' => __('Instance not found.', 'n8n-chat'),
             ], 404);
         }
 
@@ -354,11 +369,11 @@ class Admin_Endpoints {
         if (!$result) {
             return new \WP_REST_Response([
                 'error' => 'update_failed',
-                'message' => __('Failed to update instance.', 'flowchat'),
+                'message' => __('Failed to update instance.', 'n8n-chat'),
             ], 500);
         }
 
-        $instance = $this->instance_manager->get_instance($id);
+        $instance = $this->instance_manager->get($id);
 
         return new \WP_REST_Response($instance);
     }
@@ -372,11 +387,11 @@ class Admin_Endpoints {
     public function delete_instance(\WP_REST_Request $request): \WP_REST_Response {
         $id = $request->get_param('id');
 
-        $existing = $this->instance_manager->get_instance($id);
+        $existing = $this->instance_manager->get($id);
         if (!$existing) {
             return new \WP_REST_Response([
                 'error' => 'not_found',
-                'message' => __('Instance not found.', 'flowchat'),
+                'message' => __('Instance not found.', 'n8n-chat'),
             ], 404);
         }
 
@@ -389,7 +404,7 @@ class Admin_Endpoints {
         if (!$result) {
             return new \WP_REST_Response([
                 'error' => 'delete_failed',
-                'message' => __('Failed to delete instance.', 'flowchat'),
+                'message' => __('Failed to delete instance.', 'n8n-chat'),
             ], 500);
         }
 
@@ -410,11 +425,11 @@ class Admin_Endpoints {
         if (!$new_id) {
             return new \WP_REST_Response([
                 'error' => 'duplicate_failed',
-                'message' => __('Failed to duplicate instance.', 'flowchat'),
+                'message' => __('Failed to duplicate instance.', 'n8n-chat'),
             ], 500);
         }
 
-        $instance = $this->instance_manager->get_instance($new_id);
+        $instance = $this->instance_manager->get($new_id);
 
         return new \WP_REST_Response($instance, 201);
     }
@@ -428,11 +443,11 @@ class Admin_Endpoints {
     public function test_webhook(\WP_REST_Request $request): \WP_REST_Response {
         $id = $request->get_param('id');
 
-        $instance = $this->instance_manager->get_instance($id);
+        $instance = $this->instance_manager->get($id);
         if (!$instance) {
             return new \WP_REST_Response([
                 'error' => 'not_found',
-                'message' => __('Instance not found.', 'flowchat'),
+                'message' => __('Instance not found.', 'n8n-chat'),
             ], 404);
         }
 
@@ -465,8 +480,8 @@ class Admin_Endpoints {
      * @return \WP_REST_Response
      */
     public function get_settings(): \WP_REST_Response {
-        $settings = get_option('flowchat_global_settings', []);
-        $error_messages = get_option('flowchat_error_messages', []);
+        $settings = get_option('n8n_chat_global_settings', []);
+        $error_messages = get_option('n8n_chat_error_messages', []);
 
         return new \WP_REST_Response([
             'settings' => $settings,
@@ -484,11 +499,11 @@ class Admin_Endpoints {
         $data = $request->get_json_params();
 
         if (isset($data['settings'])) {
-            update_option('flowchat_global_settings', $data['settings']);
+            update_option('n8n_chat_global_settings', $data['settings']);
         }
 
         if (isset($data['errorMessages'])) {
-            update_option('flowchat_error_messages', $data['errorMessages']);
+            update_option('n8n_chat_error_messages', $data['errorMessages']);
         }
 
         return new \WP_REST_Response(['success' => true]);
@@ -532,10 +547,10 @@ class Admin_Endpoints {
             ],
             'page' => [
                 'url' => admin_url(),
-                'title' => __('Admin Page (Preview)', 'flowchat'),
+                'title' => __('Admin Page (Preview)', 'n8n-chat'),
                 'type' => 'admin',
-                'excerpt' => __('This is a preview of your system prompt.', 'flowchat'),
-                'content' => __('This is a preview of your system prompt with all tags resolved.', 'flowchat'),
+                'excerpt' => __('This is a preview of your system prompt.', 'n8n-chat'),
+                'content' => __('This is a preview of your system prompt with all tags resolved.', 'n8n-chat'),
             ],
             'datetime' => [
                 'date' => date_i18n('F j, Y'),
@@ -585,7 +600,7 @@ class Admin_Endpoints {
 
         $sessions = $wpdb->get_results(
             $wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}flowchat_sessions
+                "SELECT * FROM {$wpdb->prefix}n8n_chat_sessions
                 WHERE {$where_clause}
                 ORDER BY last_activity_at DESC
                 LIMIT %d OFFSET %d",
@@ -596,7 +611,7 @@ class Admin_Endpoints {
         // Get total count
         $total = $wpdb->get_var(
             $wpdb->prepare(
-                "SELECT COUNT(*) FROM {$wpdb->prefix}flowchat_sessions WHERE {$where_clause}",
+                "SELECT COUNT(*) FROM {$wpdb->prefix}n8n_chat_sessions WHERE {$where_clause}",
                 ...array_slice($params, 0, -2)
             )
         );
@@ -619,7 +634,7 @@ class Admin_Endpoints {
         global $wpdb;
 
         $messages = $wpdb->get_results(
-            "SELECT * FROM {$wpdb->prefix}flowchat_fallback_messages
+            "SELECT * FROM {$wpdb->prefix}n8n_chat_fallback_messages
             ORDER BY created_at DESC
             LIMIT 100"
         );
@@ -637,31 +652,66 @@ class Admin_Endpoints {
 
         $file_handler = new File_Handler();
 
+        // Get active theme
+        $theme = wp_get_theme();
+
+        // Get active plugins
+        $active_plugins = get_option('active_plugins', []);
+        $plugin_names = [];
+        foreach ($active_plugins as $plugin) {
+            $plugin_data = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin, false, false);
+            $plugin_names[] = $plugin_data['Name'] ?? $plugin;
+        }
+
+        // Check required PHP extensions
+        $required_extensions = ['curl', 'json', 'mbstring', 'openssl'];
+        $php_extensions = [];
+        foreach ($required_extensions as $ext) {
+            $php_extensions[$ext] = extension_loaded($ext);
+        }
+
+        // Check database tables
+        $tables = [
+            'n8n_chat_sessions' => $wpdb->prefix . 'n8n_chat_sessions',
+            'n8n_chat_messages' => $wpdb->prefix . 'n8n_chat_messages',
+            'n8n_chat_fallback_messages' => $wpdb->prefix . 'n8n_chat_fallback_messages',
+        ];
+
+        $database_tables = [];
+        foreach ($tables as $name => $table) {
+            $exists = $wpdb->get_var($wpdb->prepare(
+                "SHOW TABLES LIKE %s",
+                $table
+            )) === $table;
+
+            $rows = 0;
+            if ($exists) {
+                $rows = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table}");
+            }
+
+            $database_tables[$name] = [
+                'exists' => $exists,
+                'rows' => $rows,
+            ];
+        }
+
+        // Get cURL version
+        $curl_version = function_exists('curl_version') ? curl_version()['version'] : 'N/A';
+
+        // Format response to match frontend expectations
         return new \WP_REST_Response([
-            'plugin' => [
-                'version' => FLOWCHAT_VERSION,
-                'db_version' => get_option('flowchat_db_version', 'unknown'),
-            ],
-            'wordpress' => [
-                'version' => get_bloginfo('version'),
-                'multisite' => is_multisite(),
-            ],
-            'php' => [
-                'version' => PHP_VERSION,
-                'memory_limit' => ini_get('memory_limit'),
-                'max_execution_time' => ini_get('max_execution_time'),
-                'upload_max_filesize' => ini_get('upload_max_filesize'),
-            ],
-            'database' => [
-                'sessions_count' => (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}flowchat_sessions"),
-                'messages_count' => (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}flowchat_messages"),
-                'fallback_count' => (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}flowchat_fallback_messages"),
-            ],
-            'storage' => [
-                'upload_size' => $file_handler->get_total_upload_size(),
-                'upload_size_formatted' => size_format($file_handler->get_total_upload_size()),
-                'file_count' => $file_handler->get_file_count(),
-            ],
+            'php_version' => PHP_VERSION,
+            'wp_version' => get_bloginfo('version'),
+            'plugin_version' => N8N_CHAT_VERSION,
+            'active_theme' => $theme->get('Name') . ' ' . $theme->get('Version'),
+            'active_plugins' => $plugin_names,
+            'database_tables' => $database_tables,
+            'php_extensions' => $php_extensions,
+            'server_info' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
+            'memory_limit' => ini_get('memory_limit'),
+            'max_execution_time' => ini_get('max_execution_time'),
+            'curl_version' => $curl_version,
+            'ssl_enabled' => is_ssl(),
         ]);
     }
 
@@ -672,23 +722,22 @@ class Admin_Endpoints {
      * @return \WP_REST_Response
      */
     public function export_data(\WP_REST_Request $request): \WP_REST_Response {
-        $data = $request->get_json_params();
-        $include_instances = $data['instances'] ?? true;
-        $include_settings = $data['settings'] ?? true;
+        $type = $request->get_param('type') ?? 'all';
 
         $export = [
-            'version' => FLOWCHAT_VERSION,
+            'version' => N8N_CHAT_VERSION,
             'exported_at' => current_time('c'),
             'site_url' => home_url(),
+            'export_type' => $type,
         ];
 
-        if ($include_instances) {
-            $export['instances'] = $this->instance_manager->get_all_instances();
+        if ($type === 'all' || $type === 'instances') {
+            $export['instances'] = array_values($this->instance_manager->get_all_instances());
         }
 
-        if ($include_settings) {
-            $export['settings'] = get_option('flowchat_global_settings', []);
-            $export['error_messages'] = get_option('flowchat_error_messages', []);
+        if ($type === 'all' || $type === 'settings') {
+            $export['settings'] = get_option('n8n_chat_global_settings', []);
+            $export['error_messages'] = get_option('n8n_chat_error_messages', []);
         }
 
         return new \WP_REST_Response($export);
@@ -703,10 +752,8 @@ class Admin_Endpoints {
     public function import_data(\WP_REST_Request $request): \WP_REST_Response {
         $data = $request->get_json_params();
 
-        $imported = [
-            'instances' => 0,
-            'settings' => false,
-        ];
+        $instances_imported = 0;
+        $settings_imported = false;
 
         // Import instances
         if (!empty($data['instances']) && is_array($data['instances'])) {
@@ -721,23 +768,28 @@ class Admin_Endpoints {
                 $instance['isEnabled'] = false;
 
                 $this->instance_manager->create_instance($instance);
-                $imported['instances']++;
+                $instances_imported++;
             }
         }
 
         // Import settings
         if (!empty($data['settings'])) {
-            update_option('flowchat_global_settings', $data['settings']);
-            $imported['settings'] = true;
+            update_option('n8n_chat_global_settings', $data['settings']);
+            $settings_imported = true;
         }
 
         if (!empty($data['error_messages'])) {
-            update_option('flowchat_error_messages', $data['error_messages']);
+            update_option('n8n_chat_error_messages', $data['error_messages']);
         }
 
         return new \WP_REST_Response([
             'success' => true,
-            'imported' => $imported,
+            'instances_imported' => $instances_imported,
+            'settings_imported' => $settings_imported,
+            'message' => sprintf(
+                __('Successfully imported %d instance(s).', 'n8n-chat'),
+                $instances_imported
+            ),
         ]);
     }
 
@@ -753,7 +805,7 @@ class Admin_Endpoints {
         if (!is_array($order)) {
             return new \WP_REST_Response([
                 'error' => 'invalid_order',
-                'message' => __('Order must be an array of instance IDs.', 'flowchat'),
+                'message' => __('Order must be an array of instance IDs.', 'n8n-chat'),
             ], 400);
         }
 
@@ -792,8 +844,8 @@ class Admin_Endpoints {
         };
 
         $start_date = date('Y-m-d H:i:s', strtotime("-{$days} days"));
-        $sessions_table = $wpdb->prefix . 'flowchat_sessions';
-        $messages_table = $wpdb->prefix . 'flowchat_messages';
+        $sessions_table = $wpdb->prefix . 'n8n_chat_sessions';
+        $messages_table = $wpdb->prefix . 'n8n_chat_messages';
 
         // Build where clause
         $where = "started_at >= %s";
@@ -893,8 +945,8 @@ class Admin_Endpoints {
         $per_page = min(100, max(1, (int) $request->get_param('per_page')));
         $offset = ($page - 1) * $per_page;
 
-        $sessions_table = $wpdb->prefix . 'flowchat_sessions';
-        $messages_table = $wpdb->prefix . 'flowchat_messages';
+        $sessions_table = $wpdb->prefix . 'n8n_chat_sessions';
+        $messages_table = $wpdb->prefix . 'n8n_chat_messages';
 
         // Build where clause
         $where = '1=1';
@@ -939,5 +991,56 @@ class Admin_Endpoints {
                 'total_pages' => $total_pages,
             ],
         ]);
+    }
+
+    /**
+     * Get style presets
+     *
+     * @return \WP_REST_Response
+     */
+    public function get_style_presets(): \WP_REST_Response {
+        $presets_file = N8N_CHAT_PLUGIN_DIR . 'assets/style-presets.json';
+
+        if (!file_exists($presets_file)) {
+            return new \WP_REST_Response([
+                'error' => 'file_not_found',
+                'message' => __('Style presets file not found.', 'n8n-chat'),
+            ], 404);
+        }
+
+        $presets_json = file_get_contents($presets_file);
+        $presets = json_decode($presets_json, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return new \WP_REST_Response([
+                'error' => 'invalid_json',
+                'message' => __('Style presets file contains invalid JSON.', 'n8n-chat'),
+            ], 500);
+        }
+
+        // Transform presets to match frontend expected format
+        $transformed = [];
+        foreach ($presets as $id => $preset) {
+            $styles = $preset['styles'] ?? [];
+            $borderRadius = isset($styles['borderRadius']) ? (int) preg_replace('/[^0-9]/', '', $styles['borderRadius']) : 12;
+
+            $transformed[] = [
+                'id' => $preset['id'] ?? $id,
+                'name' => $preset['name'] ?? $id,
+                'description' => $preset['description'] ?? '',
+                'colors' => [
+                    'primary' => $styles['primaryColor'] ?? '#3b82f6',
+                    'userBubble' => $styles['userMessageBg'] ?? '#3b82f6',
+                    'botBubble' => $styles['assistantMessageBg'] ?? '#f3f4f6',
+                    'background' => $styles['backgroundColor'] ?? '#ffffff',
+                    'text' => $styles['textColor'] ?? '#1f2937',
+                    'header' => $styles['headerBg'] ?? '#ffffff',
+                ],
+                'borderRadius' => $borderRadius,
+                'fontFamily' => $styles['fontFamily'] ?? 'system-ui, sans-serif',
+            ];
+        }
+
+        return new \WP_REST_Response($transformed);
     }
 }

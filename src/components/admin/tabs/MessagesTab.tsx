@@ -6,6 +6,17 @@
 
 import React, { useState } from 'react';
 import type { AdminInstance } from '../../../types';
+import { useAdminI18n } from '../../../hooks/useAdminI18n';
+import { InfoIcon } from '../shared/InfoIcon';
+
+/**
+ * Format bytes to human-readable file size
+ */
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1048576) return `${Math.round(bytes / 1024)} KB`;
+  return `${Math.round(bytes / 1048576)} MB`;
+}
 
 interface MessagesTabProps {
   instance: Partial<AdminInstance>;
@@ -16,6 +27,7 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
   instance,
   updateField,
 }) => {
+  const { t } = useAdminI18n();
   const [showErrorMessages, setShowErrorMessages] = useState(false);
 
   const messages = instance.messages || {};
@@ -39,13 +51,13 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
   };
 
   return (
-    <div className="flowchat-tab-content">
+    <div className="n8n-chat-tab-content">
       {/* Welcome Screen */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Welcome Screen</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">Welcome Screen</h2>
 
-        <div className="flowchat-field">
-          <label className="flowchat-checkbox">
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
             <input
               type="checkbox"
               checked={messages.showWelcomeScreen !== false}
@@ -61,7 +73,7 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
         {messages.showWelcomeScreen !== false && (
           <>
             {/* Chat Title */}
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-chat-title">Chat Title</label>
               <input
                 type="text"
@@ -77,7 +89,7 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
             </div>
 
             {/* Welcome Message */}
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-welcome-message">Welcome Message</label>
               <textarea
                 id="fc-welcome-message"
@@ -93,14 +105,14 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
             </div>
 
             {/* Quick Suggestions */}
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label>
                 Quick Suggestions
-                <span className="flowchat-field-note">(max 4)</span>
+                <span className="n8n-chat-field-note">(max 4)</span>
               </label>
-              <div className="flowchat-suggestions-list">
+              <div className="n8n-chat-suggestions-list">
                 {suggestedPrompts.map((suggestion, index) => (
-                  <div key={index} className="flowchat-suggestion-item">
+                  <div key={index} className="n8n-chat-suggestion-item">
                     <input
                       type="text"
                       value={suggestion}
@@ -110,7 +122,7 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
                     />
                     <button
                       type="button"
-                      className="button-link flowchat-remove-btn"
+                      className="button-link n8n-chat-remove-btn"
                       onClick={() => removeSuggestion(index)}
                       aria-label="Remove suggestion"
                     >
@@ -138,10 +150,10 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
       </div>
 
       {/* Input Placeholder */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Chat Input</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">Chat Input</h2>
 
-        <div className="flowchat-field">
+        <div className="n8n-chat-field">
           <label htmlFor="fc-placeholder">Input Placeholder</label>
           <input
             type="text"
@@ -158,11 +170,11 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
       </div>
 
       {/* UI Options */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">UI Options</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">UI Options</h2>
 
-        <div className="flowchat-field">
-          <label className="flowchat-checkbox">
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
             <input
               type="checkbox"
               checked={instance.showHeader !== false}
@@ -172,8 +184,8 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
           </label>
         </div>
 
-        <div className="flowchat-field">
-          <label className="flowchat-checkbox">
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
             <input
               type="checkbox"
               checked={instance.showTimestamp || false}
@@ -183,8 +195,8 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
           </label>
         </div>
 
-        <div className="flowchat-field">
-          <label className="flowchat-checkbox">
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
             <input
               type="checkbox"
               checked={instance.showAvatar !== false}
@@ -194,8 +206,8 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
           </label>
         </div>
 
-        <div className="flowchat-field">
-          <label className="flowchat-checkbox">
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
             <input
               type="checkbox"
               checked={instance.features?.showTypingIndicator !== false}
@@ -206,11 +218,176 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
         </div>
       </div>
 
+      {/* Input Features */}
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">{t('inputFeatures', 'Input Features')}</h2>
+
+        {/* Voice Input */}
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
+            <input
+              type="checkbox"
+              checked={instance.features?.voiceInput !== false}
+              onChange={(e) => updateField('features.voiceInput', e.target.checked)}
+            />
+            <span>{t('enableVoiceInput', 'Enable voice input')}</span>
+            <InfoIcon tooltip={t('tooltipVoiceInput', 'Uses Web Speech API. Supported in Chrome, Edge, and Safari. Firefox has limited support.')} />
+          </label>
+          <p className="description">
+            {t('voiceInputDesc', 'Allow users to dictate messages using their microphone.')}
+          </p>
+        </div>
+
+        {/* File Upload */}
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
+            <input
+              type="checkbox"
+              checked={instance.features?.fileUpload || false}
+              onChange={(e) => updateField('features.fileUpload', e.target.checked)}
+            />
+            <span>{t('enableFileUploads', 'Enable file uploads')}</span>
+            <InfoIcon tooltip={t('tooltipFileUpload', 'Files are uploaded to wp-content/uploads/n8n-chat/temp/ and auto-deleted after 24 hours.')} />
+          </label>
+          <p className="description">
+            {t('fileUploadsDesc', 'Allow users to attach files and images to their messages.')}
+          </p>
+        </div>
+
+        {instance.features?.fileUpload && (
+          <div className="n8n-chat-subsection">
+            {/* Allowed File Types */}
+            <div className="n8n-chat-field">
+              <label>Allowed File Types</label>
+              <div className="n8n-chat-file-types-grid">
+                <label className="n8n-chat-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={instance.features?.fileTypes?.includes('image/jpeg') || false}
+                    onChange={(e) => {
+                      const types = instance.features?.fileTypes || [];
+                      if (e.target.checked) {
+                        updateField('features.fileTypes', [...types, 'image/jpeg']);
+                      } else {
+                        updateField('features.fileTypes', types.filter((t: string) => t !== 'image/jpeg'));
+                      }
+                    }}
+                  />
+                  <span>JPEG Images</span>
+                </label>
+                <label className="n8n-chat-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={instance.features?.fileTypes?.includes('image/png') || false}
+                    onChange={(e) => {
+                      const types = instance.features?.fileTypes || [];
+                      if (e.target.checked) {
+                        updateField('features.fileTypes', [...types, 'image/png']);
+                      } else {
+                        updateField('features.fileTypes', types.filter((t: string) => t !== 'image/png'));
+                      }
+                    }}
+                  />
+                  <span>PNG Images</span>
+                </label>
+                <label className="n8n-chat-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={instance.features?.fileTypes?.includes('image/gif') || false}
+                    onChange={(e) => {
+                      const types = instance.features?.fileTypes || [];
+                      if (e.target.checked) {
+                        updateField('features.fileTypes', [...types, 'image/gif']);
+                      } else {
+                        updateField('features.fileTypes', types.filter((t: string) => t !== 'image/gif'));
+                      }
+                    }}
+                  />
+                  <span>GIF Images</span>
+                </label>
+                <label className="n8n-chat-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={instance.features?.fileTypes?.includes('image/webp') || false}
+                    onChange={(e) => {
+                      const types = instance.features?.fileTypes || [];
+                      if (e.target.checked) {
+                        updateField('features.fileTypes', [...types, 'image/webp']);
+                      } else {
+                        updateField('features.fileTypes', types.filter((t: string) => t !== 'image/webp'));
+                      }
+                    }}
+                  />
+                  <span>WebP Images</span>
+                </label>
+                <label className="n8n-chat-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={instance.features?.fileTypes?.includes('application/pdf') || false}
+                    onChange={(e) => {
+                      const types = instance.features?.fileTypes || [];
+                      if (e.target.checked) {
+                        updateField('features.fileTypes', [...types, 'application/pdf']);
+                      } else {
+                        updateField('features.fileTypes', types.filter((t: string) => t !== 'application/pdf'));
+                      }
+                    }}
+                  />
+                  <span>PDF Documents</span>
+                </label>
+                <label className="n8n-chat-checkbox">
+                  <input
+                    type="checkbox"
+                    checked={instance.features?.fileTypes?.includes('text/plain') || false}
+                    onChange={(e) => {
+                      const types = instance.features?.fileTypes || [];
+                      if (e.target.checked) {
+                        updateField('features.fileTypes', [...types, 'text/plain']);
+                      } else {
+                        updateField('features.fileTypes', types.filter((t: string) => t !== 'text/plain'));
+                      }
+                    }}
+                  />
+                  <span>Text Files</span>
+                </label>
+              </div>
+            </div>
+
+            {/* Max File Size */}
+            <div className="n8n-chat-field">
+              <label htmlFor="fc-max-file-size">
+                Maximum File Size
+                <span className="n8n-chat-field-value">
+                  {formatFileSize(instance.features?.maxFileSize || 10485760)}
+                </span>
+              </label>
+              <input
+                type="range"
+                id="fc-max-file-size"
+                min={1048576}
+                max={52428800}
+                step={1048576}
+                value={instance.features?.maxFileSize || 10485760}
+                onChange={(e) => updateField('features.maxFileSize', parseInt(e.target.value, 10))}
+                className="n8n-chat-slider"
+              />
+              <div className="n8n-chat-slider-labels">
+                <span>1 MB</span>
+                <span>50 MB</span>
+              </div>
+              <p className="description">
+                Maximum size for uploaded files. Larger files will be rejected.
+              </p>
+            </div>
+          </div>
+        )}
+      </div>
+
       {/* Error Messages */}
-      <div className="flowchat-section">
+      <div className="n8n-chat-section">
         <button
           type="button"
-          className="flowchat-toggle-advanced"
+          className="n8n-chat-toggle-advanced"
           onClick={() => setShowErrorMessages(!showErrorMessages)}
           aria-expanded={showErrorMessages}
         >
@@ -219,13 +396,13 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
         </button>
 
         {showErrorMessages && (
-          <div className="flowchat-advanced-content">
-            <p className="flowchat-section-description">
+          <div className="n8n-chat-advanced-content">
+            <p className="n8n-chat-section-description">
               Customize the error messages shown to users when something goes wrong.
             </p>
 
             {/* Connection Error */}
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-error-connection">Connection Error</label>
               <textarea
                 id="fc-error-connection"
@@ -238,7 +415,7 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
             </div>
 
             {/* Timeout Error */}
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-error-timeout">Timeout Error</label>
               <textarea
                 id="fc-error-timeout"
@@ -251,7 +428,7 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
             </div>
 
             {/* Rate Limit Error */}
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-error-rate-limit">Rate Limit Error</label>
               <textarea
                 id="fc-error-rate-limit"
@@ -267,11 +444,11 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
       </div>
 
       {/* Fallback Settings */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Offline Fallback</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">Offline Fallback</h2>
 
-        <div className="flowchat-field">
-          <label className="flowchat-checkbox">
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
             <input
               type="checkbox"
               checked={instance.fallback?.enabled !== false}
@@ -286,7 +463,7 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
 
         {instance.fallback?.enabled !== false && (
           <>
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-fallback-email">Notification Email</label>
               <input
                 type="email"
@@ -301,7 +478,7 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
               </p>
             </div>
 
-            <div className="flowchat-field">
+            <div className="n8n-chat-field">
               <label htmlFor="fc-fallback-message">Fallback Message</label>
               <textarea
                 id="fc-fallback-message"

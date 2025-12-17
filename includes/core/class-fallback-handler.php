@@ -1,14 +1,14 @@
 <?php
 /**
- * Fallback Handler for FlowChat
+ * Fallback Handler for n8n Chat
  *
  * Handles fallback contact form when n8n is unavailable.
  * Stores messages and notifies admins.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 defined('ABSPATH') || exit;
 
@@ -20,7 +20,7 @@ class Fallback_Handler {
     /**
      * Table name for fallback messages
      */
-    const TABLE_NAME = 'flowchat_fallback_messages';
+    const TABLE_NAME = 'n8n_chat_fallback_messages';
 
     /**
      * Singleton instance
@@ -42,11 +42,11 @@ class Fallback_Handler {
      */
     private function __construct() {
         // Schedule cleanup cron
-        if (!wp_next_scheduled('flowchat_cleanup_fallback_messages')) {
-            wp_schedule_event(time(), 'daily', 'flowchat_cleanup_fallback_messages');
+        if (!wp_next_scheduled('n8n_chat_cleanup_fallback_messages')) {
+            wp_schedule_event(time(), 'daily', 'n8n_chat_cleanup_fallback_messages');
         }
 
-        add_action('flowchat_cleanup_fallback_messages', [$this, 'cleanup_old_messages']);
+        add_action('n8n_chat_cleanup_fallback_messages', [$this, 'cleanup_old_messages']);
     }
 
     /**
@@ -57,7 +57,7 @@ class Fallback_Handler {
      * @return array Health check result
      */
     public function check_webhook_health(string $webhook_url, int $timeout = 5): array {
-        $cache_key = 'flowchat_webhook_health_' . md5($webhook_url);
+        $cache_key = 'n8n_chat_webhook_health_' . md5($webhook_url);
         $cached = get_transient($cache_key);
 
         if ($cached !== false) {
@@ -76,7 +76,7 @@ class Fallback_Handler {
         // Send a HEAD request to check availability
         $response = wp_remote_head($webhook_url, [
             'timeout' => $timeout,
-            'sslverify' => apply_filters('flowchat_ssl_verify', true),
+            'sslverify' => apply_filters('n8n_chat_ssl_verify', true),
         ]);
 
         $result['response_time'] = round((microtime(true) - $start_time) * 1000); // ms
@@ -107,7 +107,7 @@ class Fallback_Handler {
      */
     public function should_use_fallback(int $instance_id): bool {
         $instance_manager = Instance_Manager::get_instance();
-        $instance = $instance_manager->get_instance($instance_id);
+        $instance = $instance_manager->get($instance_id);
 
         if (!$instance) {
             return true;
@@ -138,17 +138,17 @@ class Fallback_Handler {
      */
     public function get_fallback_config(int $instance_id): array {
         $instance_manager = Instance_Manager::get_instance();
-        $instance = $instance_manager->get_instance($instance_id);
+        $instance = $instance_manager->get($instance_id);
 
         $config = $instance['config'] ?? [];
 
         return [
             'enabled' => !empty($config['fallback_enabled']),
-            'title' => $config['fallback_title'] ?? __('Contact Us', 'flowchat'),
-            'message' => $config['fallback_message'] ?? __('Our chat is currently unavailable. Please leave your message and we\'ll get back to you soon.', 'flowchat'),
+            'title' => $config['fallback_title'] ?? __('Contact Us', 'n8n-chat'),
+            'message' => $config['fallback_message'] ?? __('Our chat is currently unavailable. Please leave your message and we\'ll get back to you soon.', 'n8n-chat'),
             'fields' => $config['fallback_fields'] ?? ['name', 'email', 'message'],
             'require_email' => $config['fallback_require_email'] ?? true,
-            'success_message' => $config['fallback_success_message'] ?? __('Thank you! We\'ll get back to you soon.', 'flowchat'),
+            'success_message' => $config['fallback_success_message'] ?? __('Thank you! We\'ll get back to you soon.', 'n8n-chat'),
             'notification_email' => $config['fallback_notification_email'] ?? get_option('admin_email'),
         ];
     }
@@ -171,14 +171,14 @@ class Fallback_Handler {
         if ($config['require_email'] && empty($data['email'])) {
             return [
                 'success' => false,
-                'error' => __('Email is required.', 'flowchat'),
+                'error' => __('Email is required.', 'n8n-chat'),
             ];
         }
 
         if (empty($data['message'])) {
             return [
                 'success' => false,
-                'error' => __('Message is required.', 'flowchat'),
+                'error' => __('Message is required.', 'n8n-chat'),
             ];
         }
 
@@ -206,7 +206,7 @@ class Fallback_Handler {
         if ($result === false) {
             return [
                 'success' => false,
-                'error' => __('Failed to save message. Please try again.', 'flowchat'),
+                'error' => __('Failed to save message. Please try again.', 'n8n-chat'),
             ];
         }
 
@@ -216,7 +216,7 @@ class Fallback_Handler {
         $this->send_notification_email($instance_id, $message_id, $insert_data);
 
         // Fire action
-        do_action('flowchat_fallback_message_submitted', $message_id, $insert_data, $instance_id);
+        do_action('n8n_chat_fallback_message_submitted', $message_id, $insert_data, $instance_id);
 
         return [
             'success' => true,
@@ -241,12 +241,12 @@ class Fallback_Handler {
         }
 
         $instance_manager = Instance_Manager::get_instance();
-        $instance = $instance_manager->get_instance($instance_id);
+        $instance = $instance_manager->get($instance_id);
         $instance_name = $instance['name'] ?? 'Unknown';
 
         $subject = sprintf(
             /* translators: 1: Site name, 2: Instance name */
-            __('[%1$s] New FlowChat Message from %2$s', 'flowchat'),
+            __('[%1$s] New n8n Chat Message from %2$s', 'n8n-chat'),
             get_bloginfo('name'),
             $instance_name
         );
@@ -254,7 +254,7 @@ class Fallback_Handler {
         $body = sprintf(
             /* translators: Message notification template */
             __(
-                "New message received via FlowChat fallback form.\n\n" .
+                "New message received via n8n Chat fallback form.\n\n" .
                 "Instance: %1\$s\n" .
                 "Name: %2\$s\n" .
                 "Email: %3\$s\n" .
@@ -263,7 +263,7 @@ class Fallback_Handler {
                 "Message:\n%6\$s\n\n" .
                 "---\n" .
                 "View all messages in your WordPress admin.",
-                'flowchat'
+                'n8n-chat'
             ),
             $instance_name,
             $data['name'] ?: 'Not provided',
@@ -489,7 +489,7 @@ class Fallback_Handler {
             )
         );
 
-        do_action('flowchat_fallback_messages_cleaned', $days);
+        do_action('n8n_chat_fallback_messages_cleaned', $days);
     }
 
     /**

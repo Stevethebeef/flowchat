@@ -16,6 +16,7 @@ export const BubbleWidget: React.FC<BubbleWidgetProps> = ({
   sessionId,
   config,
   context,
+  apiUrl,
   onToggle,
 }) => {
   const bubbleConfig = config.bubble;
@@ -57,7 +58,7 @@ export const BubbleWidget: React.FC<BubbleWidgetProps> = ({
 
   return (
     <div
-      className={`flowchat-bubble-widget ${isOpen ? 'flowchat-bubble-open' : ''}`}
+      className={`n8n-chat-bubble-widget ${isOpen ? 'n8n-chat-bubble-open' : ''}`}
       style={positionStyles}
       data-position={bubbleConfig.position}
     >
@@ -82,6 +83,7 @@ export const BubbleWidget: React.FC<BubbleWidgetProps> = ({
             sessionId={sessionId}
             config={config}
             context={context}
+            apiUrl={apiUrl}
             onClose={close}
           />
         </BubblePanel>

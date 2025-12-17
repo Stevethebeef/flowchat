@@ -4,16 +4,16 @@
  *
  * Handles public-facing API endpoints for chat initialization and interactions.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\API;
+namespace N8nChat\API;
 
-use FlowChat\Core\Instance_Manager;
-use FlowChat\Core\Session_Manager;
-use FlowChat\Core\Context_Builder;
-use FlowChat\Core\File_Handler;
-use FlowChat\Frontend\Frontend;
+use N8nChat\Core\Instance_Manager;
+use N8nChat\Core\Session_Manager;
+use N8nChat\Core\Context_Builder;
+use N8nChat\Core\File_Handler;
+use N8nChat\Frontend\Frontend;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -27,7 +27,7 @@ class Public_Endpoints {
     /**
      * API namespace
      */
-    private const NAMESPACE = 'flowchat/v1';
+    private const NAMESPACE = 'n8n-chat/v1';
 
     /**
      * Instance manager
@@ -54,8 +54,8 @@ class Public_Endpoints {
      * Constructor
      */
     public function __construct() {
-        $this->instance_manager = new Instance_Manager();
-        $this->session_manager = new Session_Manager();
+        $this->instance_manager = Instance_Manager::get_instance();
+        $this->session_manager = Session_Manager::get_instance();
         $this->context_builder = new Context_Builder();
 
         add_action('rest_api_init', [$this, 'register_routes']);
@@ -195,12 +195,12 @@ class Public_Endpoints {
         $existing_session_id = $request->get_param('session_id');
 
         // Get instance
-        $instance = $this->instance_manager->get_instance($instance_id);
+        $instance = $this->instance_manager->get($instance_id);
 
         if (!$instance) {
             return new \WP_REST_Response([
                 'error' => 'instance_not_found',
-                'message' => __('Chat instance not found.', 'flowchat'),
+                'message' => __('Chat instance not found.', 'n8n-chat'),
             ], 404);
         }
 
@@ -208,7 +208,7 @@ class Public_Endpoints {
         if (empty($instance['isEnabled'])) {
             return new \WP_REST_Response([
                 'error' => 'instance_disabled',
-                'message' => __('This chat is currently unavailable.', 'flowchat'),
+                'message' => __('This chat is currently unavailable.', 'n8n-chat'),
             ], 403);
         }
 
@@ -269,6 +269,7 @@ class Public_Endpoints {
                 'fileUpload' => $instance['features']['fileUpload'] ?? false,
                 'fileTypes' => $instance['features']['fileTypes'] ?? [],
                 'maxFileSize' => $instance['features']['maxFileSize'] ?? 10485760,
+                'voiceInput' => $instance['features']['voiceInput'] ?? true,
                 'showTypingIndicator' => $instance['features']['showTypingIndicator'] ?? true,
                 'enableFeedback' => $instance['features']['enableFeedback'] ?? false,
             ],
@@ -292,17 +293,17 @@ class Public_Endpoints {
         if (empty($files['file'])) {
             return new \WP_REST_Response([
                 'error' => 'no_file',
-                'message' => __('No file was uploaded.', 'flowchat'),
+                'message' => __('No file was uploaded.', 'n8n-chat'),
             ], 400);
         }
 
         // Check instance access
-        $instance = $this->instance_manager->get_instance($instance_id);
+        $instance = $this->instance_manager->get($instance_id);
 
         if (!$instance) {
             return new \WP_REST_Response([
                 'error' => 'instance_not_found',
-                'message' => __('Chat instance not found.', 'flowchat'),
+                'message' => __('Chat instance not found.', 'n8n-chat'),
             ], 404);
         }
 
@@ -310,7 +311,7 @@ class Public_Endpoints {
         if (!$frontend->check_access($instance)) {
             return new \WP_REST_Response([
                 'error' => 'access_denied',
-                'message' => __('Access denied.', 'flowchat'),
+                'message' => __('Access denied.', 'n8n-chat'),
             ], 403);
         }
 
@@ -344,17 +345,17 @@ class Public_Endpoints {
         if (!$session) {
             return new \WP_REST_Response([
                 'error' => 'session_not_found',
-                'message' => __('Session not found.', 'flowchat'),
+                'message' => __('Session not found.', 'n8n-chat'),
             ], 404);
         }
 
         // Check if instance has history enabled
-        $instance = $this->instance_manager->get_instance($session->instance_id);
+        $instance = $this->instance_manager->get($session->instance_id);
 
         if (!$instance || empty($instance['features']['enableHistory'])) {
             return new \WP_REST_Response([
                 'error' => 'history_disabled',
-                'message' => __('History is not enabled for this chat.', 'flowchat'),
+                'message' => __('History is not enabled for this chat.', 'n8n-chat'),
             ], 400);
         }
 
@@ -402,17 +403,17 @@ class Public_Endpoints {
         if (!$session) {
             return new \WP_REST_Response([
                 'error' => 'session_not_found',
-                'message' => __('Session not found.', 'flowchat'),
+                'message' => __('Session not found.', 'n8n-chat'),
             ], 404);
         }
 
         // Check instance access
-        $instance = $this->instance_manager->get_instance($session->instance_id);
+        $instance = $this->instance_manager->get($session->instance_id);
 
         if (!$instance) {
             return new \WP_REST_Response([
                 'error' => 'instance_not_found',
-                'message' => __('Instance not found.', 'flowchat'),
+                'message' => __('Instance not found.', 'n8n-chat'),
             ], 404);
         }
 
@@ -420,7 +421,7 @@ class Public_Endpoints {
         if (!$frontend->check_access($instance)) {
             return new \WP_REST_Response([
                 'error' => 'access_denied',
-                'message' => __('Access denied.', 'flowchat'),
+                'message' => __('Access denied.', 'n8n-chat'),
             ], 403);
         }
 
@@ -453,12 +454,12 @@ class Public_Endpoints {
         $message = $request->get_param('message');
 
         // Validate instance
-        $instance = $this->instance_manager->get_instance($instance_id);
+        $instance = $this->instance_manager->get($instance_id);
 
         if (!$instance) {
             return new \WP_REST_Response([
                 'error' => 'instance_not_found',
-                'message' => __('Instance not found.', 'flowchat'),
+                'message' => __('Instance not found.', 'n8n-chat'),
             ], 404);
         }
 
@@ -466,7 +467,7 @@ class Public_Endpoints {
         if (empty($instance['fallback']['enabled'])) {
             return new \WP_REST_Response([
                 'error' => 'fallback_disabled',
-                'message' => __('Fallback messages are not enabled.', 'flowchat'),
+                'message' => __('Fallback messages are not enabled.', 'n8n-chat'),
             ], 400);
         }
 
@@ -474,22 +475,22 @@ class Public_Endpoints {
         if (!is_email($email)) {
             return new \WP_REST_Response([
                 'error' => 'invalid_email',
-                'message' => __('Please provide a valid email address.', 'flowchat'),
+                'message' => __('Please provide a valid email address.', 'n8n-chat'),
             ], 400);
         }
 
         // Rate limiting (simple implementation)
-        $transient_key = 'flowchat_fallback_' . md5($email . $_SERVER['REMOTE_ADDR']);
+        $transient_key = 'n8n_chat_fallback_' . md5($email . $_SERVER['REMOTE_ADDR']);
         if (get_transient($transient_key)) {
             return new \WP_REST_Response([
                 'error' => 'rate_limited',
-                'message' => __('Please wait before submitting another message.', 'flowchat'),
+                'message' => __('Please wait before submitting another message.', 'n8n-chat'),
             ], 429);
         }
 
         // Save fallback message
         $result = $wpdb->insert(
-            $wpdb->prefix . 'flowchat_fallback_messages',
+            $wpdb->prefix . 'n8n_chat_fallback_messages',
             [
                 'instance_id' => $instance_id,
                 'name' => $name,
@@ -504,7 +505,7 @@ class Public_Endpoints {
         if (!$result) {
             return new \WP_REST_Response([
                 'error' => 'save_failed',
-                'message' => __('Failed to save your message. Please try again.', 'flowchat'),
+                'message' => __('Failed to save your message. Please try again.', 'n8n-chat'),
             ], 500);
         }
 
@@ -516,7 +517,7 @@ class Public_Endpoints {
 
         return new \WP_REST_Response([
             'success' => true,
-            'message' => __('Your message has been received. We will get back to you soon.', 'flowchat'),
+            'message' => __('Your message has been received. We will get back to you soon.', 'n8n-chat'),
         ]);
     }
 
@@ -533,14 +534,14 @@ class Public_Endpoints {
 
         $subject = sprintf(
             /* translators: 1: Site name, 2: Instance name */
-            __('[%1$s] New FlowChat Message - %2$s', 'flowchat'),
+            __('[%1$s] New n8n Chat Message - %2$s', 'n8n-chat'),
             get_bloginfo('name'),
             $instance['name']
         );
 
         $body = sprintf(
             /* translators: 1: Sender name, 2: Sender email, 3: Message content */
-            __("New message received:\n\nFrom: %1\$s <%2\$s>\n\nMessage:\n%3\$s", 'flowchat'),
+            __("New message received:\n\nFrom: %1\$s <%2\$s>\n\nMessage:\n%3\$s", 'n8n-chat'),
             $name,
             $email,
             $message
@@ -614,7 +615,7 @@ class Public_Endpoints {
                 'instances' => $applicable,
                 'wpContext' => $wp_context,
                 'apiEndpoints' => [
-                    'base' => rest_url('flowchat/v1'),
+                    'base' => rest_url('n8n-chat/v1'),
                     'nonce' => wp_create_nonce('wp_rest'),
                 ],
                 'premium' => $premium,
@@ -821,7 +822,7 @@ class Public_Endpoints {
      */
     private function get_premium_features(): array {
         // Check for premium license
-        $is_premium = apply_filters('flowchat_is_premium', false);
+        $is_premium = apply_filters('n8n_chat_is_premium', false);
 
         $features = [];
         if ($is_premium) {

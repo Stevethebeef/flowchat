@@ -1,5 +1,5 @@
 /**
- * Connection Status Component for FlowChat
+ * Connection Status Component for n8n Chat
  *
  * Displays the current connection status and reconnection state.
  */
@@ -32,19 +32,19 @@ export const ConnectionStatus: React.FC<ConnectionStatusProps> = ({
 
   return (
     <div
-      className={`flowchat-connection-status flowchat-connection-status--${state} ${className}`}
+      className={`n8n-chat-connection-status n8n-chat-connection-status--${state} ${className}`}
       role="status"
       aria-live="polite"
     >
-      <div className="flowchat-connection-status__indicator">
+      <div className="n8n-chat-connection-status__indicator">
         {statusConfig.icon}
       </div>
-      <span className="flowchat-connection-status__text">
+      <span className="n8n-chat-connection-status__text">
         {message || statusConfig.message}
       </span>
       {state === 'error' && onRetry && (
         <button
-          className="flowchat-connection-status__retry"
+          className="n8n-chat-connection-status__retry"
           onClick={onRetry}
           type="button"
           aria-label="Retry connection"
@@ -97,7 +97,7 @@ const ConnectedIcon: React.FC = () => (
     height="12"
     viewBox="0 0 24 24"
     fill="currentColor"
-    className="flowchat-connection-status__icon flowchat-connection-status__icon--connected"
+    className="n8n-chat-connection-status__icon n8n-chat-connection-status__icon--connected"
   >
     <circle cx="12" cy="12" r="8" />
   </svg>
@@ -109,7 +109,7 @@ const DisconnectedIcon: React.FC = () => (
     height="12"
     viewBox="0 0 24 24"
     fill="currentColor"
-    className="flowchat-connection-status__icon flowchat-connection-status__icon--disconnected"
+    className="n8n-chat-connection-status__icon n8n-chat-connection-status__icon--disconnected"
   >
     <circle cx="12" cy="12" r="8" />
   </svg>
@@ -121,7 +121,7 @@ const ErrorIcon: React.FC = () => (
     height="12"
     viewBox="0 0 24 24"
     fill="currentColor"
-    className="flowchat-connection-status__icon flowchat-connection-status__icon--error"
+    className="n8n-chat-connection-status__icon n8n-chat-connection-status__icon--error"
   >
     <circle cx="12" cy="12" r="8" />
   </svg>
@@ -135,7 +135,7 @@ const LoadingIcon: React.FC = () => (
     fill="none"
     stroke="currentColor"
     strokeWidth="3"
-    className="flowchat-connection-status__icon flowchat-connection-status__icon--loading"
+    className="n8n-chat-connection-status__icon n8n-chat-connection-status__icon--loading"
   >
     <circle cx="12" cy="12" r="8" strokeOpacity="0.25" />
     <path d="M12 4a8 8 0 0 1 8 8" strokeLinecap="round" />

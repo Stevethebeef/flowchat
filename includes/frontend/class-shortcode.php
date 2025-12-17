@@ -2,14 +2,14 @@
 /**
  * Shortcode Handler
  *
- * Handles the [flowchat] shortcode for embedding chat widgets.
+ * Handles the [n8n_chat] shortcode for embedding chat widgets.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Frontend;
+namespace N8nChat\Frontend;
 
-use FlowChat\Core\Instance_Manager;
+use N8nChat\Core\Instance_Manager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -45,10 +45,10 @@ class Shortcode {
      * Constructor
      */
     public function __construct() {
-        $this->instance_manager = new Instance_Manager();
+        $this->instance_manager = Instance_Manager::get_instance();
         $this->frontend = new Frontend();
 
-        add_shortcode('flowchat', [$this, 'render']);
+        add_shortcode('n8n_chat', [$this, 'render']);
     }
 
     /**
@@ -68,13 +68,13 @@ class Shortcode {
             'placeholder' => '',        // Override placeholder text
             'require-login' => '',      // Override login requirement
             'class' => '',              // Additional CSS classes
-        ], $atts, 'flowchat');
+        ], $atts, 'n8n-chat');
 
         // Get instance
         $instance = $this->get_instance($atts['id']);
 
         if (!$instance) {
-            return $this->render_error(__('FlowChat: No chat instance configured.', 'flowchat'));
+            return $this->render_error(__('n8n Chat: No chat instance configured.', 'n8n-chat'));
         }
 
         // Check access
@@ -112,7 +112,7 @@ class Shortcode {
      */
     private function get_instance(string $id): ?array {
         if (!empty($id)) {
-            return $this->instance_manager->get_instance($id);
+            return $this->instance_manager->get($id);
         }
 
         return $this->instance_manager->get_default_instance();
@@ -153,7 +153,7 @@ class Shortcode {
      * @return string HTML output
      */
     private function render_inline(array $instance, array $atts): string {
-        $container_id = 'flowchat-' . esc_attr($instance['id']) . '-' . wp_generate_uuid4();
+        $container_id = 'n8n-chat-' . esc_attr($instance['id']) . '-' . wp_generate_uuid4();
 
         // Prevent duplicate renders
         $render_key = $instance['id'] . '-inline';
@@ -163,8 +163,8 @@ class Shortcode {
         $this->rendered_instances[$render_key] = true;
 
         // Enqueue assets
-        wp_enqueue_script('flowchat-frontend');
-        wp_enqueue_style('flowchat-frontend');
+        wp_enqueue_script('n8n-chat-frontend');
+        wp_enqueue_style('n8n-chat-frontend');
 
         // Build inline styles
         $style = sprintf(
@@ -175,9 +175,9 @@ class Shortcode {
 
         // CSS classes
         $classes = [
-            'flowchat-container',
-            'flowchat-mode-inline',
-            'flowchat-theme-' . esc_attr($instance['theme']),
+            'n8n-chat-container',
+            'n8n-chat-mode-inline',
+            'n8n-chat-theme-' . esc_attr($instance['theme']),
         ];
 
         if (!empty($atts['class'])) {
@@ -185,12 +185,12 @@ class Shortcode {
         }
 
         // Pass config to JS
-        $js_var_name = 'flowchatInit_' . str_replace('-', '_', $container_id);
-        wp_localize_script('flowchat-frontend', $js_var_name, [
+        $js_var_name = 'n8nChatInit_' . str_replace('-', '_', $container_id);
+        wp_localize_script('n8n-chat-frontend', $js_var_name, [
             'containerId' => $container_id,
             'instanceId' => $instance['id'],
             'mode' => 'inline',
-            'apiUrl' => rest_url('flowchat/v1'),
+            'apiUrl' => rest_url('n8n-chat/v1'),
             'nonce' => wp_create_nonce('wp_rest'),
         ]);
 
@@ -210,7 +210,7 @@ class Shortcode {
      * @return string HTML output
      */
     private function render_bubble(array $instance, array $atts): string {
-        $container_id = 'flowchat-bubble-' . esc_attr($instance['id']);
+        $container_id = 'n8n-chat-bubble-' . esc_attr($instance['id']);
 
         // Prevent duplicate bubble renders
         $render_key = $instance['id'] . '-bubble';
@@ -220,22 +220,22 @@ class Shortcode {
         $this->rendered_instances[$render_key] = true;
 
         // Enqueue assets
-        wp_enqueue_script('flowchat-frontend');
-        wp_enqueue_style('flowchat-frontend');
+        wp_enqueue_script('n8n-chat-frontend');
+        wp_enqueue_style('n8n-chat-frontend');
 
         // CSS classes
         $classes = [
-            'flowchat-bubble-container',
-            'flowchat-theme-' . esc_attr($instance['theme']),
+            'n8n-chat-bubble-container',
+            'n8n-chat-theme-' . esc_attr($instance['theme']),
         ];
 
         // Pass config to JS
-        $js_var_name = 'flowchatBubble_' . str_replace('-', '_', $instance['id']);
-        wp_localize_script('flowchat-frontend', $js_var_name, [
+        $js_var_name = 'n8nChatBubble_' . str_replace('-', '_', $instance['id']);
+        wp_localize_script('n8n-chat-frontend', $js_var_name, [
             'containerId' => $container_id,
             'instanceId' => $instance['id'],
             'mode' => 'bubble',
-            'apiUrl' => rest_url('flowchat/v1'),
+            'apiUrl' => rest_url('n8n-chat/v1'),
             'nonce' => wp_create_nonce('wp_rest'),
         ]);
 
@@ -255,12 +255,12 @@ class Shortcode {
     private function render_error(string $message): string {
         if (current_user_can('manage_options')) {
             return sprintf(
-                '<div class="flowchat-error" style="padding:20px;border:1px solid #c00;background:#fff0f0;color:#c00;border-radius:4px;">%s</div>',
+                '<div class="n8n-chat-error" style="padding:20px;border:1px solid #c00;background:#fff0f0;color:#c00;border-radius:4px;">%s</div>',
                 esc_html($message)
             );
         }
 
-        return '<!-- FlowChat: Configuration error -->';
+        return '<!-- n8n Chat: Configuration error -->';
     }
 
     /**
@@ -275,13 +275,13 @@ class Shortcode {
         $login_url = wp_login_url(get_permalink());
 
         return sprintf(
-            '<div class="flowchat-login-required" style="padding:20px;border:1px solid #ddd;background:#f9f9f9;border-radius:4px;text-align:center;">
+            '<div class="n8n-chat-login-required" style="padding:20px;border:1px solid #ddd;background:#f9f9f9;border-radius:4px;text-align:center;">
                 <p>%s</p>
-                <a href="%s" class="flowchat-login-link" style="display:inline-block;padding:10px 20px;background:#3b82f6;color:#fff;text-decoration:none;border-radius:4px;">%s</a>
+                <a href="%s" class="n8n-chat-login-link" style="display:inline-block;padding:10px 20px;background:#3b82f6;color:#fff;text-decoration:none;border-radius:4px;">%s</a>
             </div>',
             esc_html($message),
             esc_url($login_url),
-            esc_html__('Log In', 'flowchat')
+            esc_html__('Log In', 'n8n-chat')
         );
     }
 }

@@ -6,6 +6,8 @@
 
 import React, { useState } from 'react';
 import type { AdminInstance } from '../../../types';
+import { useAdminI18n } from '../../../hooks/useAdminI18n';
+import { InfoIcon } from '../shared/InfoIcon';
 
 interface RulesTabProps {
   instance: Partial<AdminInstance>;
@@ -61,6 +63,7 @@ export const RulesTab: React.FC<RulesTabProps> = ({
   instance,
   updateField,
 }) => {
+  const { t } = useAdminI18n();
   const [showProBadge] = useState(true); // For future pro features
 
   const targeting = instance.targeting || {};
@@ -107,78 +110,81 @@ export const RulesTab: React.FC<RulesTabProps> = ({
   };
 
   return (
-    <div className="flowchat-tab-content">
+    <div className="n8n-chat-tab-content">
       {/* Page Targeting */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">
-          Page Targeting
-          {showProBadge && <span className="flowchat-pro-badge">PRO</span>}
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">
+          {t('pageTargeting', 'Page Targeting')}
+          {showProBadge && <span className="n8n-chat-pro-badge">PRO</span>}
         </h2>
 
-        <div className="flowchat-field">
-          <label className="flowchat-checkbox">
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
             <input
               type="checkbox"
               checked={targeting.enabled || false}
               onChange={(e) => updateField('targeting.enabled', e.target.checked)}
             />
-            <span>Enable page targeting rules</span>
+            <span>{t('enablePageTargeting', 'Enable page targeting rules')}</span>
           </label>
           <p className="description">
-            Show this chat only on specific pages or sections of your site.
+            {t('pageTargetingDesc', 'Show this chat only on specific pages or sections of your site.')}
           </p>
         </div>
 
         {targeting.enabled && (
           <>
             {/* Targeting Mode */}
-            <div className="flowchat-field">
-              <label>Display Mode</label>
-              <div className="flowchat-radio-group">
-                <label className="flowchat-radio">
+            <div className="n8n-chat-field">
+              <label>{t('displayMode', 'Display Mode')}</label>
+              <div className="n8n-chat-radio-group">
+                <label className="n8n-chat-radio">
                   <input
                     type="radio"
                     name="targetingMode"
                     checked={targeting.mode === 'all'}
                     onChange={() => updateField('targeting.mode', 'all')}
                   />
-                  <span className="flowchat-radio-label">Show on all pages (default)</span>
+                  <span className="n8n-chat-radio-label">{t('showOnAllPages', 'Show on all pages (default)')}</span>
                 </label>
-                <label className="flowchat-radio">
+                <label className="n8n-chat-radio">
                   <input
                     type="radio"
                     name="targetingMode"
                     checked={targeting.mode === 'include'}
                     onChange={() => updateField('targeting.mode', 'include')}
                   />
-                  <span className="flowchat-radio-label">Show only on matching pages</span>
+                  <span className="n8n-chat-radio-label">{t('showOnlyMatching', 'Show only on matching pages')}</span>
                 </label>
-                <label className="flowchat-radio">
+                <label className="n8n-chat-radio">
                   <input
                     type="radio"
                     name="targetingMode"
                     checked={targeting.mode === 'exclude'}
                     onChange={() => updateField('targeting.mode', 'exclude')}
                   />
-                  <span className="flowchat-radio-label">Hide on matching pages</span>
+                  <span className="n8n-chat-radio-label">{t('hideOnMatching', 'Hide on matching pages')}</span>
                 </label>
               </div>
             </div>
 
             {/* Rules */}
             {(targeting.mode === 'include' || targeting.mode === 'exclude') && (
-              <div className="flowchat-field">
-                <label>Targeting Rules</label>
-                <div className="flowchat-rules-list">
+              <div className="n8n-chat-field">
+                <label>
+                  {t('targetingRules', 'Targeting Rules')}
+                  <InfoIcon tooltip={t('tooltipUrlPattern', 'Examples: /products/* (wildcard), /blog (exact), product (contains). Uses simple pattern matching, not regex.')} />
+                </label>
+                <div className="n8n-chat-rules-list">
                   {rules.map((rule: TargetingRule, index: number) => (
-                    <div key={rule.id} className="flowchat-rule-row">
+                    <div key={rule.id} className="n8n-chat-rule-row">
                       {index > 0 && (
-                        <span className="flowchat-rule-connector">OR</span>
+                        <span className="n8n-chat-rule-connector">OR</span>
                       )}
                       <select
                         value={rule.type}
                         onChange={(e) => updateRule(rule.id, 'type', e.target.value)}
-                        className="flowchat-rule-type"
+                        className="n8n-chat-rule-type"
                       >
                         {RULE_TYPES.map((type) => (
                           <option key={type.id} value={type.id}>
@@ -189,7 +195,7 @@ export const RulesTab: React.FC<RulesTabProps> = ({
                       <select
                         value={rule.operator}
                         onChange={(e) => updateRule(rule.id, 'operator', e.target.value)}
-                        className="flowchat-rule-operator"
+                        className="n8n-chat-rule-operator"
                       >
                         {OPERATORS.map((op) => (
                           <option key={op.id} value={op.id}>
@@ -202,11 +208,11 @@ export const RulesTab: React.FC<RulesTabProps> = ({
                         value={rule.value}
                         onChange={(e) => updateRule(rule.id, 'value', e.target.value)}
                         placeholder={RULE_TYPES.find((t) => t.id === rule.type)?.placeholder}
-                        className="flowchat-rule-value"
+                        className="n8n-chat-rule-value"
                       />
                       <button
                         type="button"
-                        className="button-link flowchat-remove-btn"
+                        className="button-link n8n-chat-remove-btn"
                         onClick={() => removeRule(rule.id)}
                         aria-label="Remove rule"
                       >
@@ -220,15 +226,18 @@ export const RulesTab: React.FC<RulesTabProps> = ({
                     onClick={addRule}
                   >
                     <span className="dashicons dashicons-plus-alt2"></span>
-                    Add Rule
+                    {t('addRule', 'Add Rule')}
                   </button>
                 </div>
               </div>
             )}
 
             {/* Priority */}
-            <div className="flowchat-field">
-              <label htmlFor="fc-priority">Priority</label>
+            <div className="n8n-chat-field">
+              <label htmlFor="fc-priority">
+                {t('priority', 'Priority')}
+                <InfoIcon tooltip={t('tooltipPriority', 'Higher number = higher priority. If a page matches multiple chat instances, the highest priority wins.')} />
+              </label>
               <input
                 type="number"
                 id="fc-priority"
@@ -239,7 +248,7 @@ export const RulesTab: React.FC<RulesTabProps> = ({
                 className="small-text"
               />
               <p className="description">
-                When multiple chat bots match a page, the one with higher priority wins.
+                {t('priorityDesc', 'When multiple chat bots match a page, the one with higher priority wins.')}
               </p>
             </div>
           </>
@@ -247,28 +256,28 @@ export const RulesTab: React.FC<RulesTabProps> = ({
       </div>
 
       {/* User Access */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">User Access</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">{t('userAccess', 'User Access')}</h2>
 
-        <div className="flowchat-field">
-          <label className="flowchat-checkbox">
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
             <input
               type="checkbox"
               checked={access.requireLogin || false}
               onChange={(e) => updateField('access.requireLogin', e.target.checked)}
             />
-            <span>Require user to be logged in</span>
+            <span>{t('requireLogin', 'Require user to be logged in')}</span>
           </label>
         </div>
 
         {access.requireLogin && (
           <>
             {/* Role Restriction */}
-            <div className="flowchat-field">
-              <label>Restrict to specific roles (leave empty for all logged-in users)</label>
-              <div className="flowchat-roles-grid">
+            <div className="n8n-chat-field">
+              <label>{t('restrictToRoles', 'Restrict to specific roles (leave empty for all logged-in users)')}</label>
+              <div className="n8n-chat-roles-grid">
                 {USER_ROLES.map((role) => (
-                  <label key={role.id} className="flowchat-checkbox">
+                  <label key={role.id} className="n8n-chat-checkbox">
                     <input
                       type="checkbox"
                       checked={(access.allowedRoles || []).includes(role.id)}
@@ -281,15 +290,15 @@ export const RulesTab: React.FC<RulesTabProps> = ({
             </div>
 
             {/* Denied Message */}
-            <div className="flowchat-field">
-              <label htmlFor="fc-denied-message">Access Denied Message</label>
+            <div className="n8n-chat-field">
+              <label htmlFor="fc-denied-message">{t('accessDeniedMessage', 'Access Denied Message')}</label>
               <textarea
                 id="fc-denied-message"
                 value={access.deniedMessage || ''}
                 onChange={(e) => updateField('access.deniedMessage', e.target.value)}
                 rows={2}
                 className="large-text"
-                placeholder="Please log in to use this chat."
+                placeholder={t('accessDeniedPlaceholder', 'Please log in to use this chat.')}
               />
             </div>
           </>
@@ -297,75 +306,75 @@ export const RulesTab: React.FC<RulesTabProps> = ({
       </div>
 
       {/* Device Targeting */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">Device Targeting</h2>
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">{t('deviceTargeting', 'Device Targeting')}</h2>
 
-        <div className="flowchat-devices-grid">
-          <label className="flowchat-device-option">
+        <div className="n8n-chat-devices-grid">
+          <label className="n8n-chat-device-option">
             <input
               type="checkbox"
               checked={devices.desktop !== false}
               onChange={(e) => updateField('devices.desktop', e.target.checked)}
             />
-            <span className="flowchat-device-icon">
+            <span className="n8n-chat-device-icon">
               <span className="dashicons dashicons-desktop"></span>
             </span>
-            <span className="flowchat-device-label">Desktop</span>
+            <span className="n8n-chat-device-label">{t('desktop', 'Desktop')}</span>
           </label>
 
-          <label className="flowchat-device-option">
+          <label className="n8n-chat-device-option">
             <input
               type="checkbox"
               checked={devices.tablet !== false}
               onChange={(e) => updateField('devices.tablet', e.target.checked)}
             />
-            <span className="flowchat-device-icon">
+            <span className="n8n-chat-device-icon">
               <span className="dashicons dashicons-tablet"></span>
             </span>
-            <span className="flowchat-device-label">Tablet</span>
+            <span className="n8n-chat-device-label">{t('tablet', 'Tablet')}</span>
           </label>
 
-          <label className="flowchat-device-option">
+          <label className="n8n-chat-device-option">
             <input
               type="checkbox"
               checked={devices.mobile !== false}
               onChange={(e) => updateField('devices.mobile', e.target.checked)}
             />
-            <span className="flowchat-device-icon">
+            <span className="n8n-chat-device-icon">
               <span className="dashicons dashicons-smartphone"></span>
             </span>
-            <span className="flowchat-device-label">Mobile</span>
+            <span className="n8n-chat-device-label">{t('mobile', 'Mobile')}</span>
           </label>
         </div>
       </div>
 
       {/* Schedule */}
-      <div className="flowchat-section">
-        <h2 className="flowchat-section-title">
-          Schedule
-          {showProBadge && <span className="flowchat-pro-badge">PRO</span>}
+      <div className="n8n-chat-section">
+        <h2 className="n8n-chat-section-title">
+          {t('schedule', 'Schedule')}
+          {showProBadge && <span className="n8n-chat-pro-badge">PRO</span>}
         </h2>
 
-        <div className="flowchat-field">
-          <label className="flowchat-checkbox">
+        <div className="n8n-chat-field">
+          <label className="n8n-chat-checkbox">
             <input
               type="checkbox"
               checked={schedule.enabled || false}
               onChange={(e) => updateField('schedule.enabled', e.target.checked)}
             />
-            <span>Enable scheduled availability</span>
+            <span>{t('enableSchedule', 'Enable scheduled availability')}</span>
           </label>
           <p className="description">
-            Only show the chat during specific hours/days.
+            {t('scheduleDesc', 'Only show the chat during specific hours/days.')}
           </p>
         </div>
 
         {schedule.enabled && (
           <>
             {/* Time Range */}
-            <div className="flowchat-field-row">
-              <div className="flowchat-field">
-                <label htmlFor="fc-schedule-start">Start Time</label>
+            <div className="n8n-chat-field-row">
+              <div className="n8n-chat-field">
+                <label htmlFor="fc-schedule-start">{t('startTime', 'Start Time')}</label>
                 <input
                   type="time"
                   id="fc-schedule-start"
@@ -373,8 +382,8 @@ export const RulesTab: React.FC<RulesTabProps> = ({
                   onChange={(e) => updateField('schedule.startTime', e.target.value)}
                 />
               </div>
-              <div className="flowchat-field">
-                <label htmlFor="fc-schedule-end">End Time</label>
+              <div className="n8n-chat-field">
+                <label htmlFor="fc-schedule-end">{t('endTime', 'End Time')}</label>
                 <input
                   type="time"
                   id="fc-schedule-end"
@@ -385,29 +394,29 @@ export const RulesTab: React.FC<RulesTabProps> = ({
             </div>
 
             {/* Timezone */}
-            <div className="flowchat-field">
-              <label htmlFor="fc-schedule-timezone">Timezone</label>
+            <div className="n8n-chat-field">
+              <label htmlFor="fc-schedule-timezone">{t('timezone', 'Timezone')}</label>
               <select
                 id="fc-schedule-timezone"
                 value={schedule.timezone || 'site'}
                 onChange={(e) => updateField('schedule.timezone', e.target.value)}
                 className="regular-text"
               >
-                <option value="site">Site Timezone</option>
-                <option value="visitor">Visitor's Timezone</option>
+                <option value="site">{t('siteTimezone', 'Site Timezone')}</option>
+                <option value="visitor">{t('visitorTimezone', "Visitor's Timezone")}</option>
                 <option value="UTC">UTC</option>
               </select>
             </div>
 
             {/* Days */}
-            <div className="flowchat-field">
-              <label>Active Days</label>
-              <div className="flowchat-days-selector">
+            <div className="n8n-chat-field">
+              <label>{t('activeDays', 'Active Days')}</label>
+              <div className="n8n-chat-days-selector">
                 {DAYS_OF_WEEK.map((day) => (
                   <button
                     key={day.id}
                     type="button"
-                    className={`flowchat-day-btn ${
+                    className={`n8n-chat-day-btn ${
                       (schedule.days || []).includes(day.id) ? 'is-active' : ''
                     }`}
                     onClick={() => handleDayToggle(day.id)}
@@ -419,18 +428,18 @@ export const RulesTab: React.FC<RulesTabProps> = ({
             </div>
 
             {/* Outside Hours Message */}
-            <div className="flowchat-field">
-              <label htmlFor="fc-outside-hours-msg">Outside Hours Message</label>
+            <div className="n8n-chat-field">
+              <label htmlFor="fc-outside-hours-msg">{t('outsideHoursMessage', 'Outside Hours Message')}</label>
               <textarea
                 id="fc-outside-hours-msg"
                 value={schedule.outsideHoursMessage || ''}
                 onChange={(e) => updateField('schedule.outsideHoursMessage', e.target.value)}
                 rows={2}
                 className="large-text"
-                placeholder="We're currently offline. Leave a message and we'll respond when we're back online."
+                placeholder={t('outsideHoursPlaceholder', "We're currently offline. Leave a message and we'll respond when we're back online.")}
               />
               <p className="description">
-                Message shown when the chat is accessed outside scheduled hours.
+                {t('outsideHoursDesc', 'Message shown when the chat is accessed outside scheduled hours.')}
               </p>
             </div>
           </>

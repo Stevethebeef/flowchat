@@ -1,5 +1,5 @@
 /**
- * FlowChat Error Handling System
+ * n8n Chat Error Handling System
  *
  * Centralized error management for the frontend with
  * user-friendly messages and recovery strategies.
@@ -26,7 +26,7 @@ export type RecoveryAction =
   | 'wait'
   | 'none';
 
-export interface FlowChatError {
+export interface N8nChatError {
   code: string;
   category: ErrorCategory;
   message: string;
@@ -290,13 +290,13 @@ const ERROR_DEFINITIONS: Record<string, ErrorDefinition> = {
 };
 
 /**
- * Create a FlowChat error from code
+ * Create an n8n Chat error from code
  */
 export function createError(
   code: string,
   context?: Record<string, unknown>,
   originalError?: Error
-): FlowChatError {
+): N8nChatError {
   const definition = ERROR_DEFINITIONS[code] || {
     category: 'internal' as ErrorCategory,
     message: 'Unknown error',
@@ -334,7 +334,7 @@ export function createErrorFromResponse(response: {
     message?: string;
     recovery?: RecoveryAction;
   };
-}): FlowChatError {
+}): N8nChatError {
   if (!response.error) {
     return createError('E8002');
   }
@@ -358,7 +358,7 @@ export function createErrorFromResponse(response: {
 /**
  * Create error from network failure
  */
-export function createNetworkError(originalError: Error): FlowChatError {
+export function createNetworkError(originalError: Error): N8nChatError {
   // Check for specific error types
   if (originalError.name === 'AbortError') {
     return createError('E1002', undefined, originalError);
@@ -378,33 +378,33 @@ export function createNetworkError(originalError: Error): FlowChatError {
 /**
  * Check if error is retryable
  */
-export function isRetryable(error: FlowChatError): boolean {
+export function isRetryable(error: N8nChatError): boolean {
   return error.retryable;
 }
 
 /**
  * Check if error should trigger fallback
  */
-export function shouldFallback(error: FlowChatError): boolean {
+export function shouldFallback(error: N8nChatError): boolean {
   return error.fallback;
 }
 
 /**
  * Get recovery action for error
  */
-export function getRecoveryAction(error: FlowChatError): RecoveryAction {
+export function getRecoveryAction(error: N8nChatError): RecoveryAction {
   return error.recovery;
 }
 
 /**
- * Error class for FlowChat
+ * Error class for n8n Chat
  */
-export class FlowChatException extends Error {
-  public readonly error: FlowChatError;
+export class N8nChatException extends Error {
+  public readonly error: N8nChatError;
 
-  constructor(error: FlowChatError) {
+  constructor(error: N8nChatError) {
     super(error.message);
-    this.name = 'FlowChatException';
+    this.name = 'N8nChatException';
     this.error = error;
   }
 
@@ -438,7 +438,7 @@ export async function withRetry<T>(
     maxRetries?: number;
     baseDelay?: number;
     maxDelay?: number;
-    shouldRetry?: (error: FlowChatError) => boolean;
+    shouldRetry?: (error: N8nChatError) => boolean;
   } = {}
 ): Promise<T> {
   const {
@@ -448,21 +448,21 @@ export async function withRetry<T>(
     shouldRetry = isRetryable,
   } = options;
 
-  let lastError: FlowChatError | null = null;
+  let lastError: N8nChatError | null = null;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
       return await fn();
     } catch (err) {
       const error =
-        err instanceof FlowChatException
+        err instanceof N8nChatException
           ? err.error
           : createNetworkError(err instanceof Error ? err : new Error(String(err)));
 
       lastError = error;
 
       if (attempt === maxRetries || !shouldRetry(error)) {
-        throw new FlowChatException(error);
+        throw new N8nChatException(error);
       }
 
       // Exponential backoff with jitter
@@ -472,13 +472,13 @@ export async function withRetry<T>(
     }
   }
 
-  throw new FlowChatException(lastError || createError('E8002'));
+  throw new N8nChatException(lastError || createError('E8002'));
 }
 
 /**
  * Format error for display
  */
-export function formatErrorForDisplay(error: FlowChatError): {
+export function formatErrorForDisplay(error: N8nChatError): {
   title: string;
   message: string;
   showRetry: boolean;

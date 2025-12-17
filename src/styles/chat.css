@@ -1,5 +1,5 @@
 /**
- * FlowChat Styles
+ * n8n Chat Styles
  *
  * Main stylesheet for the chat widget and bubble.
  */
@@ -8,45 +8,45 @@
    CSS Custom Properties
    ============================================================================ */
 
-.flowchat-widget,
-.flowchat-bubble-widget {
-  --flowchat-primary: #3b82f6;
-  --flowchat-primary-foreground: #ffffff;
-  --flowchat-background: #ffffff;
-  --flowchat-foreground: #111827;
-  --flowchat-muted: #f3f4f6;
-  --flowchat-muted-foreground: #6b7280;
-  --flowchat-border: #e5e7eb;
-  --flowchat-radius: 8px;
-  --flowchat-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-  --flowchat-font-size: 14px;
-  --flowchat-line-height: 1.5;
+.n8n-chat-widget,
+.n8n-chat-bubble-widget {
+  --n8n-chat-primary: #3b82f6;
+  --n8n-chat-primary-foreground: #ffffff;
+  --n8n-chat-background: #ffffff;
+  --n8n-chat-foreground: #111827;
+  --n8n-chat-muted: #f3f4f6;
+  --n8n-chat-muted-foreground: #6b7280;
+  --n8n-chat-border: #e5e7eb;
+  --n8n-chat-radius: 8px;
+  --n8n-chat-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  --n8n-chat-font-size: 14px;
+  --n8n-chat-line-height: 1.5;
 }
 
 /* Dark theme */
-.flowchat-dark {
-  --flowchat-background: #1f2937;
-  --flowchat-foreground: #f9fafb;
-  --flowchat-muted: #374151;
-  --flowchat-muted-foreground: #9ca3af;
-  --flowchat-border: #374151;
+.n8n-chat-dark {
+  --n8n-chat-background: #1f2937;
+  --n8n-chat-foreground: #f9fafb;
+  --n8n-chat-muted: #374151;
+  --n8n-chat-muted-foreground: #9ca3af;
+  --n8n-chat-border: #374151;
 }
 
 /* ============================================================================
    Widget Container
    ============================================================================ */
 
-.flowchat-widget {
+.n8n-chat-widget {
   display: flex;
   flex-direction: column;
   width: 100%;
   height: 100%;
-  background-color: var(--flowchat-background);
-  color: var(--flowchat-foreground);
-  font-family: var(--flowchat-font-family);
-  font-size: var(--flowchat-font-size);
-  line-height: var(--flowchat-line-height);
-  border-radius: var(--flowchat-radius);
+  background-color: var(--n8n-chat-background);
+  color: var(--n8n-chat-foreground);
+  font-family: var(--n8n-chat-font-family);
+  font-size: var(--n8n-chat-font-size);
+  line-height: var(--n8n-chat-line-height);
+  border-radius: var(--n8n-chat-radius);
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
 }
@@ -55,35 +55,35 @@
    Header
    ============================================================================ */
 
-.flowchat-header {
+.n8n-chat-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background-color: var(--flowchat-primary);
-  color: var(--flowchat-primary-foreground);
+  background-color: var(--n8n-chat-primary);
+  color: var(--n8n-chat-primary-foreground);
   flex-shrink: 0;
 }
 
-.flowchat-header-content {
+.n8n-chat-header-content {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.flowchat-header-title {
+.n8n-chat-header-title {
   margin: 0;
   font-size: 16px;
   font-weight: 600;
 }
 
-.flowchat-header-actions {
+.n8n-chat-header-actions {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.flowchat-header-button {
+.n8n-chat-header-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -99,7 +99,7 @@
   transition: opacity 0.2s, background-color 0.2s;
 }
 
-.flowchat-header-button:hover {
+.n8n-chat-header-button:hover {
   opacity: 1;
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -108,7 +108,7 @@
    Messages Area
    ============================================================================ */
 
-.flowchat-messages {
+.n8n-chat-messages {
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -116,7 +116,7 @@
   position: relative;
 }
 
-.flowchat-messages-viewport {
+.n8n-chat-messages-viewport {
   flex: 1;
   overflow-y: auto;
   padding: 16px;
@@ -126,26 +126,26 @@
 }
 
 /* Welcome message */
-.flowchat-welcome {
+.n8n-chat-welcome {
   display: flex;
   justify-content: flex-start;
   margin-bottom: 8px;
 }
 
-.flowchat-welcome-content {
+.n8n-chat-welcome-content {
   max-width: 80%;
   padding: 12px 16px;
-  background-color: var(--flowchat-muted);
-  border-radius: var(--flowchat-radius);
+  background-color: var(--n8n-chat-muted);
+  border-radius: var(--n8n-chat-radius);
   border-bottom-left-radius: 4px;
 }
 
-.flowchat-welcome-content p {
+.n8n-chat-welcome-content p {
   margin: 0;
 }
 
 /* Scroll to bottom button */
-.flowchat-scroll-to-bottom {
+.n8n-chat-scroll-to-bottom {
   position: absolute;
   bottom: 8px;
   left: 50%;
@@ -155,53 +155,53 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  background-color: var(--flowchat-background);
-  border: 1px solid var(--flowchat-border);
+  background-color: var(--n8n-chat-background);
+  border: 1px solid var(--n8n-chat-border);
   border-radius: 50%;
   cursor: pointer;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: opacity 0.2s;
 }
 
-.flowchat-scroll-to-bottom:hover {
-  background-color: var(--flowchat-muted);
+.n8n-chat-scroll-to-bottom:hover {
+  background-color: var(--n8n-chat-muted);
 }
 
 /* ============================================================================
    Message
    ============================================================================ */
 
-.flowchat-message {
+.n8n-chat-message {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.flowchat-message-wrapper {
+.n8n-chat-message-wrapper {
   display: flex;
   gap: 8px;
   max-width: 85%;
 }
 
-.flowchat-message-user {
+.n8n-chat-message-user {
   align-items: flex-end;
 }
 
-.flowchat-message-user .flowchat-message-wrapper {
+.n8n-chat-message-user .n8n-chat-message-wrapper {
   flex-direction: row-reverse;
   margin-left: auto;
 }
 
-.flowchat-message-assistant .flowchat-message-wrapper {
+.n8n-chat-message-assistant .n8n-chat-message-wrapper {
   margin-right: auto;
 }
 
 /* Avatar */
-.flowchat-message-avatar {
+.n8n-chat-message-avatar {
   flex-shrink: 0;
 }
 
-.flowchat-avatar {
+.n8n-chat-avatar {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,69 +211,69 @@
   overflow: hidden;
 }
 
-.flowchat-avatar-user {
-  background-color: var(--flowchat-primary);
-  color: var(--flowchat-primary-foreground);
+.n8n-chat-avatar-user {
+  background-color: var(--n8n-chat-primary);
+  color: var(--n8n-chat-primary-foreground);
 }
 
-.flowchat-avatar-assistant {
-  background-color: var(--flowchat-muted);
-  color: var(--flowchat-muted-foreground);
+.n8n-chat-avatar-assistant {
+  background-color: var(--n8n-chat-muted);
+  color: var(--n8n-chat-muted-foreground);
 }
 
-.flowchat-avatar img {
+.n8n-chat-avatar img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 /* Message content */
-.flowchat-message-content {
+.n8n-chat-message-content {
   padding: 10px 14px;
-  border-radius: var(--flowchat-radius);
+  border-radius: var(--n8n-chat-radius);
 }
 
-.flowchat-message-user .flowchat-message-content {
-  background-color: var(--flowchat-primary);
-  color: var(--flowchat-primary-foreground);
+.n8n-chat-message-user .n8n-chat-message-content {
+  background-color: var(--n8n-chat-primary);
+  color: var(--n8n-chat-primary-foreground);
   border-bottom-right-radius: 4px;
 }
 
-.flowchat-message-assistant .flowchat-message-content {
-  background-color: var(--flowchat-muted);
+.n8n-chat-message-assistant .n8n-chat-message-content {
+  background-color: var(--n8n-chat-muted);
   border-bottom-left-radius: 4px;
 }
 
-.flowchat-message-text p {
+.n8n-chat-message-text p {
   margin: 0;
 }
 
-.flowchat-message-text p + p {
+.n8n-chat-message-text p + p {
   margin-top: 8px;
 }
 
 /* Message image */
-.flowchat-message-image {
+.n8n-chat-message-image {
   max-width: 100%;
   border-radius: 4px;
   overflow: hidden;
 }
 
-.flowchat-message-image img {
+.n8n-chat-message-image img {
   max-width: 100%;
   height: auto;
   display: block;
 }
 
 /* Timestamp */
-.flowchat-message-timestamp {
+.n8n-chat-message-timestamp {
   font-size: 11px;
-  color: var(--flowchat-muted-foreground);
+  color: var(--n8n-chat-muted-foreground);
   padding: 0 8px;
 }
 
 /* Message actions */
-.flowchat-message-actions {
+.n8n-chat-message-actions {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -282,12 +282,12 @@
   transition: opacity 0.2s;
 }
 
-.flowchat-message:hover .flowchat-message-actions {
+.n8n-chat-message:hover .n8n-chat-message-actions {
   opacity: 1;
 }
 
-.flowchat-copy-button,
-.flowchat-branch-button {
+.n8n-chat-copy-button,
+.n8n-chat-branch-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -297,27 +297,27 @@
   background: transparent;
   border: none;
   border-radius: 4px;
-  color: var(--flowchat-muted-foreground);
+  color: var(--n8n-chat-muted-foreground);
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
 }
 
-.flowchat-copy-button:hover,
-.flowchat-branch-button:hover {
-  background-color: var(--flowchat-muted);
-  color: var(--flowchat-foreground);
+.n8n-chat-copy-button:hover,
+.n8n-chat-branch-button:hover {
+  background-color: var(--n8n-chat-muted);
+  color: var(--n8n-chat-foreground);
 }
 
 /* Branch navigation */
-.flowchat-branch-nav {
+.n8n-chat-branch-nav {
   display: flex;
   align-items: center;
   gap: 2px;
 }
 
-.flowchat-branch-count {
+.n8n-chat-branch-count {
   font-size: 11px;
-  color: var(--flowchat-muted-foreground);
+  color: var(--n8n-chat-muted-foreground);
   padding: 0 4px;
 }
 
@@ -325,39 +325,39 @@
    Typing Indicator
    ============================================================================ */
 
-.flowchat-typing-indicator {
+.n8n-chat-typing-indicator {
   display: flex;
   padding: 0 16px;
   margin-bottom: 8px;
 }
 
-.flowchat-typing-dots {
+.n8n-chat-typing-dots {
   display: flex;
   align-items: center;
   gap: 4px;
   padding: 12px 16px;
-  background-color: var(--flowchat-muted);
-  border-radius: var(--flowchat-radius);
+  background-color: var(--n8n-chat-muted);
+  border-radius: var(--n8n-chat-radius);
   border-bottom-left-radius: 4px;
 }
 
-.flowchat-typing-dot {
+.n8n-chat-typing-dot {
   width: 6px;
   height: 6px;
-  background-color: var(--flowchat-muted-foreground);
+  background-color: var(--n8n-chat-muted-foreground);
   border-radius: 50%;
-  animation: flowchat-typing 1.4s infinite ease-in-out both;
+  animation: n8n-chat-typing 1.4s infinite ease-in-out both;
 }
 
-.flowchat-typing-dot:nth-child(1) {
+.n8n-chat-typing-dot:nth-child(1) {
   animation-delay: -0.32s;
 }
 
-.flowchat-typing-dot:nth-child(2) {
+.n8n-chat-typing-dot:nth-child(2) {
   animation-delay: -0.16s;
 }
 
-@keyframes flowchat-typing {
+@keyframes n8n-chat-typing {
   0%, 80%, 100% {
     transform: scale(0.6);
     opacity: 0.5;
@@ -372,25 +372,25 @@
    Input Area
    ============================================================================ */
 
-.flowchat-input-container {
+.n8n-chat-input-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
   padding: 12px 16px;
-  border-top: 1px solid var(--flowchat-border);
+  border-top: 1px solid var(--n8n-chat-border);
   flex-shrink: 0;
 }
 
-.flowchat-input-wrapper {
+.n8n-chat-input-wrapper {
   display: flex;
   align-items: flex-end;
   gap: 8px;
-  background-color: var(--flowchat-muted);
-  border-radius: var(--flowchat-radius);
+  background-color: var(--n8n-chat-muted);
+  border-radius: var(--n8n-chat-radius);
   padding: 8px 12px;
 }
 
-.flowchat-input {
+.n8n-chat-input {
   flex: 1;
   min-height: 20px;
   max-height: 120px;
@@ -402,15 +402,15 @@
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-  color: var(--flowchat-foreground);
+  color: var(--n8n-chat-foreground);
 }
 
-.flowchat-input::placeholder {
-  color: var(--flowchat-muted-foreground);
+.n8n-chat-input::placeholder {
+  color: var(--n8n-chat-muted-foreground);
 }
 
-.flowchat-attachment-button,
-.flowchat-send-button {
+.n8n-chat-attachment-button,
+.n8n-chat-send-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -424,89 +424,89 @@
   transition: background-color 0.2s, color 0.2s;
 }
 
-.flowchat-attachment-button {
-  color: var(--flowchat-muted-foreground);
+.n8n-chat-attachment-button {
+  color: var(--n8n-chat-muted-foreground);
 }
 
-.flowchat-attachment-button:hover {
-  background-color: var(--flowchat-border);
-  color: var(--flowchat-foreground);
+.n8n-chat-attachment-button:hover {
+  background-color: var(--n8n-chat-border);
+  color: var(--n8n-chat-foreground);
 }
 
-.flowchat-send-button {
-  background-color: var(--flowchat-primary);
-  color: var(--flowchat-primary-foreground);
+.n8n-chat-send-button {
+  background-color: var(--n8n-chat-primary);
+  color: var(--n8n-chat-primary-foreground);
 }
 
-.flowchat-send-button:hover {
+.n8n-chat-send-button:hover {
   opacity: 0.9;
 }
 
-.flowchat-send-button:disabled {
+.n8n-chat-send-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.flowchat-file-input-hidden {
+.n8n-chat-file-input-hidden {
   display: none;
 }
 
 /* Cancel button */
-.flowchat-cancel-button {
+.n8n-chat-cancel-button {
   display: none;
   align-items: center;
   justify-content: center;
   gap: 6px;
   padding: 8px 16px;
-  background-color: var(--flowchat-muted);
+  background-color: var(--n8n-chat-muted);
   border: none;
-  border-radius: var(--flowchat-radius);
-  color: var(--flowchat-muted-foreground);
+  border-radius: var(--n8n-chat-radius);
+  color: var(--n8n-chat-muted-foreground);
   font-size: 13px;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
-.flowchat-cancel-button:hover {
-  background-color: var(--flowchat-border);
+.n8n-chat-cancel-button:hover {
+  background-color: var(--n8n-chat-border);
 }
 
 /* File previews */
-.flowchat-file-previews {
+.n8n-chat-file-previews {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
 }
 
-.flowchat-file-preview {
+.n8n-chat-file-preview {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 6px 10px;
-  background-color: var(--flowchat-muted);
-  border-radius: var(--flowchat-radius);
+  background-color: var(--n8n-chat-muted);
+  border-radius: var(--n8n-chat-radius);
   font-size: 12px;
 }
 
-.flowchat-file-preview-image {
+.n8n-chat-file-preview-image {
   width: 32px;
   height: 32px;
   object-fit: cover;
   border-radius: 4px;
 }
 
-.flowchat-file-preview-icon {
-  color: var(--flowchat-muted-foreground);
+.n8n-chat-file-preview-icon {
+  color: var(--n8n-chat-muted-foreground);
 }
 
-.flowchat-file-preview-name {
+.n8n-chat-file-preview-name {
   max-width: 120px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.flowchat-file-preview-remove {
+.n8n-chat-file-preview-remove {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -516,63 +516,63 @@
   background: transparent;
   border: none;
   border-radius: 50%;
-  color: var(--flowchat-muted-foreground);
+  color: var(--n8n-chat-muted-foreground);
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s;
 }
 
-.flowchat-file-preview-remove:hover {
-  background-color: var(--flowchat-border);
-  color: var(--flowchat-foreground);
+.n8n-chat-file-preview-remove:hover {
+  background-color: var(--n8n-chat-border);
+  color: var(--n8n-chat-foreground);
 }
 
 /* Suggested prompts */
-.flowchat-suggested-prompts {
+.n8n-chat-suggested-prompts {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   padding: 0 16px 12px;
 }
 
-.flowchat-suggested-prompt {
+.n8n-chat-suggested-prompt {
   padding: 6px 12px;
-  background-color: var(--flowchat-muted);
-  border: 1px solid var(--flowchat-border);
+  background-color: var(--n8n-chat-muted);
+  border: 1px solid var(--n8n-chat-border);
   border-radius: 16px;
   font-size: 13px;
-  color: var(--flowchat-foreground);
+  color: var(--n8n-chat-foreground);
   cursor: pointer;
   transition: background-color 0.2s, border-color 0.2s;
 }
 
-.flowchat-suggested-prompt:hover {
-  background-color: var(--flowchat-border);
-  border-color: var(--flowchat-primary);
+.n8n-chat-suggested-prompt:hover {
+  background-color: var(--n8n-chat-border);
+  border-color: var(--n8n-chat-primary);
 }
 
 /* ============================================================================
    Bubble Widget
    ============================================================================ */
 
-.flowchat-bubble-widget {
+.n8n-chat-bubble-widget {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 16px;
 }
 
-.flowchat-bubble-widget[data-position="bottom-left"] {
+.n8n-chat-bubble-widget[data-position="bottom-left"] {
   align-items: flex-start;
 }
 
 /* Trigger button */
-.flowchat-bubble-trigger {
+.n8n-chat-bubble-trigger {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: var(--flowchat-primary);
-  color: var(--flowchat-primary-foreground);
+  background-color: var(--n8n-chat-primary);
+  color: var(--n8n-chat-primary-foreground);
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -581,52 +581,52 @@
   position: relative;
 }
 
-.flowchat-bubble-trigger:hover {
+.n8n-chat-bubble-trigger:hover {
   transform: scale(1.05);
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
 
-.flowchat-bubble-trigger-small {
+.n8n-chat-bubble-trigger-small {
   width: 48px;
   height: 48px;
 }
 
-.flowchat-bubble-trigger-medium {
+.n8n-chat-bubble-trigger-medium {
   width: 56px;
   height: 56px;
 }
 
-.flowchat-bubble-trigger-large {
+.n8n-chat-bubble-trigger-large {
   width: 64px;
   height: 64px;
 }
 
 /* With text */
-.flowchat-bubble-trigger:has(.flowchat-bubble-text) {
+.n8n-chat-bubble-trigger:has(.n8n-chat-bubble-text) {
   border-radius: 28px;
   padding: 0 20px;
   width: auto;
 }
 
-.flowchat-bubble-icon {
+.n8n-chat-bubble-icon {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.flowchat-bubble-text {
+.n8n-chat-bubble-text {
   font-weight: 500;
   white-space: nowrap;
 }
 
-.flowchat-bubble-custom-icon {
+.n8n-chat-bubble-custom-icon {
   width: 24px;
   height: 24px;
   object-fit: contain;
 }
 
 /* Unread badge */
-.flowchat-bubble-badge {
+.n8n-chat-bubble-badge {
   position: absolute;
   top: -4px;
   right: -4px;
@@ -644,11 +644,11 @@
 }
 
 /* Pulse animation */
-.flowchat-bubble-pulse {
-  animation: flowchat-pulse 2s infinite;
+.n8n-chat-bubble-pulse {
+  animation: n8n-chat-pulse 2s infinite;
 }
 
-@keyframes flowchat-pulse {
+@keyframes n8n-chat-pulse {
   0% {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(59, 130, 246, 0.4);
   }
@@ -661,27 +661,27 @@
 }
 
 /* Panel */
-.flowchat-bubble-panel {
+.n8n-chat-bubble-panel {
   width: 380px;
   height: 550px;
   max-height: calc(100vh - 140px);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-  animation: flowchat-slide-up 0.3s ease-out;
+  animation: n8n-chat-slide-up 0.3s ease-out;
 }
 
-.flowchat-bubble-panel-inner {
+.n8n-chat-bubble-panel-inner {
   width: 100%;
   height: 100%;
 }
 
-.flowchat-bubble-panel .flowchat-widget {
+.n8n-chat-bubble-panel .n8n-chat-widget {
   height: 100%;
   border-radius: 0;
 }
 
-@keyframes flowchat-slide-up {
+@keyframes n8n-chat-slide-up {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -694,7 +694,7 @@
 
 /* Mobile styles */
 @media (max-width: 480px) {
-  .flowchat-bubble-panel {
+  .n8n-chat-bubble-panel {
     position: fixed;
     top: 0;
     left: 0;
@@ -711,12 +711,12 @@
    Error State
    ============================================================================ */
 
-.flowchat-error {
+.n8n-chat-error {
   padding: 16px;
   color: #dc2626;
   background-color: #fef2f2;
   border: 1px solid #fecaca;
-  border-radius: var(--flowchat-radius);
+  border-radius: var(--n8n-chat-radius);
   font-size: 14px;
 }
 
@@ -724,28 +724,28 @@
    Login Required
    ============================================================================ */
 
-.flowchat-login-required {
+.n8n-chat-login-required {
   padding: 24px;
   text-align: center;
 }
 
-.flowchat-login-required p {
+.n8n-chat-login-required p {
   margin: 0 0 16px;
-  color: var(--flowchat-muted-foreground);
+  color: var(--n8n-chat-muted-foreground);
 }
 
-.flowchat-login-link {
+.n8n-chat-login-link {
   display: inline-block;
   padding: 10px 20px;
-  background-color: var(--flowchat-primary);
-  color: var(--flowchat-primary-foreground);
+  background-color: var(--n8n-chat-primary);
+  color: var(--n8n-chat-primary-foreground);
   text-decoration: none;
-  border-radius: var(--flowchat-radius);
+  border-radius: var(--n8n-chat-radius);
   font-weight: 500;
   transition: opacity 0.2s;
 }
 
-.flowchat-login-link:hover {
+.n8n-chat-login-link:hover {
   opacity: 0.9;
 }
 
@@ -753,25 +753,25 @@
    Instance Switcher
    ============================================================================ */
 
-.flowchat-instance-switcher {
+.n8n-chat-instance-switcher {
   display: flex;
-  background-color: var(--flowchat-background);
-  border-bottom: 1px solid var(--flowchat-border);
+  background-color: var(--n8n-chat-background);
+  border-bottom: 1px solid var(--n8n-chat-border);
 }
 
 /* Tabs Layout */
-.flowchat-instance-switcher--tabs {
+.n8n-chat-instance-switcher--tabs {
   flex-wrap: nowrap;
   overflow-x: auto;
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
-.flowchat-instance-switcher--tabs::-webkit-scrollbar {
+.n8n-chat-instance-switcher--tabs::-webkit-scrollbar {
   display: none;
 }
 
-.flowchat-instance-tab {
+.n8n-chat-instance-tab {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -780,7 +780,7 @@
   background: none;
   cursor: pointer;
   white-space: nowrap;
-  color: var(--flowchat-muted-foreground);
+  color: var(--n8n-chat-muted-foreground);
   font-size: 13px;
   font-weight: 500;
   transition: all 0.2s;
@@ -788,23 +788,23 @@
   margin-bottom: -1px;
 }
 
-.flowchat-instance-tab:hover {
-  color: var(--flowchat-foreground);
-  background-color: var(--flowchat-secondary);
+.n8n-chat-instance-tab:hover {
+  color: var(--n8n-chat-foreground);
+  background-color: var(--n8n-chat-secondary);
 }
 
-.flowchat-instance-tab--active {
-  color: var(--flowchat-primary);
-  border-bottom-color: var(--flowchat-primary);
+.n8n-chat-instance-tab--active {
+  color: var(--n8n-chat-primary);
+  border-bottom-color: var(--n8n-chat-primary);
 }
 
-.flowchat-instance-tab__name {
+.n8n-chat-instance-tab__name {
   max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.flowchat-instance-tab__badge {
+.n8n-chat-instance-tab__badge {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -819,12 +819,12 @@
 }
 
 /* Icons Layout */
-.flowchat-instance-switcher--icons {
+.n8n-chat-instance-switcher--icons {
   gap: 4px;
   padding: 8px;
 }
 
-.flowchat-instance-icon {
+.n8n-chat-instance-icon {
   position: relative;
   display: flex;
   align-items: center;
@@ -839,15 +839,15 @@
   transition: all 0.2s;
 }
 
-.flowchat-instance-icon:hover {
-  border-color: var(--flowchat-border);
+.n8n-chat-instance-icon:hover {
+  border-color: var(--n8n-chat-border);
 }
 
-.flowchat-instance-icon--active {
-  border-color: var(--flowchat-primary);
+.n8n-chat-instance-icon--active {
+  border-color: var(--n8n-chat-primary);
 }
 
-.flowchat-instance-icon__badge {
+.n8n-chat-instance-icon__badge {
   position: absolute;
   top: -4px;
   right: -4px;
@@ -865,36 +865,36 @@
 }
 
 /* Dropdown Layout */
-.flowchat-instance-switcher--dropdown {
+.n8n-chat-instance-switcher--dropdown {
   position: relative;
   padding: 8px 12px;
 }
 
-.flowchat-instance-dropdown__trigger {
+.n8n-chat-instance-dropdown__trigger {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
   padding: 8px 12px;
-  border: 1px solid var(--flowchat-border);
-  border-radius: var(--flowchat-radius);
-  background-color: var(--flowchat-background);
+  border: 1px solid var(--n8n-chat-border);
+  border-radius: var(--n8n-chat-radius);
+  background-color: var(--n8n-chat-background);
   cursor: pointer;
   font-size: 14px;
-  color: var(--flowchat-foreground);
+  color: var(--n8n-chat-foreground);
   transition: border-color 0.2s;
 }
 
-.flowchat-instance-dropdown__trigger:hover {
-  border-color: var(--flowchat-primary);
+.n8n-chat-instance-dropdown__trigger:hover {
+  border-color: var(--n8n-chat-primary);
 }
 
-.flowchat-instance-dropdown__name {
+.n8n-chat-instance-dropdown__name {
   flex: 1;
   text-align: left;
 }
 
-.flowchat-instance-dropdown__badge {
+.n8n-chat-instance-dropdown__badge {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -908,30 +908,30 @@
   border-radius: 9px;
 }
 
-.flowchat-instance-dropdown__arrow {
+.n8n-chat-instance-dropdown__arrow {
   transition: transform 0.2s;
 }
 
-.flowchat-instance-dropdown__arrow--open {
+.n8n-chat-instance-dropdown__arrow--open {
   transform: rotate(180deg);
 }
 
-.flowchat-instance-dropdown__menu {
+.n8n-chat-instance-dropdown__menu {
   position: absolute;
   top: 100%;
   left: 12px;
   right: 12px;
   margin-top: 4px;
-  background-color: var(--flowchat-background);
-  border: 1px solid var(--flowchat-border);
-  border-radius: var(--flowchat-radius);
+  background-color: var(--n8n-chat-background);
+  border: 1px solid var(--n8n-chat-border);
+  border-radius: var(--n8n-chat-radius);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 100;
   max-height: 200px;
   overflow-y: auto;
 }
 
-.flowchat-instance-dropdown__item {
+.n8n-chat-instance-dropdown__item {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -942,23 +942,23 @@
   cursor: pointer;
   text-align: left;
   font-size: 14px;
-  color: var(--flowchat-foreground);
+  color: var(--n8n-chat-foreground);
   transition: background-color 0.2s;
 }
 
-.flowchat-instance-dropdown__item:hover {
-  background-color: var(--flowchat-secondary);
+.n8n-chat-instance-dropdown__item:hover {
+  background-color: var(--n8n-chat-secondary);
 }
 
-.flowchat-instance-dropdown__item--active {
-  background-color: var(--flowchat-accent);
+.n8n-chat-instance-dropdown__item--active {
+  background-color: var(--n8n-chat-accent);
 }
 
-.flowchat-instance-dropdown__item-name {
+.n8n-chat-instance-dropdown__item-name {
   flex: 1;
 }
 
-.flowchat-instance-dropdown__item-badge {
+.n8n-chat-instance-dropdown__item-badge {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -972,12 +972,12 @@
   border-radius: 9px;
 }
 
-.flowchat-instance-dropdown__check {
-  color: var(--flowchat-primary);
+.n8n-chat-instance-dropdown__check {
+  color: var(--n8n-chat-primary);
 }
 
 /* Instance Avatar */
-.flowchat-instance-avatar {
+.n8n-chat-instance-avatar {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -986,31 +986,31 @@
   flex-shrink: 0;
 }
 
-.flowchat-instance-avatar--small {
+.n8n-chat-instance-avatar--small {
   width: 24px;
   height: 24px;
   font-size: 12px;
 }
 
-.flowchat-instance-avatar--medium {
+.n8n-chat-instance-avatar--medium {
   width: 28px;
   height: 28px;
   font-size: 13px;
 }
 
-.flowchat-instance-avatar--large {
+.n8n-chat-instance-avatar--large {
   width: 36px;
   height: 36px;
   font-size: 16px;
 }
 
-.flowchat-instance-avatar__image {
+.n8n-chat-instance-avatar__image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.flowchat-instance-avatar__initial {
+.n8n-chat-instance-avatar__initial {
   color: #fff;
   font-weight: 600;
 }
@@ -1019,13 +1019,13 @@
    Voice Input Styles
    ========================================================================== */
 
-.flowchat-voice-input {
+.n8n-chat-voice-input {
   position: relative;
   display: inline-flex;
   align-items: center;
 }
 
-.flowchat-voice-button {
+.n8n-chat-voice-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1034,61 +1034,61 @@
   padding: 0;
   border: none;
   border-radius: 50%;
-  background: var(--flowchat-surface, #f5f5f5);
-  color: var(--flowchat-text-secondary, #666);
+  background: var(--n8n-chat-surface, #f5f5f5);
+  color: var(--n8n-chat-text-secondary, #666);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.flowchat-voice-button:hover:not(:disabled) {
-  background: var(--flowchat-surface-hover, #e8e8e8);
-  color: var(--flowchat-primary, #3b82f6);
+.n8n-chat-voice-button:hover:not(:disabled) {
+  background: var(--n8n-chat-surface-hover, #e8e8e8);
+  color: var(--n8n-chat-primary, #3b82f6);
 }
 
-.flowchat-voice-button:focus {
+.n8n-chat-voice-button:focus {
   outline: none;
-  box-shadow: 0 0 0 2px var(--flowchat-primary-light, rgba(59, 130, 246, 0.3));
+  box-shadow: 0 0 0 2px var(--n8n-chat-primary-light, rgba(59, 130, 246, 0.3));
 }
 
-.flowchat-voice-button:disabled {
+.n8n-chat-voice-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.flowchat-voice-listening {
-  background: var(--flowchat-primary, #3b82f6);
+.n8n-chat-voice-listening {
+  background: var(--n8n-chat-primary, #3b82f6);
   color: white;
-  animation: flowchat-pulse 1.5s ease-in-out infinite;
+  animation: n8n-chat-pulse 1.5s ease-in-out infinite;
 }
 
-.flowchat-voice-listening:hover:not(:disabled) {
-  background: var(--flowchat-primary-dark, #2563eb);
+.n8n-chat-voice-listening:hover:not(:disabled) {
+  background: var(--n8n-chat-primary-dark, #2563eb);
   color: white;
 }
 
-.flowchat-voice-error {
-  background: var(--flowchat-error-light, #fee2e2);
-  color: var(--flowchat-error, #dc2626);
+.n8n-chat-voice-error {
+  background: var(--n8n-chat-error-light, #fee2e2);
+  color: var(--n8n-chat-error, #dc2626);
 }
 
-.flowchat-voice-icon {
+.n8n-chat-voice-icon {
   width: 20px;
   height: 20px;
 }
 
-.flowchat-voice-icon-listening {
-  animation: flowchat-mic-pulse 0.5s ease-in-out infinite alternate;
+.n8n-chat-voice-icon-listening {
+  animation: n8n-chat-mic-pulse 0.5s ease-in-out infinite alternate;
 }
 
-.flowchat-voice-wave {
+.n8n-chat-voice-wave {
   fill: none;
   stroke: currentColor;
   stroke-width: 1;
   opacity: 0.5;
-  animation: flowchat-wave 1s ease-out infinite;
+  animation: n8n-chat-wave 1s ease-out infinite;
 }
 
-@keyframes flowchat-pulse {
+@keyframes n8n-chat-pulse {
   0%, 100% {
     box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
   }
@@ -1097,7 +1097,7 @@
   }
 }
 
-@keyframes flowchat-mic-pulse {
+@keyframes n8n-chat-mic-pulse {
   from {
     transform: scale(1);
   }
@@ -1106,7 +1106,7 @@
   }
 }
 
-@keyframes flowchat-wave {
+@keyframes n8n-chat-wave {
   0% {
     transform: scale(1);
     opacity: 0.5;
@@ -1117,41 +1117,41 @@
   }
 }
 
-.flowchat-voice-transcript {
+.n8n-chat-voice-transcript {
   position: absolute;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--flowchat-surface, #f5f5f5);
+  background: var(--n8n-chat-surface, #f5f5f5);
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 13px;
-  color: var(--flowchat-text, #333);
+  color: var(--n8n-chat-text, #333);
   white-space: nowrap;
   max-width: 200px;
   overflow: hidden;
   text-overflow: ellipsis;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 8px;
-  animation: flowchat-fade-in 0.2s ease;
+  animation: n8n-chat-fade-in 0.2s ease;
 }
 
-.flowchat-voice-error-message {
+.n8n-chat-voice-error-message {
   position: absolute;
   bottom: 100%;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--flowchat-error, #dc2626);
+  background: var(--n8n-chat-error, #dc2626);
   color: white;
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 12px;
   white-space: nowrap;
   margin-bottom: 8px;
-  animation: flowchat-fade-in 0.2s ease;
+  animation: n8n-chat-fade-in 0.2s ease;
 }
 
-@keyframes flowchat-fade-in {
+@keyframes n8n-chat-fade-in {
   from {
     opacity: 0;
     transform: translateX(-50%) translateY(4px);
@@ -1166,7 +1166,7 @@
    Fullscreen Mode Styles
    ========================================================================== */
 
-.flowchat-fullscreen {
+.n8n-chat-fullscreen {
   position: fixed;
   top: 0;
   left: 0;
@@ -1176,14 +1176,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: flowchat-fullscreen-enter 0.3s ease;
+  animation: n8n-chat-fullscreen-enter 0.3s ease;
 }
 
-.flowchat-fullscreen-exiting {
-  animation: flowchat-fullscreen-exit 0.3s ease forwards;
+.n8n-chat-fullscreen-exiting {
+  animation: n8n-chat-fullscreen-exit 0.3s ease forwards;
 }
 
-@keyframes flowchat-fullscreen-enter {
+@keyframes n8n-chat-fullscreen-enter {
   from {
     opacity: 0;
   }
@@ -1192,7 +1192,7 @@
   }
 }
 
-@keyframes flowchat-fullscreen-exit {
+@keyframes n8n-chat-fullscreen-exit {
   from {
     opacity: 1;
   }
@@ -1201,7 +1201,7 @@
   }
 }
 
-.flowchat-fullscreen-backdrop {
+.n8n-chat-fullscreen-backdrop {
   position: absolute;
   top: 0;
   left: 0;
@@ -1211,7 +1211,7 @@
   backdrop-filter: blur(4px);
 }
 
-.flowchat-fullscreen-container {
+.n8n-chat-fullscreen-container {
   position: relative;
   width: 100%;
   max-width: 800px;
@@ -1220,14 +1220,14 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  background: var(--flowchat-background, #fff);
+  background: var(--n8n-chat-background, #fff);
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  animation: flowchat-fullscreen-slide-up 0.3s ease;
+  animation: n8n-chat-fullscreen-slide-up 0.3s ease;
 }
 
-@keyframes flowchat-fullscreen-slide-up {
+@keyframes n8n-chat-fullscreen-slide-up {
   from {
     transform: translateY(20px);
     opacity: 0;
@@ -1238,12 +1238,12 @@
   }
 }
 
-.flowchat-fullscreen-dark .flowchat-fullscreen-container {
-  background: var(--flowchat-background-dark, #1a1a2e);
+.n8n-chat-fullscreen-dark .n8n-chat-fullscreen-container {
+  background: var(--n8n-chat-background-dark, #1a1a2e);
   color: #fff;
 }
 
-.flowchat-fullscreen-exit {
+.n8n-chat-fullscreen-exit {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -1262,26 +1262,26 @@
   transition: all 0.2s ease;
 }
 
-.flowchat-fullscreen-exit:hover {
+.n8n-chat-fullscreen-exit:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: scale(1.05);
 }
 
-.flowchat-fullscreen-exit:focus {
+.n8n-chat-fullscreen-exit:focus {
   outline: none;
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.5);
 }
 
-.flowchat-fullscreen-header {
+.n8n-chat-fullscreen-header {
   display: flex;
   align-items: center;
   gap: 16px;
   padding: 24px 32px;
-  background: linear-gradient(135deg, var(--flowchat-primary, #3b82f6), var(--flowchat-primary-dark, #2563eb));
+  background: linear-gradient(135deg, var(--n8n-chat-primary, #3b82f6), var(--n8n-chat-primary-dark, #2563eb));
   color: #fff;
 }
 
-.flowchat-fullscreen-avatar {
+.n8n-chat-fullscreen-avatar {
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -1289,59 +1289,59 @@
   border: 3px solid rgba(255, 255, 255, 0.3);
 }
 
-.flowchat-fullscreen-title h1 {
+.n8n-chat-fullscreen-title h1 {
   margin: 0;
   font-size: 24px;
   font-weight: 700;
   line-height: 1.2;
 }
 
-.flowchat-fullscreen-title p {
+.n8n-chat-fullscreen-title p {
   margin: 4px 0 0;
   font-size: 14px;
   opacity: 0.8;
 }
 
-.flowchat-fullscreen-chat {
+.n8n-chat-fullscreen-chat {
   flex: 1;
   min-height: 0;
   display: flex;
   flex-direction: column;
 }
 
-.flowchat-fullscreen-chat .flowchat-widget {
+.n8n-chat-fullscreen-chat .n8n-chat-widget {
   flex: 1;
   height: 100%;
   border-radius: 0;
   box-shadow: none;
 }
 
-.flowchat-fullscreen-chat .flowchat-header {
+.n8n-chat-fullscreen-chat .n8n-chat-header {
   display: none; /* Header is shown in fullscreen container */
 }
 
 /* Responsive fullscreen */
 @media (max-width: 768px) {
-  .flowchat-fullscreen-container {
+  .n8n-chat-fullscreen-container {
     max-width: 100%;
     max-height: 100%;
     border-radius: 0;
   }
 
-  .flowchat-fullscreen-header {
+  .n8n-chat-fullscreen-header {
     padding: 16px 20px;
   }
 
-  .flowchat-fullscreen-avatar {
+  .n8n-chat-fullscreen-avatar {
     width: 44px;
     height: 44px;
   }
 
-  .flowchat-fullscreen-title h1 {
+  .n8n-chat-fullscreen-title h1 {
     font-size: 18px;
   }
 
-  .flowchat-fullscreen-exit {
+  .n8n-chat-fullscreen-exit {
     top: 12px;
     right: 12px;
     width: 36px;
@@ -1354,86 +1354,86 @@
    ========================================================================== */
 
 /* Avatar Component */
-.flowchat-avatar {
+.n8n-chat-avatar {
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 50%;
   overflow: hidden;
-  background: var(--flowchat-surface, #f0f0f0);
+  background: var(--n8n-chat-surface, #f0f0f0);
   flex-shrink: 0;
 }
 
-.flowchat-avatar-assistant {
-  background: var(--flowchat-primary, #3b82f6);
+.n8n-chat-avatar-assistant {
+  background: var(--n8n-chat-primary, #3b82f6);
   color: #fff;
 }
 
-.flowchat-avatar-user {
-  background: var(--flowchat-surface, #e5e7eb);
-  color: var(--flowchat-text, #374151);
+.n8n-chat-avatar-user {
+  background: var(--n8n-chat-surface, #e5e7eb);
+  color: var(--n8n-chat-text, #374151);
 }
 
-.flowchat-avatar-xs {
+.n8n-chat-avatar-xs {
   width: 24px;
   height: 24px;
   font-size: 10px;
 }
 
-.flowchat-avatar-sm {
+.n8n-chat-avatar-sm {
   width: 32px;
   height: 32px;
   font-size: 12px;
 }
 
-.flowchat-avatar-md {
+.n8n-chat-avatar-md {
   width: 40px;
   height: 40px;
   font-size: 14px;
 }
 
-.flowchat-avatar-lg {
+.n8n-chat-avatar-lg {
   width: 48px;
   height: 48px;
   font-size: 18px;
 }
 
-.flowchat-avatar-image {
+.n8n-chat-avatar-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.flowchat-avatar-fallback {
+.n8n-chat-avatar-fallback {
   font-weight: 600;
 }
 
 /* File Preview Component */
-.flowchat-file-preview {
+.n8n-chat-file-preview {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 12px;
-  background: var(--flowchat-surface, #f5f5f5);
+  background: var(--n8n-chat-surface, #f5f5f5);
   border-radius: 8px;
   max-width: 300px;
 }
 
-.flowchat-file-image {
+.n8n-chat-file-image {
   flex-direction: column;
   align-items: stretch;
 }
 
-.flowchat-file-uploading {
+.n8n-chat-file-uploading {
   opacity: 0.7;
 }
 
-.flowchat-file-preview-media {
+.n8n-chat-file-preview-media {
   position: relative;
   flex-shrink: 0;
 }
 
-.flowchat-file-preview-image {
+.n8n-chat-file-preview-image {
   width: 100%;
   max-width: 250px;
   max-height: 150px;
@@ -1441,11 +1441,11 @@
   border-radius: 4px;
 }
 
-.flowchat-file-preview-icon {
+.n8n-chat-file-preview-icon {
   font-size: 32px;
 }
 
-.flowchat-file-upload-overlay {
+.n8n-chat-file-upload-overlay {
   position: absolute;
   top: 0;
   left: 0;
@@ -1458,30 +1458,30 @@
   border-radius: 4px;
 }
 
-.flowchat-file-upload-progress {
+.n8n-chat-file-upload-progress {
   position: absolute;
   bottom: 0;
   left: 0;
   height: 4px;
-  background: var(--flowchat-primary, #3b82f6);
+  background: var(--n8n-chat-primary, #3b82f6);
   border-radius: 2px;
   transition: width 0.2s ease;
 }
 
-.flowchat-file-upload-text {
+.n8n-chat-file-upload-text {
   color: #fff;
   font-size: 12px;
   font-weight: 600;
 }
 
-.flowchat-file-preview-info {
+.n8n-chat-file-preview-info {
   flex: 1;
   min-width: 0;
 }
 
-.flowchat-file-preview-name {
+.n8n-chat-file-preview-name {
   display: block;
-  color: var(--flowchat-text, #333);
+  color: var(--n8n-chat-text, #333);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -1490,18 +1490,18 @@
   white-space: nowrap;
 }
 
-.flowchat-file-preview-name:hover {
-  color: var(--flowchat-primary, #3b82f6);
+.n8n-chat-file-preview-name:hover {
+  color: var(--n8n-chat-primary, #3b82f6);
 }
 
-.flowchat-file-preview-size {
+.n8n-chat-file-preview-size {
   display: block;
   font-size: 12px;
-  color: var(--flowchat-text-secondary, #666);
+  color: var(--n8n-chat-text-secondary, #666);
   margin-top: 2px;
 }
 
-.flowchat-file-preview-remove {
+.n8n-chat-file-preview-remove {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1511,62 +1511,62 @@
   border: none;
   border-radius: 50%;
   background: transparent;
-  color: var(--flowchat-text-secondary, #666);
+  color: var(--n8n-chat-text-secondary, #666);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.flowchat-file-preview-remove:hover {
-  background: var(--flowchat-error-light, #fee2e2);
-  color: var(--flowchat-error, #dc2626);
+.n8n-chat-file-preview-remove:hover {
+  background: var(--n8n-chat-error-light, #fee2e2);
+  color: var(--n8n-chat-error, #dc2626);
 }
 
 /* Markdown Component */
-.flowchat-markdown {
+.n8n-chat-markdown {
   line-height: 1.6;
 }
 
-.flowchat-markdown p {
+.n8n-chat-markdown p {
   margin: 0 0 1em;
 }
 
-.flowchat-markdown p:last-child {
+.n8n-chat-markdown p:last-child {
   margin-bottom: 0;
 }
 
-.flowchat-markdown strong {
+.n8n-chat-markdown strong {
   font-weight: 600;
 }
 
-.flowchat-markdown em {
+.n8n-chat-markdown em {
   font-style: italic;
 }
 
-.flowchat-markdown del {
+.n8n-chat-markdown del {
   text-decoration: line-through;
 }
 
-.flowchat-markdown a,
-.flowchat-link {
-  color: var(--flowchat-primary, #3b82f6);
+.n8n-chat-markdown a,
+.n8n-chat-link {
+  color: var(--n8n-chat-primary, #3b82f6);
   text-decoration: none;
 }
 
-.flowchat-markdown a:hover,
-.flowchat-link:hover {
+.n8n-chat-markdown a:hover,
+.n8n-chat-link:hover {
   text-decoration: underline;
 }
 
-.flowchat-inline-code {
-  background: var(--flowchat-surface, #f0f0f0);
+.n8n-chat-inline-code {
+  background: var(--n8n-chat-surface, #f0f0f0);
   padding: 2px 6px;
   border-radius: 4px;
   font-family: monospace;
   font-size: 0.9em;
 }
 
-.flowchat-code-block {
-  background: var(--flowchat-surface-dark, #1e1e1e);
+.n8n-chat-code-block {
+  background: var(--n8n-chat-surface-dark, #1e1e1e);
   color: #e5e7eb;
   padding: 16px;
   border-radius: 8px;
@@ -1577,116 +1577,116 @@
   margin: 1em 0;
 }
 
-.flowchat-code-block code {
+.n8n-chat-code-block code {
   background: none;
   padding: 0;
 }
 
-.flowchat-list {
+.n8n-chat-list {
   margin: 1em 0;
   padding-left: 1.5em;
 }
 
-.flowchat-list li {
+.n8n-chat-list li {
   margin: 0.25em 0;
 }
 
-.flowchat-blockquote {
+.n8n-chat-blockquote {
   margin: 1em 0;
   padding-left: 1em;
-  border-left: 3px solid var(--flowchat-primary, #3b82f6);
-  color: var(--flowchat-text-secondary, #666);
+  border-left: 3px solid var(--n8n-chat-primary, #3b82f6);
+  color: var(--n8n-chat-text-secondary, #666);
 }
 
-.flowchat-h1,
-.flowchat-h2,
-.flowchat-h3 {
+.n8n-chat-h1,
+.n8n-chat-h2,
+.n8n-chat-h3 {
   margin: 1em 0 0.5em;
   font-weight: 600;
   line-height: 1.3;
 }
 
-.flowchat-h1 {
+.n8n-chat-h1 {
   font-size: 1.5em;
 }
 
-.flowchat-h2 {
+.n8n-chat-h2 {
   font-size: 1.25em;
 }
 
-.flowchat-h3 {
+.n8n-chat-h3 {
   font-size: 1.1em;
 }
 
-.flowchat-hr {
+.n8n-chat-hr {
   margin: 1.5em 0;
   border: none;
-  border-top: 1px solid var(--flowchat-border, #e5e7eb);
+  border-top: 1px solid var(--n8n-chat-border, #e5e7eb);
 }
 
 /* Syntax Highlighting */
-.flowchat-hl-keyword {
+.n8n-chat-hl-keyword {
   color: #c678dd;
   font-weight: 500;
 }
 
-.flowchat-hl-string {
+.n8n-chat-hl-string {
   color: #98c379;
 }
 
-.flowchat-hl-comment {
+.n8n-chat-hl-comment {
   color: #5c6370;
   font-style: italic;
 }
 
-.flowchat-hl-number {
+.n8n-chat-hl-number {
   color: #d19a66;
 }
 
-.flowchat-hl-function {
+.n8n-chat-hl-function {
   color: #61afef;
 }
 
 /* Language-specific code block styling */
-.flowchat-code-block.language-javascript,
-.flowchat-code-block.language-typescript,
-.flowchat-code-block.language-js,
-.flowchat-code-block.language-ts {
+.n8n-chat-code-block.language-javascript,
+.n8n-chat-code-block.language-typescript,
+.n8n-chat-code-block.language-js,
+.n8n-chat-code-block.language-ts {
   border-left: 3px solid #f7df1e;
 }
 
-.flowchat-code-block.language-python,
-.flowchat-code-block.language-py {
+.n8n-chat-code-block.language-python,
+.n8n-chat-code-block.language-py {
   border-left: 3px solid #3776ab;
 }
 
-.flowchat-code-block.language-php {
+.n8n-chat-code-block.language-php {
   border-left: 3px solid #8892be;
 }
 
-.flowchat-code-block.language-css {
+.n8n-chat-code-block.language-css {
   border-left: 3px solid #264de4;
 }
 
-.flowchat-code-block.language-html {
+.n8n-chat-code-block.language-html {
   border-left: 3px solid #e34c26;
 }
 
-.flowchat-code-block.language-sql {
+.n8n-chat-code-block.language-sql {
   border-left: 3px solid #e38c00;
 }
 
-.flowchat-code-block.language-bash,
-.flowchat-code-block.language-shell {
+.n8n-chat-code-block.language-bash,
+.n8n-chat-code-block.language-shell {
   border-left: 3px solid #4eaa25;
 }
 
-.flowchat-code-block.language-json {
+.n8n-chat-code-block.language-json {
   border-left: 3px solid #292929;
 }
 
 /* Message Feedback (Thumbs Up/Down) */
-.flowchat-message-feedback {
+.n8n-chat-message-feedback {
   display: inline-flex;
   align-items: center;
   gap: 4px;
@@ -1695,16 +1695,16 @@
   transition: opacity 0.2s ease;
 }
 
-.flowchat-feedback-hover {
+.n8n-chat-feedback-hover {
   opacity: 0;
 }
 
-.flowchat-message:hover .flowchat-feedback-hover,
-.flowchat-feedback-hover:focus-within {
+.n8n-chat-message:hover .n8n-chat-feedback-hover,
+.n8n-chat-feedback-hover:focus-within {
   opacity: 1;
 }
 
-.flowchat-feedback-button {
+.n8n-chat-feedback-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1714,40 +1714,40 @@
   border: none;
   border-radius: 6px;
   background: transparent;
-  color: var(--flowchat-text-secondary, #9ca3af);
+  color: var(--n8n-chat-text-secondary, #9ca3af);
   cursor: pointer;
   transition: all 0.15s ease;
 }
 
-.flowchat-feedback-button:hover {
-  background: var(--flowchat-surface, #f3f4f6);
-  color: var(--flowchat-text-primary, #374151);
+.n8n-chat-feedback-button:hover {
+  background: var(--n8n-chat-surface, #f3f4f6);
+  color: var(--n8n-chat-text-primary, #374151);
 }
 
-.flowchat-feedback-button:disabled {
+.n8n-chat-feedback-button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
-.flowchat-feedback-positive.flowchat-feedback-active {
+.n8n-chat-feedback-positive.n8n-chat-feedback-active {
   background: rgba(34, 197, 94, 0.15);
   color: #22c55e;
 }
 
-.flowchat-feedback-positive.flowchat-feedback-active:hover {
+.n8n-chat-feedback-positive.n8n-chat-feedback-active:hover {
   background: rgba(34, 197, 94, 0.25);
 }
 
-.flowchat-feedback-negative.flowchat-feedback-active {
+.n8n-chat-feedback-negative.n8n-chat-feedback-active {
   background: rgba(239, 68, 68, 0.15);
   color: #ef4444;
 }
 
-.flowchat-feedback-negative.flowchat-feedback-active:hover {
+.n8n-chat-feedback-negative.n8n-chat-feedback-active:hover {
   background: rgba(239, 68, 68, 0.25);
 }
 
-.flowchat-feedback-disabled {
+.n8n-chat-feedback-disabled {
   pointer-events: none;
   opacity: 0.5;
 }

@@ -1,13 +1,13 @@
 <?php
 /**
- * Import/Export Manager for FlowChat
+ * Import/Export Manager for n8n Chat
  *
  * Handles import and export of chat instances and settings.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 defined('ABSPATH') || exit;
 
@@ -56,7 +56,7 @@ class Import_Export {
      * @return array|null Export data or null if not found
      */
     public function export_instance(int $instance_id, bool $include_sensitive = false): ?array {
-        $instance = $this->instance_manager->get_instance($instance_id);
+        $instance = $this->instance_manager->get($instance_id);
 
         if (!$instance) {
             return null;
@@ -67,7 +67,7 @@ class Import_Export {
             'export_type' => 'instance',
             'export_date' => current_time('mysql'),
             'site_url' => home_url(),
-            'plugin_version' => FLOWCHAT_VERSION,
+            'plugin_version' => N8N_CHAT_VERSION,
             'instance' => $this->prepare_instance_export($instance, $include_sensitive),
         ];
 
@@ -87,7 +87,7 @@ class Import_Export {
         } else {
             $instances = array_filter(
                 array_map(
-                    fn($id) => $this->instance_manager->get_instance($id),
+                    fn($id) => $this->instance_manager->get($id),
                     $instance_ids
                 )
             );
@@ -98,7 +98,7 @@ class Import_Export {
             'export_type' => 'instances',
             'export_date' => current_time('mysql'),
             'site_url' => home_url(),
-            'plugin_version' => FLOWCHAT_VERSION,
+            'plugin_version' => N8N_CHAT_VERSION,
             'instances' => array_map(
                 fn($instance) => $this->prepare_instance_export($instance, $include_sensitive),
                 $instances
@@ -115,7 +115,7 @@ class Import_Export {
      * @return array Settings export
      */
     public function export_settings(bool $include_sensitive = false): array {
-        $settings = get_option('flowchat_settings', []);
+        $settings = get_option('n8n_chat_settings', []);
 
         // Remove sensitive data if needed
         if (!$include_sensitive) {
@@ -128,7 +128,7 @@ class Import_Export {
             'export_type' => 'settings',
             'export_date' => current_time('mysql'),
             'site_url' => home_url(),
-            'plugin_version' => FLOWCHAT_VERSION,
+            'plugin_version' => N8N_CHAT_VERSION,
             'settings' => $settings,
         ];
     }
@@ -141,8 +141,8 @@ class Import_Export {
      */
     public function export_all(bool $include_sensitive = false): array {
         $instances = $this->instance_manager->get_all_instances();
-        $settings = get_option('flowchat_settings', []);
-        $custom_templates = get_option('flowchat_custom_templates', []);
+        $settings = get_option('n8n_chat_settings', []);
+        $custom_templates = get_option('n8n_chat_custom_templates', []);
 
         if (!$include_sensitive) {
             unset($settings['license_key']);
@@ -154,7 +154,7 @@ class Import_Export {
             'export_type' => 'full',
             'export_date' => current_time('mysql'),
             'site_url' => home_url(),
-            'plugin_version' => FLOWCHAT_VERSION,
+            'plugin_version' => N8N_CHAT_VERSION,
             'instances' => array_map(
                 fn($instance) => $this->prepare_instance_export($instance, $include_sensitive),
                 $instances
@@ -362,7 +362,7 @@ class Import_Export {
      * @return array Result
      */
     private function import_settings(array $settings, array $options): array {
-        $current_settings = get_option('flowchat_settings', []);
+        $current_settings = get_option('n8n_chat_settings', []);
 
         if ($options['overwrite']) {
             // Full replacement
@@ -372,7 +372,7 @@ class Import_Export {
             $new_settings = array_merge($current_settings, $settings);
         }
 
-        $success = update_option('flowchat_settings', $new_settings);
+        $success = update_option('n8n_chat_settings', $new_settings);
 
         return [
             'success' => $success,
@@ -444,7 +444,7 @@ class Import_Export {
         $site = sanitize_title(get_bloginfo('name'));
         $date = wp_date('Y-m-d');
 
-        return "flowchat-{$type}-{$site}-{$date}.json";
+        return "n8n-chat-{$type}-{$site}-{$date}.json";
     }
 
     /**

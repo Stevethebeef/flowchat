@@ -13,6 +13,7 @@ import { MessagesTab } from './tabs/MessagesTab';
 import { AppearanceTab } from './tabs/AppearanceTab';
 import { RulesTab } from './tabs/RulesTab';
 import { LivePreview } from './LivePreview';
+import { useAdminI18n } from '../../hooks/useAdminI18n';
 
 interface InstanceEditorProps {
   instanceId: string | null;
@@ -24,17 +25,18 @@ type TabId = 'general' | 'connection' | 'display' | 'messages' | 'appearance' | 
 
 interface Tab {
   id: TabId;
-  label: string;
+  labelKey: string;
+  fallback: string;
   icon: string;
 }
 
 const TABS: Tab[] = [
-  { id: 'general', label: 'General', icon: '⚙️' },
-  { id: 'connection', label: 'Connection', icon: '🔗' },
-  { id: 'display', label: 'Display', icon: '📱' },
-  { id: 'messages', label: 'Messages', icon: '💬' },
-  { id: 'appearance', label: 'Appearance', icon: '🎨' },
-  { id: 'rules', label: 'Rules', icon: '📋' },
+  { id: 'general', labelKey: 'general', fallback: 'General', icon: '⚙️' },
+  { id: 'connection', labelKey: 'connection', fallback: 'Connection', icon: '🔗' },
+  { id: 'display', labelKey: 'display', fallback: 'Display', icon: '📱' },
+  { id: 'messages', labelKey: 'messages', fallback: 'Messages', icon: '💬' },
+  { id: 'appearance', labelKey: 'appearance', fallback: 'Appearance', icon: '🎨' },
+  { id: 'rules', labelKey: 'rules', fallback: 'Rules', icon: '📋' },
 ];
 
 // Default instance configuration
@@ -158,6 +160,7 @@ export const InstanceEditor: React.FC<InstanceEditorProps> = ({
   onBack,
   onSaved,
 }) => {
+  const { t } = useAdminI18n();
   const [instance, setInstance] = useState<Partial<AdminInstance>>(defaultInstance);
   const [activeTab, setActiveTab] = useState<TabId>('general');
   const [loading, setLoading] = useState(!!instanceId);
@@ -194,10 +197,10 @@ export const InstanceEditor: React.FC<InstanceEditorProps> = ({
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/instances/${id}`,
+        `${(window as any).n8nChatAdmin.apiUrl}/instances/${id}`,
         {
           headers: {
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
         }
       );
@@ -248,14 +251,14 @@ export const InstanceEditor: React.FC<InstanceEditorProps> = ({
       }
 
       const url = isEditing
-        ? `${(window as any).flowchatAdmin.apiUrl}/instances/${instanceId}`
-        : `${(window as any).flowchatAdmin.apiUrl}/instances`;
+        ? `${(window as any).n8nChatAdmin.apiUrl}/instances/${instanceId}`
+        : `${(window as any).n8nChatAdmin.apiUrl}/instances`;
 
       const response = await fetch(url, {
         method: isEditing ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+          'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
         },
         body: JSON.stringify(dataToSave),
       });
@@ -309,9 +312,9 @@ export const InstanceEditor: React.FC<InstanceEditorProps> = ({
 
   if (loading) {
     return (
-      <div className="flowchat-instance-editor">
-        <div className="flowchat-loading">
-          <div className="flowchat-loading-spinner" />
+      <div className="n8n-chat-instance-editor">
+        <div className="n8n-chat-loading">
+          <div className="n8n-chat-loading-spinner" />
           <p>Loading instance...</p>
         </div>
       </div>
@@ -319,17 +322,17 @@ export const InstanceEditor: React.FC<InstanceEditorProps> = ({
   }
 
   return (
-    <div className="flowchat-instance-editor">
+    <div className="n8n-chat-instance-editor">
       {/* Header */}
-      <div className="flowchat-editor-header">
-        <button className="button flowchat-back-button" onClick={handleBack}>
+      <div className="n8n-chat-editor-header">
+        <button className="button n8n-chat-back-button" onClick={handleBack}>
           <span className="dashicons dashicons-arrow-left-alt"></span>
-          Back to Chat Bots
+          {t('back', 'Back')}
         </button>
-        <div className="flowchat-editor-title">
+        <div className="n8n-chat-editor-title">
           <h1>{isEditing ? `Edit: ${instance.name}` : 'Create New Chat Bot'}</h1>
           {hasUnsavedChanges && (
-            <span className="flowchat-unsaved-badge">Unsaved changes</span>
+            <span className="n8n-chat-unsaved-badge">Unsaved changes</span>
           )}
         </div>
       </div>
@@ -344,29 +347,29 @@ export const InstanceEditor: React.FC<InstanceEditorProps> = ({
       )}
 
       {/* Main Content */}
-      <div className="flowchat-editor-layout">
+      <div className="n8n-chat-editor-layout">
         {/* Left: Form */}
-        <div className="flowchat-editor-form">
+        <div className="n8n-chat-editor-form">
           {/* Tabs */}
-          <div className="flowchat-editor-tabs" role="tablist">
+          <div className="n8n-chat-editor-tabs" role="tablist">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 role="tab"
                 aria-selected={activeTab === tab.id}
                 aria-controls={`panel-${tab.id}`}
-                className={`flowchat-editor-tab ${activeTab === tab.id ? 'is-active' : ''}`}
+                className={`n8n-chat-editor-tab ${activeTab === tab.id ? 'is-active' : ''}`}
                 onClick={() => setActiveTab(tab.id)}
               >
-                <span className="flowchat-tab-icon">{tab.icon}</span>
-                <span className="flowchat-tab-label">{tab.label}</span>
+                <span className="n8n-chat-tab-icon">{tab.icon}</span>
+                <span className="n8n-chat-tab-label">{t(tab.labelKey, tab.fallback)}</span>
               </button>
             ))}
           </div>
 
           {/* Tab Content */}
           <div
-            className="flowchat-editor-panel"
+            className="n8n-chat-editor-panel"
             role="tabpanel"
             id={`panel-${activeTab}`}
             aria-labelledby={activeTab}
@@ -376,19 +379,19 @@ export const InstanceEditor: React.FC<InstanceEditorProps> = ({
         </div>
 
         {/* Right: Preview */}
-        <div className="flowchat-editor-preview">
-          <div className="flowchat-preview-header">
+        <div className="n8n-chat-editor-preview">
+          <div className="n8n-chat-preview-header">
             <h3>Live Preview</h3>
-            <div className="flowchat-preview-toggle">
+            <div className="n8n-chat-preview-toggle">
               <button
-                className={`flowchat-preview-btn ${previewMode === 'desktop' ? 'is-active' : ''}`}
+                className={`n8n-chat-preview-btn ${previewMode === 'desktop' ? 'is-active' : ''}`}
                 onClick={() => setPreviewMode('desktop')}
                 title="Desktop preview"
               >
                 <span className="dashicons dashicons-desktop"></span>
               </button>
               <button
-                className={`flowchat-preview-btn ${previewMode === 'mobile' ? 'is-active' : ''}`}
+                className={`n8n-chat-preview-btn ${previewMode === 'mobile' ? 'is-active' : ''}`}
                 onClick={() => setPreviewMode('mobile')}
                 title="Mobile preview"
               >
@@ -401,31 +404,31 @@ export const InstanceEditor: React.FC<InstanceEditorProps> = ({
       </div>
 
       {/* Footer Actions */}
-      <div className="flowchat-editor-footer">
-        <div className="flowchat-footer-left">
+      <div className="n8n-chat-editor-footer">
+        <div className="n8n-chat-footer-left">
           {instanceId && (
-            <code className="flowchat-shortcode-display">
-              [flowchat id="{instanceId}"]
+            <code className="n8n-chat-shortcode-display">
+              [n8n-chat id="{instanceId}"]
             </code>
           )}
         </div>
-        <div className="flowchat-footer-right">
+        <div className="n8n-chat-footer-right">
           <button className="button" onClick={handleBack} disabled={saving}>
-            Cancel
+            {t('cancel', 'Cancel')}
           </button>
           <button
             className="button"
             onClick={() => handleSave(false)}
             disabled={saving}
           >
-            {saving ? 'Saving...' : 'Save Draft'}
+            {saving ? t('loading', 'Saving...') : t('save', 'Save Draft')}
           </button>
           <button
             className="button button-primary"
             onClick={() => handleSave(true)}
             disabled={saving}
           >
-            {saving ? 'Saving...' : isEditing ? 'Save & Update' : 'Save & Activate'}
+            {saving ? t('loading', 'Saving...') : t('save', 'Save & Activate')}
           </button>
         </div>
       </div>

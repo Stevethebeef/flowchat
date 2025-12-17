@@ -30,7 +30,7 @@ export const BubbleTrigger: React.FC<BubbleTriggerProps> = ({
   pulseAnimation,
 }) => {
   // Size classes
-  const sizeClass = `flowchat-bubble-trigger-${size}`;
+  const sizeClass = `n8n-chat-bubble-trigger-${size}`;
 
   // Get icon component
   const IconComponent = getIconComponent(icon, customIconUrl);
@@ -39,28 +39,28 @@ export const BubbleTrigger: React.FC<BubbleTriggerProps> = ({
     <button
       type="button"
       className={`
-        flowchat-bubble-trigger
+        n8n-chat-bubble-trigger
         ${sizeClass}
-        ${isOpen ? 'flowchat-bubble-trigger-open' : ''}
-        ${pulseAnimation ? 'flowchat-bubble-pulse' : ''}
+        ${isOpen ? 'n8n-chat-bubble-trigger-open' : ''}
+        ${pulseAnimation ? 'n8n-chat-bubble-pulse' : ''}
       `.trim()}
       onClick={onClick}
       aria-label={isOpen ? 'Close chat' : 'Open chat'}
       aria-expanded={isOpen}
     >
       {/* Icon or close icon when open */}
-      <span className="flowchat-bubble-icon">
+      <span className="n8n-chat-bubble-icon">
         {isOpen ? <CloseIcon /> : IconComponent}
       </span>
 
       {/* Optional text */}
       {text && !isOpen && (
-        <span className="flowchat-bubble-text">{text}</span>
+        <span className="n8n-chat-bubble-text">{text}</span>
       )}
 
       {/* Unread badge */}
       {showUnreadBadge && unreadCount > 0 && !isOpen && (
-        <span className="flowchat-bubble-badge">
+        <span className="n8n-chat-bubble-badge">
           {unreadCount > 99 ? '99+' : unreadCount}
         </span>
       )}
@@ -82,7 +82,7 @@ function getIconComponent(
       return <HelpIcon />;
     case 'custom':
       return customIconUrl ? (
-        <img src={customIconUrl} alt="" className="flowchat-bubble-custom-icon" />
+        <img src={customIconUrl} alt="" className="n8n-chat-bubble-custom-icon" />
       ) : (
         <ChatIcon />
       );

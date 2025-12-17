@@ -36,7 +36,7 @@ coverage/
 *.temp
 
 # WordPress
-wp-content/uploads/flowchat/
+wp-content/uploads/n8n-chat/
 
 # Package files
 *.zip
@@ -45,3 +45,4 @@ wp-content/uploads/flowchat/
 # Lock files (uncomment if you want to ignore)
 # package-lock.json
 # composer.lock
+nul

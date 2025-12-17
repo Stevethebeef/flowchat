@@ -1,14 +1,14 @@
 <?php
 /**
- * Error Handler for FlowChat
+ * Error Handler for n8n Chat
  *
  * Centralized error handling with user-friendly messages,
  * logging, and recovery strategies.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 defined('ABSPATH') || exit;
 
@@ -468,7 +468,7 @@ class Error_Handler {
         }
 
         $message = sprintf(
-            '[FlowChat] [%s] %s: %s',
+            '[n8n Chat] [%s] %s: %s',
             strtoupper($log_level),
             $code,
             $definition['message']
@@ -487,7 +487,7 @@ class Error_Handler {
         $this->store_error_log($code, $definition, $context);
 
         // Fire action for external logging
-        do_action('flowchat_error_logged', $code, $definition, $context);
+        do_action('n8n_chat_error_logged', $code, $definition, $context);
     }
 
     /**
@@ -511,7 +511,7 @@ class Error_Handler {
      * @param array  $context Additional context
      */
     private function store_error_log(string $code, array $definition, array $context): void {
-        $logs = get_option('flowchat_error_log', []);
+        $logs = get_option('n8n_chat_error_log', []);
 
         // Keep only last 100 errors
         if (count($logs) >= 100) {
@@ -528,7 +528,7 @@ class Error_Handler {
             'ip' => $this->get_client_ip(),
         ];
 
-        update_option('flowchat_error_log', $logs, false);
+        update_option('n8n_chat_error_log', $logs, false);
     }
 
     /**
@@ -583,7 +583,7 @@ class Error_Handler {
      * @return array
      */
     public function get_error_logs(int $limit = 50): array {
-        $logs = get_option('flowchat_error_log', []);
+        $logs = get_option('n8n_chat_error_log', []);
         return array_slice(array_reverse($logs), 0, $limit);
     }
 
@@ -591,7 +591,7 @@ class Error_Handler {
      * Clear error logs
      */
     public function clear_error_logs(): void {
-        delete_option('flowchat_error_log');
+        delete_option('n8n_chat_error_log');
     }
 
     /**

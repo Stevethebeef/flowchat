@@ -38,7 +38,7 @@ export interface OfflineQueueConfig {
 const DEFAULT_CONFIG: OfflineQueueConfig = {
   maxSize: 10,
   expiryTime: 24 * 60 * 60 * 1000, // 24 hours
-  storageKey: 'flowchat_offline_queue',
+  storageKey: 'n8n_chat_offline_queue',
   maxAttempts: 5,
 };
 

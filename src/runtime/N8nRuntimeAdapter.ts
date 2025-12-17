@@ -18,9 +18,17 @@ interface N8nConfig {
   onError?: (error: Error) => void;
 }
 
+interface FileAttachment {
+  type: 'image' | 'file';
+  url: string;
+  filename: string;
+  mimeType: string;
+}
+
 interface FormattedMessage {
   role: string;
   content: string;
+  attachments?: FileAttachment[];
 }
 
 interface SSEData {
@@ -238,13 +246,37 @@ export class N8nRuntimeAdapter implements ChatModelAdapter {
   private formatMessages(
     messages: ChatModelRunOptions['messages']
   ): FormattedMessage[] {
-    return messages.map((msg) => ({
-      role: msg.role,
-      content: msg.content
+    return messages.map((msg) => {
+      // Extract text content
+      const textParts = msg.content
         .filter((c): c is { type: 'text'; text: string } => c.type === 'text')
-        .map((c) => c.text)
-        .join(''),
-    }));
+        .map((c) => c.text);
+
+      // Extract file attachments (images and files)
+      const attachments: FileAttachment[] = msg.content
+        .filter(
+          (c): c is { type: 'image' | 'file'; url: string; filename?: string; mimeType?: string } =>
+            c.type === 'image' || c.type === 'file'
+        )
+        .map((c) => ({
+          type: c.type as 'image' | 'file',
+          url: (c as { url: string }).url,
+          filename: (c as { filename?: string }).filename || 'attachment',
+          mimeType: (c as { mimeType?: string }).mimeType || 'application/octet-stream',
+        }));
+
+      const message: FormattedMessage = {
+        role: msg.role,
+        content: textParts.join(''),
+      };
+
+      // Only include attachments if there are any
+      if (attachments.length > 0) {
+        message.attachments = attachments;
+      }
+
+      return message;
+    });
   }
 
   /**

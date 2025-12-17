@@ -6,10 +6,10 @@
  * Note: Database tables and options are NOT removed on deactivation.
  * Full cleanup happens in uninstall.php
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat;
+namespace N8nChat;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -31,7 +31,7 @@ class Deactivator {
         flush_rewrite_rules();
 
         // Store deactivation time for reference
-        update_option('flowchat_deactivated_at', current_time('mysql'));
+        update_option('n8n_chat_deactivated_at', current_time('mysql'));
     }
 
     /**
@@ -39,20 +39,20 @@ class Deactivator {
      */
     private static function clear_cron_jobs(): void {
         // Clear file cleanup cron
-        $timestamp = wp_next_scheduled('flowchat_cleanup_files');
+        $timestamp = wp_next_scheduled('n8n_chat_cleanup_files');
         if ($timestamp) {
-            wp_unschedule_event($timestamp, 'flowchat_cleanup_files');
+            wp_unschedule_event($timestamp, 'n8n_chat_cleanup_files');
         }
 
         // Clear session cleanup cron
-        $timestamp = wp_next_scheduled('flowchat_cleanup_sessions');
+        $timestamp = wp_next_scheduled('n8n_chat_cleanup_sessions');
         if ($timestamp) {
-            wp_unschedule_event($timestamp, 'flowchat_cleanup_sessions');
+            wp_unschedule_event($timestamp, 'n8n_chat_cleanup_sessions');
         }
 
         // Clear any other scheduled hooks
-        wp_clear_scheduled_hook('flowchat_cleanup_files');
-        wp_clear_scheduled_hook('flowchat_cleanup_sessions');
+        wp_clear_scheduled_hook('n8n_chat_cleanup_files');
+        wp_clear_scheduled_hook('n8n_chat_cleanup_sessions');
     }
 
     /**
@@ -60,12 +60,12 @@ class Deactivator {
      */
     private static function flush_caches(): void {
         // Clear transients
-        delete_transient('flowchat_active_sessions_count');
-        delete_transient('flowchat_instances_cache');
+        delete_transient('n8n_chat_active_sessions_count');
+        delete_transient('n8n_chat_instances_cache');
 
         // If using object cache, flush plugin-related data
         if (function_exists('wp_cache_flush_group')) {
-            wp_cache_flush_group('flowchat');
+            wp_cache_flush_group('n8n_chat');
         }
     }
 }

@@ -2,14 +2,14 @@
 /**
  * Frontend Handler
  *
- * Main frontend controller for FlowChat.
+ * Main frontend controller for n8n Chat.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Frontend;
+namespace N8nChat\Frontend;
 
-use FlowChat\Core\Instance_Manager;
+use N8nChat\Core\Instance_Manager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -31,38 +31,65 @@ class Frontend {
      * Constructor
      */
     public function __construct() {
-        $this->instance_manager = new Instance_Manager();
+        $this->instance_manager = Instance_Manager::get_instance();
 
         add_action('wp_footer', [$this, 'render_bubble_instances']);
         add_action('wp_head', [$this, 'output_custom_css']);
     }
 
     /**
-     * Render bubble instances that match URL targeting
+     * Render bubble instances - either site-wide or with URL targeting
      */
     public function render_bubble_instances(): void {
-        // Get current URL
-        $current_url = home_url(add_query_arg(null, null));
+        $rendered = false;
 
-        // Find instances with URL-based targeting that match current page
-        $matching_instances = $this->instance_manager->get_instances_for_url($current_url);
+        // First, check for instances with "showOnAllPages" enabled (site-wide bubble)
+        $all_instances = $this->instance_manager->get_all_instances();
 
-        foreach ($matching_instances as $instance) {
-            // Only render if bubble mode is enabled
-            if (empty($instance['bubble']['enabled'])) {
+        foreach ($all_instances as $instance) {
+            // Skip disabled instances
+            if (empty($instance['isEnabled'])) {
                 continue;
             }
 
-            // Check access permissions
-            if (!$this->check_access($instance)) {
-                continue;
+            // Check for site-wide bubble mode
+            if (!empty($instance['bubble']['enabled']) && !empty($instance['bubble']['showOnAllPages'])) {
+                // Check access permissions
+                if (!$this->check_access($instance)) {
+                    continue;
+                }
+
+                // Render the bubble container
+                $this->render_bubble_container($instance);
+                $rendered = true;
+
+                // Only render one bubble per page
+                break;
             }
+        }
 
-            // Render the bubble container
-            $this->render_bubble_container($instance);
+        // If no site-wide bubble, check URL-targeted bubbles
+        if (!$rendered) {
+            $current_url = home_url(add_query_arg(null, null));
+            $matching_instances = $this->instance_manager->get_instances_for_url($current_url);
 
-            // Only render one bubble per page (highest priority wins)
-            break;
+            foreach ($matching_instances as $instance) {
+                // Only render if bubble mode is enabled
+                if (empty($instance['bubble']['enabled'])) {
+                    continue;
+                }
+
+                // Check access permissions
+                if (!$this->check_access($instance)) {
+                    continue;
+                }
+
+                // Render the bubble container
+                $this->render_bubble_container($instance);
+
+                // Only render one bubble per page (highest priority wins)
+                break;
+            }
         }
     }
 
@@ -72,25 +99,25 @@ class Frontend {
      * @param array $instance Instance configuration
      */
     private function render_bubble_container(array $instance): void {
-        $container_id = 'flowchat-bubble-' . esc_attr($instance['id']);
+        $container_id = 'n8n-chat-bubble-' . esc_attr($instance['id']);
 
         // Enqueue assets
-        wp_enqueue_script('flowchat-frontend');
-        wp_enqueue_style('flowchat-frontend');
+        wp_enqueue_script('n8n-chat-frontend');
+        wp_enqueue_style('n8n-chat-frontend');
 
         // Pass config to JS
-        $js_var_name = 'flowchatBubble_' . str_replace('-', '_', $instance['id']);
-        wp_localize_script('flowchat-frontend', $js_var_name, [
+        $js_var_name = 'n8nChatBubble_' . str_replace('-', '_', $instance['id']);
+        wp_localize_script('n8n-chat-frontend', $js_var_name, [
             'containerId' => $container_id,
             'instanceId' => $instance['id'],
             'mode' => 'bubble',
-            'apiUrl' => rest_url('flowchat/v1'),
+            'apiUrl' => rest_url('n8n-chat/v1'),
             'nonce' => wp_create_nonce('wp_rest'),
         ]);
 
         // Output container
         printf(
-            '<div id="%s" class="flowchat-bubble-container"></div>',
+            '<div id="%s" class="n8n-chat-bubble-container"></div>',
             esc_attr($container_id)
         );
     }
@@ -129,11 +156,11 @@ class Frontend {
      * Output custom CSS from global settings
      */
     public function output_custom_css(): void {
-        $settings = get_option('flowchat_global_settings', []);
+        $settings = get_option('n8n_chat_global_settings', []);
 
         if (!empty($settings['custom_css'])) {
             printf(
-                '<style id="flowchat-custom-css">%s</style>',
+                '<style id="n8n-chat-custom-css">%s</style>',
                 wp_strip_all_tags($settings['custom_css'])
             );
         }
@@ -152,12 +179,12 @@ class Frontend {
             return $access['deniedMessage'];
         }
 
-        $error_messages = get_option('flowchat_error_messages', []);
+        $error_messages = get_option('n8n_chat_error_messages', []);
 
         if (!is_user_logged_in() && !empty($access['requireLogin'])) {
-            return $error_messages['access_denied'] ?? __('Please log in to use this chat.', 'flowchat');
+            return $error_messages['access_denied'] ?? __('Please log in to use this chat.', 'n8n-chat');
         }
 
-        return $error_messages['access_denied'] ?? __('You do not have permission to access this chat.', 'flowchat');
+        return $error_messages['access_denied'] ?? __('You do not have permission to access this chat.', 'n8n-chat');
     }
 }

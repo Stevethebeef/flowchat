@@ -4,10 +4,10 @@
  *
  * Handles chat session creation and management.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -21,12 +21,12 @@ class Session_Manager {
     /**
      * Sessions table name (without prefix)
      */
-    private const TABLE_NAME = 'flowchat_sessions';
+    private const TABLE_NAME = 'n8n_chat_sessions';
 
     /**
      * Messages table name (without prefix)
      */
-    private const MESSAGES_TABLE = 'flowchat_messages';
+    private const MESSAGES_TABLE = 'n8n_chat_messages';
 
     /**
      * Singleton instance
@@ -48,7 +48,7 @@ class Session_Manager {
      */
     private function __construct() {
         // Register cleanup hooks
-        add_action('flowchat_cleanup_sessions', [$this, 'cleanup_old_sessions']);
+        add_action('n8n_chat_cleanup_sessions', [$this, 'cleanup_old_sessions']);
     }
 
     /**
@@ -355,7 +355,7 @@ class Session_Manager {
     public function cleanup_old_sessions(): int {
         global $wpdb;
 
-        $settings = get_option('flowchat_global_settings', []);
+        $settings = get_option('n8n_chat_global_settings', []);
         $retention_days = $settings['history_retention_days'] ?? 90;
 
         $cutoff_date = date('Y-m-d H:i:s', strtotime("-{$retention_days} days"));

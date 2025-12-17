@@ -1,14 +1,14 @@
 <?php
 /**
- * Debug Mode for FlowChat
+ * Debug Mode for n8n Chat
  *
  * Provides debugging tools and diagnostic information
  * for development and troubleshooting.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 defined('ABSPATH') || exit;
 
@@ -66,18 +66,18 @@ class Debug_Mode {
      */
     private function is_debug_enabled(): bool {
         // Check WordPress debug constant
-        if (defined('FLOWCHAT_DEBUG') && FLOWCHAT_DEBUG) {
+        if (defined('N8N_CHAT_DEBUG') && N8N_CHAT_DEBUG) {
             return true;
         }
 
         // Check option
-        $settings = get_option('flowchat_settings', []);
+        $settings = get_option('n8n_chat_settings', []);
         if (!empty($settings['debug_mode'])) {
             return true;
         }
 
         // Check query parameter (only for admins)
-        if (isset($_GET['flowchat_debug']) && current_user_can('manage_options')) {
+        if (isset($_GET['n8n_chat_debug']) && current_user_can('manage_options')) {
             return true;
         }
 
@@ -89,15 +89,15 @@ class Debug_Mode {
      */
     private function init_debug_hooks(): void {
         // Log API requests
-        add_action('flowchat_api_request', [$this, 'log_api_request'], 10, 3);
-        add_action('flowchat_api_response', [$this, 'log_api_response'], 10, 3);
+        add_action('n8n_chat_api_request', [$this, 'log_api_request'], 10, 3);
+        add_action('n8n_chat_api_response', [$this, 'log_api_response'], 10, 3);
 
         // Log errors
-        add_action('flowchat_error_logged', [$this, 'log_error'], 10, 3);
+        add_action('n8n_chat_error_logged', [$this, 'log_error'], 10, 3);
 
         // Log instance events
-        add_action('flowchat_instance_matched', [$this, 'log_instance_match'], 10, 2);
-        add_action('flowchat_session_created', [$this, 'log_session_created'], 10, 2);
+        add_action('n8n_chat_instance_matched', [$this, 'log_instance_match'], 10, 2);
+        add_action('n8n_chat_session_created', [$this, 'log_session_created'], 10, 2);
 
         // Add debug info to footer
         add_action('wp_footer', [$this, 'output_debug_footer'], 999);
@@ -131,7 +131,7 @@ class Debug_Mode {
         // Also log to error_log if WP_DEBUG_LOG is enabled
         if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
             $log_message = sprintf(
-                '[FlowChat Debug] [%s] %s',
+                '[n8n Chat Debug] [%s] %s',
                 $category,
                 $message
             );
@@ -256,9 +256,9 @@ class Debug_Mode {
 
         return [
             'plugin' => [
-                'version' => FLOWCHAT_VERSION,
+                'version' => N8N_CHAT_VERSION,
                 'debug_mode' => $this->enabled,
-                'plugin_dir' => FLOWCHAT_PLUGIN_DIR,
+                'plugin_dir' => N8N_CHAT_PLUGIN_DIR,
             ],
             'wordpress' => [
                 'version' => get_bloginfo('version'),
@@ -310,9 +310,9 @@ class Debug_Mode {
         global $wpdb;
 
         $tables = [
-            'sessions' => $wpdb->prefix . 'flowchat_sessions',
-            'messages' => $wpdb->prefix . 'flowchat_messages',
-            'fallback_messages' => $wpdb->prefix . 'flowchat_fallback_messages',
+            'sessions' => $wpdb->prefix . 'n8n_chat_sessions',
+            'messages' => $wpdb->prefix . 'n8n_chat_messages',
+            'fallback_messages' => $wpdb->prefix . 'n8n_chat_fallback_messages',
         ];
 
         $status = [];
@@ -370,13 +370,13 @@ class Debug_Mode {
             'body' => wp_json_encode([
                 'action' => 'sendMessage',
                 'sessionId' => 'test-' . wp_generate_uuid4(),
-                'chatInput' => 'FlowChat connection test',
-                '_flowchat_test' => true,
+                'chatInput' => 'n8n Chat connection test',
+                '_n8n_chat_test' => true,
             ]),
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
-            'sslverify' => apply_filters('flowchat_ssl_verify', true),
+            'sslverify' => apply_filters('n8n_chat_ssl_verify', true),
         ]);
 
         $duration = round((microtime(true) - $start) * 1000);
@@ -412,15 +412,15 @@ class Debug_Mode {
         $execution_time = round((microtime(true) - $this->start_time) * 1000, 2);
         $memory = round(memory_get_peak_usage(true) / 1024 / 1024, 2);
 
-        echo '<!-- FlowChat Debug -->';
+        echo '<!-- n8n Chat Debug -->';
         echo '<script>';
-        echo 'console.group("FlowChat Debug");';
+        echo 'console.group("n8n Chat Debug");';
         echo 'console.log("Execution time: ' . $execution_time . 'ms");';
         echo 'console.log("Peak memory: ' . $memory . 'MB");';
         echo 'console.log("Log entries:", ' . wp_json_encode($this->log_entries) . ');';
         echo 'console.groupEnd();';
         echo '</script>';
-        echo '<!-- /FlowChat Debug -->';
+        echo '<!-- /n8n Chat Debug -->';
     }
 
     /**
@@ -432,15 +432,15 @@ class Debug_Mode {
         }
 
         $screen = get_current_screen();
-        if (!$screen || strpos($screen->id, 'flowchat') === false) {
+        if (!$screen || strpos($screen->id, 'n8n-chat') === false) {
             return;
         }
 
         $diagnostics = $this->get_diagnostics();
 
         echo '<script>';
-        echo 'if (window.flowchatAdmin) {';
-        echo '  window.flowchatAdmin.debug = ' . wp_json_encode([
+        echo 'if (window.n8nChatAdmin) {';
+        echo '  window.n8nChatAdmin.debug = ' . wp_json_encode([
             'enabled' => true,
             'diagnostics' => $diagnostics,
             'log' => $this->log_entries,
@@ -466,7 +466,7 @@ class Debug_Mode {
     public function generate_system_report(): string {
         $diagnostics = $this->get_diagnostics();
 
-        $report = "=== FlowChat System Report ===\n\n";
+        $report = "=== n8n Chat System Report ===\n\n";
         $report .= "Generated: " . current_time('mysql') . "\n\n";
 
         // Plugin Info

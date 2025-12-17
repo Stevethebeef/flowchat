@@ -4,10 +4,10 @@
  *
  * Handles CRUD operations for chat instances.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat\Core;
+namespace N8nChat\Core;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -21,12 +21,12 @@ class Instance_Manager {
     /**
      * Option name for storing instances
      */
-    private const OPTION_NAME = 'flowchat_instances';
+    private const OPTION_NAME = 'n8n_chat_instances';
 
     /**
      * Cache group
      */
-    private const CACHE_GROUP = 'flowchat';
+    private const CACHE_GROUP = 'n8n_chat';
 
     /**
      * Cache key for instances
@@ -84,7 +84,7 @@ class Instance_Manager {
      * @param string $id Instance ID
      * @return array|null Instance data or null if not found
      */
-    public function get_instance(string $id): ?array {
+    public function get(string $id): ?array {
         $instances = $this->get_all_instances();
         return $instances[$id] ?? null;
     }
@@ -207,7 +207,7 @@ class Instance_Manager {
      * @return string|null New instance ID or null on failure
      */
     public function duplicate_instance(string $id): ?string {
-        $instance = $this->get_instance($id);
+        $instance = $this->get($id);
 
         if (!$instance) {
             return null;
@@ -233,7 +233,7 @@ class Instance_Manager {
     public function get_defaults(): array {
         return [
             'id' => '',
-            'name' => __('New Chat', 'flowchat'),
+            'name' => __('New Chat', 'n8n-chat'),
             'webhookUrl' => '',
             'isEnabled' => false,
             'isDefault' => false,
@@ -246,9 +246,9 @@ class Instance_Manager {
             'customCss' => '',
 
             // Content
-            'welcomeMessage' => __('Hi! 👋 How can I help you today?', 'flowchat'),
-            'placeholderText' => __('Type your message...', 'flowchat'),
-            'chatTitle' => __('Chat', 'flowchat'),
+            'welcomeMessage' => __('Hi! 👋 How can I help you today?', 'n8n-chat'),
+            'placeholderText' => __('Type your message...', 'n8n-chat'),
+            'chatTitle' => __('Chat', 'n8n-chat'),
             'systemPrompt' => '',
             'suggestedPrompts' => [],
 
@@ -261,6 +261,7 @@ class Instance_Manager {
             // Bubble Mode
             'bubble' => [
                 'enabled' => false,
+                'showOnAllPages' => false, // Site-wide floating bubble
                 'icon' => 'chat',
                 'customIconUrl' => '',
                 'text' => '',
@@ -300,7 +301,7 @@ class Instance_Manager {
             'access' => [
                 'requireLogin' => false,
                 'allowedRoles' => [],
-                'deniedMessage' => __('Please log in to use this chat.', 'flowchat'),
+                'deniedMessage' => __('Please log in to use this chat.', 'n8n-chat'),
             ],
 
             // Features
@@ -308,6 +309,7 @@ class Instance_Manager {
                 'fileUpload' => false,
                 'fileTypes' => ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'],
                 'maxFileSize' => 10485760, // 10MB
+                'voiceInput' => true,
                 'showTypingIndicator' => true,
                 'enableHistory' => true,
                 'enableFeedback' => false,
@@ -317,7 +319,7 @@ class Instance_Manager {
             'fallback' => [
                 'enabled' => true,
                 'email' => '',
-                'message' => __('Our chat is temporarily unavailable. Please leave a message.', 'flowchat'),
+                'message' => __('Our chat is temporarily unavailable. Please leave a message.', 'n8n-chat'),
             ],
 
             // Metadata
@@ -514,7 +516,7 @@ class Instance_Manager {
         if (empty($webhook_url)) {
             return [
                 'success' => false,
-                'message' => __('Webhook URL is required.', 'flowchat'),
+                'message' => __('Webhook URL is required.', 'n8n-chat'),
             ];
         }
 
@@ -525,7 +527,7 @@ class Instance_Manager {
             ],
             'body' => wp_json_encode([
                 'action' => 'test',
-                'source' => 'flowchat',
+                'source' => 'n8n-chat',
                 'timestamp' => current_time('c'),
             ]),
         ]);
@@ -542,7 +544,7 @@ class Instance_Manager {
         if ($code >= 200 && $code < 300) {
             return [
                 'success' => true,
-                'message' => __('Connection successful!', 'flowchat'),
+                'message' => __('Connection successful!', 'n8n-chat'),
                 'status_code' => $code,
             ];
         }
@@ -551,7 +553,7 @@ class Instance_Manager {
             'success' => false,
             'message' => sprintf(
                 /* translators: %d: HTTP status code */
-                __('Connection failed with status code: %d', 'flowchat'),
+                __('Connection failed with status code: %d', 'n8n-chat'),
                 $code
             ),
             'status_code' => $code,

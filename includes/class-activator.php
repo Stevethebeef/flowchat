@@ -4,10 +4,10 @@
  *
  * Handles plugin activation tasks: database table creation, default options, etc.
  *
- * @package FlowChat
+ * @package N8nChat
  */
 
-namespace FlowChat;
+namespace N8nChat;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -36,7 +36,7 @@ class Activator {
         flush_rewrite_rules();
 
         // Store activation time for reference
-        update_option('flowchat_activated_at', current_time('mysql'));
+        update_option('n8n_chat_activated_at', current_time('mysql'));
     }
 
     /**
@@ -48,7 +48,7 @@ class Activator {
         $charset_collate = $wpdb->get_charset_collate();
 
         // Sessions table
-        $sessions_table = $wpdb->prefix . 'flowchat_sessions';
+        $sessions_table = $wpdb->prefix . 'n8n_chat_sessions';
         $sessions_sql = "CREATE TABLE {$sessions_table} (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             uuid VARCHAR(36) NOT NULL,
@@ -68,7 +68,7 @@ class Activator {
         ) {$charset_collate};";
 
         // Messages table
-        $messages_table = $wpdb->prefix . 'flowchat_messages';
+        $messages_table = $wpdb->prefix . 'n8n_chat_messages';
         $messages_sql = "CREATE TABLE {$messages_table} (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             session_id BIGINT UNSIGNED NOT NULL,
@@ -83,7 +83,7 @@ class Activator {
         ) {$charset_collate};";
 
         // Fallback messages table (when n8n is down)
-        $fallback_table = $wpdb->prefix . 'flowchat_fallback_messages';
+        $fallback_table = $wpdb->prefix . 'n8n_chat_fallback_messages';
         $fallback_sql = "CREATE TABLE {$fallback_table} (
             id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
             instance_id VARCHAR(64) NOT NULL,
@@ -104,7 +104,7 @@ class Activator {
         dbDelta($fallback_sql);
 
         // Store the database version
-        update_option('flowchat_db_version', self::DB_VERSION);
+        update_option('n8n_chat_db_version', self::DB_VERSION);
     }
 
     /**
@@ -112,12 +112,12 @@ class Activator {
      */
     private static function set_default_options(): void {
         // Only set defaults if options don't exist
-        if (false === get_option('flowchat_instances')) {
-            update_option('flowchat_instances', []);
+        if (false === get_option('n8n_chat_instances')) {
+            update_option('n8n_chat_instances', []);
         }
 
-        if (false === get_option('flowchat_global_settings')) {
-            update_option('flowchat_global_settings', [
+        if (false === get_option('n8n_chat_global_settings')) {
+            update_option('n8n_chat_global_settings', [
                 'default_instance' => '',
                 'enable_history' => true,
                 'history_retention_days' => 90,
@@ -127,12 +127,12 @@ class Activator {
             ]);
         }
 
-        if (false === get_option('flowchat_error_messages')) {
-            update_option('flowchat_error_messages', [
-                'connection_error' => __('Unable to connect to the chat service. Please try again later.', 'flowchat'),
-                'timeout_error' => __('The request timed out. Please try again.', 'flowchat'),
-                'access_denied' => __('You do not have permission to access this chat.', 'flowchat'),
-                'instance_disabled' => __('This chat is currently unavailable.', 'flowchat'),
+        if (false === get_option('n8n_chat_error_messages')) {
+            update_option('n8n_chat_error_messages', [
+                'connection_error' => __('Unable to connect to the chat service. Please try again later.', 'n8n-chat'),
+                'timeout_error' => __('The request timed out. Please try again.', 'n8n-chat'),
+                'access_denied' => __('You do not have permission to access this chat.', 'n8n-chat'),
+                'instance_disabled' => __('This chat is currently unavailable.', 'n8n-chat'),
             ]);
         }
     }
@@ -142,16 +142,16 @@ class Activator {
      */
     private static function create_upload_directory(): void {
         $upload_dir = wp_upload_dir();
-        $flowchat_dir = $upload_dir['basedir'] . '/flowchat/temp';
+        $n8n_chat_dir = $upload_dir['basedir'] . '/n8n-chat/temp';
 
-        if (!file_exists($flowchat_dir)) {
-            wp_mkdir_p($flowchat_dir);
+        if (!file_exists($n8n_chat_dir)) {
+            wp_mkdir_p($n8n_chat_dir);
         }
 
         // Add .htaccess to prevent direct PHP execution
-        $htaccess_file = $upload_dir['basedir'] . '/flowchat/.htaccess';
+        $htaccess_file = $upload_dir['basedir'] . '/n8n-chat/.htaccess';
         if (!file_exists($htaccess_file)) {
-            $htaccess_content = "# FlowChat upload protection\n";
+            $htaccess_content = "# n8n Chat upload protection\n";
             $htaccess_content .= "<FilesMatch \"\.php$\">\n";
             $htaccess_content .= "    Order Allow,Deny\n";
             $htaccess_content .= "    Deny from all\n";
@@ -161,7 +161,7 @@ class Activator {
         }
 
         // Add index.php for directory browsing protection
-        $index_file = $upload_dir['basedir'] . '/flowchat/index.php';
+        $index_file = $upload_dir['basedir'] . '/n8n-chat/index.php';
         if (!file_exists($index_file)) {
             file_put_contents($index_file, '<?php // Silence is golden');
         }
@@ -172,13 +172,13 @@ class Activator {
      */
     private static function schedule_cron_jobs(): void {
         // File cleanup cron
-        if (!wp_next_scheduled('flowchat_cleanup_files')) {
-            wp_schedule_event(time(), 'hourly', 'flowchat_cleanup_files');
+        if (!wp_next_scheduled('n8n_chat_cleanup_files')) {
+            wp_schedule_event(time(), 'hourly', 'n8n_chat_cleanup_files');
         }
 
         // Session cleanup cron (cleanup old closed sessions)
-        if (!wp_next_scheduled('flowchat_cleanup_sessions')) {
-            wp_schedule_event(time(), 'daily', 'flowchat_cleanup_sessions');
+        if (!wp_next_scheduled('n8n_chat_cleanup_sessions')) {
+            wp_schedule_event(time(), 'daily', 'n8n_chat_cleanup_sessions');
         }
     }
 }

@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import type { AdminInstance } from '../../types';
+import { useAdminI18n } from '../../hooks/useAdminI18n';
 
 interface InstanceListProps {
   onEdit: (instanceId: string) => void;
@@ -13,6 +14,7 @@ interface InstanceListProps {
 }
 
 export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) => {
+  const { t } = useAdminI18n();
   const [instances, setInstances] = useState<AdminInstance[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,10 +26,10 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/instances`,
+        `${(window as any).n8nChatAdmin.apiUrl}/instances`,
         {
           headers: {
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
         }
       );
@@ -51,7 +53,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
 
   // Delete instance
   const handleDelete = async (instanceId: string, instanceName: string) => {
-    const i18n = (window as any).flowchatAdmin.i18n;
+    const i18n = (window as any).n8nChatAdmin.i18n;
 
     if (!confirm(`${i18n.confirmDelete}\n\n${i18n.confirmDeleteMessage}`)) {
       return;
@@ -59,11 +61,11 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
 
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/instances/${instanceId}`,
+        `${(window as any).n8nChatAdmin.apiUrl}/instances/${instanceId}`,
         {
           method: 'DELETE',
           headers: {
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
         }
       );
@@ -83,11 +85,11 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
   const handleDuplicate = async (instanceId: string) => {
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/instances/${instanceId}/duplicate`,
+        `${(window as any).n8nChatAdmin.apiUrl}/instances/${instanceId}/duplicate`,
         {
           method: 'POST',
           headers: {
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
         }
       );
@@ -107,12 +109,12 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
   const handleToggleEnabled = async (instance: AdminInstance) => {
     try {
       const response = await fetch(
-        `${(window as any).flowchatAdmin.apiUrl}/instances/${instance.id}`,
+        `${(window as any).n8nChatAdmin.apiUrl}/instances/${instance.id}`,
         {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'X-WP-Nonce': (window as any).flowchatAdmin.nonce,
+            'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
           body: JSON.stringify({
             isEnabled: !instance.isEnabled,
@@ -133,16 +135,16 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
 
   if (loading) {
     return (
-      <div className="flowchat-instance-list">
-        <div className="flowchat-loading">Loading instances...</div>
+      <div className="n8n-chat-instance-list">
+        <div className="n8n-chat-loading">{t('loadingInstances', 'Loading instances...')}</div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flowchat-instance-list">
-        <div className="flowchat-error">{error}</div>
+      <div className="n8n-chat-instance-list">
+        <div className="n8n-chat-error">{error}</div>
         <button className="button" onClick={fetchInstances}>
           Retry
         </button>
@@ -151,31 +153,31 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
   }
 
   return (
-    <div className="flowchat-instance-list">
-      <div className="flowchat-instance-header">
-        <h1>Chat Instances</h1>
+    <div className="n8n-chat-instance-list">
+      <div className="n8n-chat-instance-header">
+        <h1>{t('chatInstances', 'Chat Instances')}</h1>
         <button className="button button-primary" onClick={onCreate}>
-          Add New Instance
+          {t('addNewInstance', 'Add New Instance')}
         </button>
       </div>
 
       {instances.length === 0 ? (
-        <div className="flowchat-empty-state">
-          <p>No chat instances yet.</p>
+        <div className="n8n-chat-empty-state">
+          <p>{t('noInstancesYet', 'No chat instances yet.')}</p>
           <button className="button button-primary" onClick={onCreate}>
-            Create Your First Instance
+            {t('createFirstInstance', 'Create Your First Instance')}
           </button>
         </div>
       ) : (
         <table className="wp-list-table widefat fixed striped">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Status</th>
-              <th>Webhook URL</th>
-              <th>Sessions</th>
-              <th>Shortcode</th>
-              <th>Actions</th>
+              <th>{t('name', 'Name')}</th>
+              <th>{t('status', 'Status')}</th>
+              <th>{t('webhookUrl', 'Webhook URL')}</th>
+              <th>{t('sessions', 'Sessions')}</th>
+              <th>{t('shortcode', 'Shortcode')}</th>
+              <th>{t('actions', 'Actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -188,53 +190,53 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
                     </a>
                   </strong>
                   {instance.isDefault && (
-                    <span className="flowchat-badge flowchat-badge-default">Default</span>
+                    <span className="n8n-chat-badge n8n-chat-badge-default">Default</span>
                   )}
                 </td>
                 <td>
                   <button
-                    className={`flowchat-toggle ${instance.isEnabled ? 'flowchat-toggle-on' : ''}`}
+                    className={`n8n-chat-toggle ${instance.isEnabled ? 'n8n-chat-toggle-on' : ''}`}
                     onClick={() => handleToggleEnabled(instance)}
-                    title={instance.isEnabled ? 'Click to disable' : 'Click to enable'}
+                    title={instance.isEnabled ? t('disabled', 'Click to disable') : t('enabled', 'Click to enable')}
                   >
-                    <span className="flowchat-toggle-slider" />
+                    <span className="n8n-chat-toggle-slider" />
                     <span className="screen-reader-text">
-                      {instance.isEnabled ? 'Enabled' : 'Disabled'}
+                      {instance.isEnabled ? t('enabled', 'Enabled') : t('disabled', 'Disabled')}
                     </span>
                   </button>
                 </td>
                 <td>
                   {instance.webhookUrl ? (
-                    <code className="flowchat-webhook-url">
+                    <code className="n8n-chat-webhook-url">
                       {instance.webhookUrl.substring(0, 40)}...
                     </code>
                   ) : (
-                    <span className="flowchat-warning">Not configured</span>
+                    <span className="n8n-chat-warning">Not configured</span>
                   )}
                 </td>
                 <td>{instance.sessionCount ?? 0}</td>
                 <td>
-                  <code>[flowchat id="{instance.id}"]</code>
+                  <code>[n8n-chat id="{instance.id}"]</code>
                 </td>
                 <td>
-                  <div className="flowchat-actions">
+                  <div className="n8n-chat-actions">
                     <button
                       className="button button-small"
                       onClick={() => onEdit(instance.id)}
                     >
-                      Edit
+                      {t('edit', 'Edit')}
                     </button>
                     <button
                       className="button button-small"
                       onClick={() => handleDuplicate(instance.id)}
                     >
-                      Duplicate
+                      {t('duplicate', 'Duplicate')}
                     </button>
                     <button
                       className="button button-small button-link-delete"
                       onClick={() => handleDelete(instance.id, instance.name)}
                     >
-                      Delete
+                      {t('delete', 'Delete')}
                     </button>
                   </div>
                 </td>
