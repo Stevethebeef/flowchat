@@ -23,11 +23,65 @@ export interface N8nChatConfig {
   autoOpen: AutoOpenConfig;
   features: FeaturesConfig;
   fallback: FallbackConfig;
+  // Additional nested config groups
+  appearance?: AppearanceConfig;
+  connection?: ConnectionConfig;
+  window?: WindowConfig;
+  messages?: MessagesConfig;
+  display?: DisplayConfig;
+}
+
+export interface AppearanceConfig {
+  primaryColor: string;
+  backgroundColor: string;
+  textColor: string;
+  userBubbleColor: string;
+  assistantBubbleColor: string;
+  font?: string;
+  fontSize?: number;
+  borderRadius?: number;
+  shadows?: boolean;
+}
+
+export interface ConnectionConfig {
+  webhookUrl: string;
+  authType: 'none' | 'basic' | 'bearer';
+  username?: string;
+  password?: string;
+  apiKey?: string;
+  timeout?: number;
+  enableStreaming: boolean;
+}
+
+export interface WindowConfig {
+  showHeader: boolean;
+  showTimestamp: boolean;
+  showAvatar: boolean;
+  avatarUrl: string;
+  chatTitle: string;
+  placeholderText: string;
+  welcomeMessage: string;
+  suggestedPrompts: string[];
+}
+
+export interface MessagesConfig {
+  enableFeedback: boolean;
+  showTypingIndicator: boolean;
+  enableHistory: boolean;
+  historyRetentionDays?: number;
+}
+
+export interface DisplayConfig {
+  mode: 'inline' | 'bubble' | 'both';
+  bubble: BubbleConfig;
+  autoOpen: AutoOpenConfig;
 }
 
 export interface BubbleConfig {
   enabled: boolean;
+  showOnAllPages?: boolean;
   showOnAllPages?: boolean; // Site-wide floating bubble
+  defaultInstance?: string;
   icon: 'chat' | 'message' | 'help' | 'custom';
   customIconUrl?: string;
   text?: string;
@@ -62,18 +116,20 @@ export interface FeaturesConfig {
   voiceInput: boolean;
   showTypingIndicator: boolean;
   enableFeedback: boolean;
+  enableHistory?: boolean;
 }
 
 export interface FallbackConfig {
   enabled: boolean;
   message: string;
+  email?: string;
 }
 
 // ============================================================================
 // Context Types
 // ============================================================================
 
-export interface ChatContext {
+export interface ChatContext extends Record<string, unknown> {
   site: SiteContext;
   user: UserContext;
   page: PageContext;
@@ -139,7 +195,7 @@ export interface WooCommerceContext {
 }
 
 // ============================================================================
-// Message Types
+// Message Types (Compatible with @assistant-ui/react)
 // ============================================================================
 
 export interface ChatMessage {
@@ -156,7 +212,7 @@ export interface MessageContent {
   toolResults?: ToolResult[];
 }
 
-export type MessagePart = TextPart | FilePart;
+export type MessagePart = TextPart | FilePart | ImagePart | AssistantImagePart;
 
 export interface TextPart {
   type: 'text';
@@ -168,6 +224,16 @@ export interface FilePart {
   url: string;
   filename: string;
   mimeType: string;
+}
+
+export interface ImagePart {
+  type: 'image';
+  image: string;
+}
+
+export interface AssistantImagePart {
+  type: 'image';
+  image: string;
 }
 
 export interface ToolCall {
@@ -284,6 +350,9 @@ export interface ChatMessageProps {
 export interface N8nChatGlobalConfig {
   version: string;
   debug: boolean;
+  apiUrl?: string;
+  apiBase?: string;
+  nonce?: string;
 }
 
 export interface N8nChatInitConfig {
@@ -296,66 +365,4 @@ export interface N8nChatInitConfig {
 
 // ============================================================================
 // Admin Types
-// ============================================================================
-
-export interface AdminInstance extends N8nChatConfig {
-  id: string;
-  webhookUrl: string;
-  isEnabled: boolean;
-  isDefault: boolean;
-  systemPrompt: string;
-  customCss: string;
-  colorSource: 'custom' | 'theme' | 'preset';
-  stylePreset: string;
-  targeting: TargetingConfig;
-  access: AccessConfig;
-  createdAt: string;
-  updatedAt: string;
-  sessionCount?: number;
-  activeSessionCount?: number;
-}
-
-export interface TargetingConfig {
-  enabled: boolean;
-  priority: number;
-  rules: TargetingRule[];
-}
-
-export interface TargetingRule {
-  id: string;
-  type: 'url_pattern' | 'post_type' | 'page_id' | 'category' | 'user_role';
-  condition?: 'equals' | 'starts_with' | 'ends_with' | 'contains' | 'wildcard';
-  value: string | string[];
-}
-
-export interface AccessConfig {
-  requireLogin: boolean;
-  allowedRoles: string[];
-  deniedMessage: string;
-}
-
-export interface GlobalSettings {
-  defaultInstance: string;
-  enableHistory: boolean;
-  historyRetentionDays: number;
-  fileRetentionHours: number;
-  enableAnalytics: boolean;
-  customCss: string;
-}
-
-// ============================================================================
-// Declare global window properties
-// ============================================================================
-
-declare global {
-  interface Window {
-    n8nChatConfig: N8nChatGlobalConfig;
-    N8nChat: {
-      init: (config: N8nChatInitConfig) => Promise<void>;
-    };
-    [key: `n8nChatInit_${string}`]: N8nChatInitConfig;
-    [key: `n8nChatBubble_${string}`]: N8nChatInitConfig;
-  }
-}
-
-export {};
+// ==============================================
