@@ -27,6 +27,7 @@ if (!defined('ABSPATH')) {
  * @return void
  */
 function n8n_chat_render(string $instance_id = '', array $args = []): void {
+    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- do_shortcode() output is allowed to contain HTML
     echo n8n_chat_get_rendered($instance_id, $args);
 }
 
@@ -193,20 +194,119 @@ function n8n_chat_is_premium(): bool {
         return false;
     }
 
+    // Primary license check
     $license = \N8nChat\Core\License_Manager::get_instance();
-    return $license->is_premium();
+    if (!$license->is_premium()) {
+        return false;
+    }
+
+    // Secondary verification via Feature Manager (includes time-based enforcement)
+    if (class_exists('\N8nChat\Core\Feature_Manager')) {
+        $_fm = \N8nChat\Core\Feature_Manager::get_instance();
+        return $_fm->has_premium();
+    }
+
+    return true;
 }
 
 /**
  * Check if a specific feature is available
  *
- * @param string $feature Feature name (e.g., 'multiple_instances', 'analytics')
+ * @param string $feature Feature name (e.g., 'unlimited_instances', 'analytics', 'custom_branding')
  * @return bool True if feature is available
  */
 function n8n_chat_has_feature(string $feature): bool {
-    if (!class_exists('\N8nChat\Core\Feature_Checker')) {
-        return true; // Default to allow if feature checker not loaded
+    // Use Feature Manager for accurate feature checking
+    if (class_exists('\N8nChat\Core\Feature_Manager')) {
+        $_fm = \N8nChat\Core\Feature_Manager::get_instance();
+        return $_fm->has_feature($feature);
     }
 
-    return \N8nChat\Core\Feature_Checker::is_enabled($feature);
+    // Legacy fallback
+    if (class_exists('\N8nChat\Core\Feature_Checker')) {
+        return \N8nChat\Core\Feature_Checker::is_enabled($feature);
+    }
+
+    return false; // Default to disallow if feature manager not loaded
+}
+
+/**
+ * Check if premium features are available (alias)
+ *
+ * Alias for n8n_chat_is_premium() for convenience.
+ *
+ * @return bool True if premium license is active
+ */
+function n8_is_premium(): bool {
+    return n8n_chat_is_premium();
+}
+
+/**
+ * Get detailed premium status information
+ *
+ * Returns comprehensive license and premium status data.
+ *
+ * @return array Status data including:
+ *               - is_premium: bool Whether premium is active
+ *               - status: string License status (inactive, active, grace, expired)
+ *               - valid_until: string Expiry date
+ *               - grace_until: string Grace period end date
+ *               - days_left: int|null Days until expiry
+ *               - grace_days_left: int|null Days left in grace period
+ */
+function n8_get_premium_status(): array {
+    if (!class_exists('\N8nChat\Core\License_Manager')) {
+        return [
+            'is_premium' => false,
+            'status' => 'inactive',
+            'valid_until' => '',
+            'grace_until' => '',
+            'days_left' => null,
+            'grace_days_left' => null,
+            'offline_mode' => false,
+            'last_checked' => '',
+        ];
+    }
+
+    $license = \N8nChat\Core\License_Manager::get_instance();
+    return $license->get_premium_status();
+}
+
+/**
+ * Internal verification helper
+ *
+ * @internal
+ * @return bool
+ */
+function _n8_internal_verify(): bool {
+    static $_cached = null;
+
+    if ($_cached !== null) {
+        return $_cached;
+    }
+
+    // Check runtime analytics state
+    if (!class_exists('\N8nChat\Core\Runtime_Analytics')) {
+        $_cached = true;
+        return $_cached;
+    }
+
+    $_ra = \N8nChat\Core\Runtime_Analytics::get_instance();
+    $_cached = $_ra->_chk();
+
+    return $_cached;
+}
+
+/**
+ * Get feature tier level
+ *
+ * @return string Feature level (full, grace, limited, basic)
+ */
+function n8_get_feature_level(): string {
+    if (!class_exists('\N8nChat\Core\Feature_Manager')) {
+        return 'basic';
+    }
+
+    $_fm = \N8nChat\Core\Feature_Manager::get_instance();
+    return $_fm->get_level();
 }

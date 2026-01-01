@@ -1,0 +1,150 @@
+{
+  "version": "1.0.0",
+  "exported_at": "2025-12-31T06:19:40+00:00",
+  "site_url": "http://n8chat.local",
+  "export_type": "all",
+  "instances": [
+    {
+      "id": "inst_6a386f24-7983-4d03-b77b-e9ffc2e4567b",
+      "name": "New Chat",
+      "webhookUrl": "",
+      "isEnabled": true,
+      "isDefault": true,
+      "theme": "light",
+      "colorSource": "custom",
+      "primaryColor": "#3b82f6",
+      "stylePreset": "",
+      "customCss": "",
+      "welcomeMessage": "Hi! 👋 How can I help you today?",
+      "placeholderText": "Type your message...",
+      "chatTitle": "Chat",
+      "systemPrompt": "",
+      "suggestedPrompts": [],
+      "showHeader": true,
+      "showTimestamp": false,
+      "showAvatar": true,
+      "avatarUrl": "",
+      "bubble": {
+        "enabled": false,
+        "icon": "chat",
+        "customIconUrl": "",
+        "text": "",
+        "position": "bottom-right",
+        "offsetX": 24,
+        "offsetY": 24,
+        "size": "medium",
+        "showUnreadBadge": true,
+        "pulseAnimation": true
+      },
+      "autoOpen": {
+        "enabled": false,
+        "trigger": "delay",
+        "delay": 5000,
+        "scrollPercentage": 50,
+        "idleTime": 30000,
+        "conditions": {
+          "oncePerSession": true,
+          "oncePerDay": false,
+          "skipIfInteracted": true,
+          "loggedInOnly": false,
+          "guestOnly": false,
+          "excludeMobile": false
+        }
+      },
+      "targeting": {
+        "enabled": false,
+        "mode": "all",
+        "priority": 0,
+        "rules": []
+      },
+      "access": {
+        "requireLogin": false,
+        "allowedRoles": [],
+        "deniedMessage": "Please log in to use this chat."
+      },
+      "features": {
+        "fileUpload": false,
+        "fileTypes": [
+          "image/jpeg",
+          "image/png",
+          "image/gif",
+          "application/pdf"
+        ],
+        "maxFileSize": 10485760,
+        "showTypingIndicator": true,
+        "enableHistory": true,
+        "enableFeedback": false
+      },
+      "fallback": {
+        "enabled": true,
+        "email": "",
+        "message": "Our chat is temporarily unavailable. Please leave a message."
+      },
+      "createdAt": "2025-12-31T06:17:09+00:00",
+      "updatedAt": "2025-12-31T06:17:09+00:00",
+      "window": {
+        "width": 400,
+        "height": 600
+      },
+      "connection": {
+        "auth": "none",
+        "username": "",
+        "password": "",
+        "bearerToken": "",
+        "enableStreaming": true,
+        "timeout": 30,
+        "chatInputKey": "chatInput",
+        "sessionKey": "sessionId"
+      },
+      "messages": {
+        "showWelcomeScreen": true,
+        "connectionError": "Sorry, I'm having trouble connecting. Please try again in a moment.",
+        "timeoutError": "The request took too long. Please try again.",
+        "rateLimitError": "You're sending messages too quickly. Please wait a moment."
+      },
+      "appearance": {
+        "userBubbleColor": "#3b82f6",
+        "botBubbleColor": "#f3f4f6",
+        "backgroundColor": "#ffffff",
+        "textColor": "#1f2937",
+        "headerBackground": "#3b82f6",
+        "fontFamily": "system",
+        "fontSize": "medium",
+        "borderRadius": 12
+      },
+      "schedule": {
+        "enabled": false,
+        "startTime": "09:00",
+        "endTime": "17:00",
+        "timezone": "site",
+        "days": [
+          "mon",
+          "tue",
+          "wed",
+          "thu",
+          "fri"
+        ],
+        "outsideHoursMessage": "We're currently offline. Leave a message and we'll respond when we're back online."
+      },
+      "devices": {
+        "desktop": true,
+        "tablet": true,
+        "mobile": true
+      }
+    }
+  ],
+  "settings": {
+    "default_instance": "",
+    "enable_history": true,
+    "history_retention_days": 90,
+    "file_retention_hours": 24,
+    "enable_analytics": false,
+    "custom_css": ""
+  },
+  "error_messages": {
+    "connection_error": "Unable to connect to the chat service. Please try again later.",
+    "timeout_error": "The request timed out. Please try again.",
+    "access_denied": "You do not have permission to access this chat.",
+    "instance_disabled": "This chat is currently unavailable."
+  }
+}

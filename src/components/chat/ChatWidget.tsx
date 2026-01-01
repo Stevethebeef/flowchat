@@ -26,18 +26,21 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
   isPreview = false,
   onClose,
 }) => {
-  // Create adapter instance
+  // Create adapter instance with proxy support for CORS bypass
   const adapter = useMemo(
     () =>
       new N8nRuntimeAdapter({
         webhookUrl,
         sessionId,
         context,
+        // Use proxy endpoint to bypass CORS
+        proxyUrl: apiUrl ? `${apiUrl}/proxy` : undefined,
+        instanceId: config.instanceId,
         onError: (error) => {
           console.error('n8n Chat error:', error);
         },
       }),
-    [webhookUrl, sessionId, context]
+    [webhookUrl, sessionId, context, apiUrl, config.instanceId]
   );
 
   // Create runtime

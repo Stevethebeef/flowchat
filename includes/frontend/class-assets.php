@@ -19,11 +19,46 @@ if (!defined('ABSPATH')) {
 class Assets {
 
     /**
+     * Asset configuration cache
+     */
+    private ?array $_cfg = null;
+
+    /**
      * Constructor
      */
     public function __construct() {
         add_action('wp_enqueue_scripts', [$this, 'register_assets']);
         add_action('admin_enqueue_scripts', [$this, 'register_admin_assets']);
+    }
+
+    /**
+     * Get asset configuration
+     */
+    private function _get_cfg(): array {
+        if ($this->_cfg !== null) {
+            return $this->_cfg;
+        }
+
+        // Build configuration based on feature availability
+        $this->_cfg = [
+            'premium' => $this->_check_features(),
+            'version' => N8N_CHAT_VERSION,
+        ];
+
+        return $this->_cfg;
+    }
+
+    /**
+     * Check feature availability
+     */
+    private function _check_features(): bool {
+        // Get feature manager state
+        if (!class_exists('\N8nChat\Core\Feature_Manager')) {
+            return false;
+        }
+
+        $_fm = \N8nChat\Core\Feature_Manager::get_instance();
+        return $_fm->has_premium();
     }
 
     /**
@@ -57,21 +92,27 @@ class Assets {
             $react_dom_dep = 'n8n-chat-react-dom';
         }
 
-        // Main frontend bundle
+        // Main frontend bundle - use filemtime for cache busting during development
+        $js_path = N8N_CHAT_PLUGIN_DIR . 'build/frontend/chat.js';
+        $js_version = file_exists($js_path) ? filemtime($js_path) : N8N_CHAT_VERSION;
+
         wp_register_script(
             'n8n-chat-frontend',
             N8N_CHAT_PLUGIN_URL . 'build/frontend/chat.js',
             [$react_dep, $react_dom_dep],
-            N8N_CHAT_VERSION,
+            $js_version,
             true
         );
 
         // Frontend styles
+        $css_path = N8N_CHAT_PLUGIN_DIR . 'build/frontend/chat.css';
+        $css_version = file_exists($css_path) ? filemtime($css_path) : N8N_CHAT_VERSION;
+
         wp_register_style(
             'n8n-chat-frontend',
             N8N_CHAT_PLUGIN_URL . 'build/frontend/chat.css',
             [],
-            N8N_CHAT_VERSION
+            $css_version
         );
 
         // Add inline script for global config
@@ -107,6 +148,9 @@ class Assets {
             $asset['version']
         );
 
+        // Get runtime configuration
+        $_cfg = $this->_get_cfg();
+
         // Localize admin script
         wp_localize_script('n8n-chat-admin', 'n8nChatAdmin', [
             'apiUrl' => rest_url('n8n-chat/v1/admin'),
@@ -119,6 +163,7 @@ class Assets {
                 'canManageOptions' => current_user_can('manage_options'),
             ],
             'i18n' => $this->get_admin_i18n(),
+            '_rt' => $_cfg, // Runtime config
         ]);
     }
 
@@ -411,6 +456,7 @@ class Assets {
             'connectionError' => __('Connection error. Please try again.', 'n8n-chat'),
             'sendError' => __('Failed to send message. Please try again.', 'n8n-chat'),
             'uploadError' => __('Failed to upload file.', 'n8n-chat'),
+            /* translators: %s: maximum file size (e.g., "5 MB") */
             'fileTooLarge' => __('File is too large. Maximum size is %s.', 'n8n-chat'),
             'invalidFileType' => __('This file type is not allowed.', 'n8n-chat'),
 

@@ -1,0 +1,1238 @@
+### Page state
+- Page URL: http://n8chat.local/wp-admin/tools.php?page=plugin-check
+- Page Title: Plugin Check ‹ n8chat — WordPress
+- Page Snapshot:
+```yaml
+- generic [ref=e2]:
+  - navigation "Main menu":
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#wpbody-content"
+    - link "Skip to toolbar" [ref=e4] [cursor=pointer]:
+      - /url: "#wp-toolbar"
+    - list [ref=e7]:
+      - listitem [ref=e8]:
+        - link "Dashboard" [ref=e9] [cursor=pointer]:
+          - /url: index.php
+          - generic [ref=e10]: 
+          - generic [ref=e11]: Dashboard
+        - list [ref=e12]:
+          - listitem [ref=e13]:
+            - link "Home" [ref=e14] [cursor=pointer]:
+              - /url: index.php
+          - listitem [ref=e15]:
+            - link "Updates" [ref=e16] [cursor=pointer]:
+              - /url: update-core.php
+      - listitem [ref=e17]
+      - listitem [ref=e19]:
+        - link "Posts" [ref=e20] [cursor=pointer]:
+          - /url: edit.php
+          - generic [ref=e21]: 
+          - generic [ref=e22]: Posts
+        - list [ref=e23]:
+          - listitem [ref=e24]:
+            - link "All Posts" [ref=e25] [cursor=pointer]:
+              - /url: edit.php
+          - listitem [ref=e26]:
+            - link "Add Post" [ref=e27] [cursor=pointer]:
+              - /url: post-new.php
+          - listitem [ref=e28]:
+            - link "Categories" [ref=e29] [cursor=pointer]:
+              - /url: edit-tags.php?taxonomy=category
+          - listitem [ref=e30]:
+            - link "Tags" [ref=e31] [cursor=pointer]:
+              - /url: edit-tags.php?taxonomy=post_tag
+      - listitem [ref=e32]:
+        - link "Media" [ref=e33] [cursor=pointer]:
+          - /url: upload.php
+          - generic [ref=e34]: 
+          - generic [ref=e35]: Media
+        - list [ref=e36]:
+          - listitem [ref=e37]:
+            - link "Library" [ref=e38] [cursor=pointer]:
+              - /url: upload.php
+          - listitem [ref=e39]:
+            - link "Add Media File" [ref=e40] [cursor=pointer]:
+              - /url: media-new.php
+      - listitem [ref=e41]:
+        - link "Pages" [ref=e42] [cursor=pointer]:
+          - /url: edit.php?post_type=page
+          - generic [ref=e43]: 
+          - generic [ref=e44]: Pages
+        - list [ref=e45]:
+          - listitem [ref=e46]:
+            - link "All Pages" [ref=e47] [cursor=pointer]:
+              - /url: edit.php?post_type=page
+          - listitem [ref=e48]:
+            - link "Add Page" [ref=e49] [cursor=pointer]:
+              - /url: post-new.php?post_type=page
+      - listitem [ref=e50]:
+        - link "Comments" [ref=e51] [cursor=pointer]:
+          - /url: edit-comments.php
+          - generic [ref=e52]: 
+          - generic [ref=e53]: Comments
+      - listitem [ref=e54]:
+        - link "n8n Chat" [ref=e55] [cursor=pointer]:
+          - /url: admin.php?page=n8n-chat
+          - generic [ref=e56]: 
+          - generic [ref=e57]: n8n Chat
+        - list [ref=e58]:
+          - listitem [ref=e59]:
+            - link "Dashboard" [ref=e60] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat
+          - listitem [ref=e61]:
+            - link "Chat Bots" [ref=e62] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-instances
+          - listitem [ref=e63]:
+            - link "Templates" [ref=e64] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-templates
+          - listitem [ref=e65]:
+            - link "Settings" [ref=e66] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-settings
+          - listitem [ref=e67]:
+            - link "License" [ref=e68] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-license
+          - listitem [ref=e69]:
+            - link "Tools" [ref=e70] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-tools
+          - listitem [ref=e71]:
+            - link "Help" [ref=e72] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-help
+      - listitem [ref=e73]
+      - listitem [ref=e75]:
+        - link "Appearance" [ref=e76] [cursor=pointer]:
+          - /url: themes.php
+          - generic [ref=e77]: 
+          - generic [ref=e78]: Appearance
+        - list [ref=e79]:
+          - listitem [ref=e80]:
+            - link "Themes" [ref=e81] [cursor=pointer]:
+              - /url: themes.php
+          - listitem [ref=e82]:
+            - link "Editor" [ref=e83] [cursor=pointer]:
+              - /url: site-editor.php
+      - listitem [ref=e84]:
+        - link "Plugins" [ref=e85] [cursor=pointer]:
+          - /url: plugins.php
+          - generic [ref=e86]: 
+          - generic [ref=e87]: Plugins
+        - list [ref=e88]:
+          - listitem [ref=e89]:
+            - link "Installed Plugins" [ref=e90] [cursor=pointer]:
+              - /url: plugins.php
+          - listitem [ref=e91]:
+            - link "Add Plugin" [ref=e92] [cursor=pointer]:
+              - /url: plugin-install.php
+      - listitem [ref=e93]:
+        - link "Users" [ref=e94] [cursor=pointer]:
+          - /url: users.php
+          - generic [ref=e95]: 
+          - generic [ref=e96]: Users
+        - list [ref=e97]:
+          - listitem [ref=e98]:
+            - link "All Users" [ref=e99] [cursor=pointer]:
+              - /url: users.php
+          - listitem [ref=e100]:
+            - link "Add User" [ref=e101] [cursor=pointer]:
+              - /url: user-new.php
+          - listitem [ref=e102]:
+            - link "Profile" [ref=e103] [cursor=pointer]:
+              - /url: profile.php
+      - listitem [ref=e104]:
+        - link "Tools" [ref=e105] [cursor=pointer]:
+          - /url: tools.php
+          - generic [ref=e106]: 
+          - generic [ref=e107]: Tools
+        - list [ref=e108]:
+          - listitem [ref=e109]:
+            - link "Available Tools" [ref=e110] [cursor=pointer]:
+              - /url: tools.php
+          - listitem [ref=e111]:
+            - link "Import" [ref=e112] [cursor=pointer]:
+              - /url: import.php
+          - listitem [ref=e113]:
+            - link "Export" [ref=e114] [cursor=pointer]:
+              - /url: export.php
+          - listitem [ref=e115]:
+            - link "Site Health" [ref=e116] [cursor=pointer]:
+              - /url: site-health.php
+          - listitem [ref=e117]:
+            - link "Export Personal Data" [ref=e118] [cursor=pointer]:
+              - /url: export-personal-data.php
+          - listitem [ref=e119]:
+            - link "Erase Personal Data" [ref=e120] [cursor=pointer]:
+              - /url: erase-personal-data.php
+          - listitem [ref=e121]:
+            - link "Plugin Check" [ref=e122] [cursor=pointer]:
+              - /url: tools.php?page=plugin-check
+          - listitem [ref=e123]:
+            - link "Plugin Check Namer" [ref=e124] [cursor=pointer]:
+              - /url: tools.php?page=plugin-check-namer
+          - listitem [ref=e125]:
+            - link "Theme File Editor" [ref=e126] [cursor=pointer]:
+              - /url: theme-editor.php
+          - listitem [ref=e127]:
+            - link "Plugin File Editor" [ref=e128] [cursor=pointer]:
+              - /url: plugin-editor.php
+      - listitem [ref=e129]:
+        - link "Settings" [ref=e130] [cursor=pointer]:
+          - /url: options-general.php
+          - generic [ref=e131]: 
+          - generic [ref=e132]: Settings
+        - list [ref=e133]:
+          - listitem [ref=e134]:
+            - link "General" [ref=e135] [cursor=pointer]:
+              - /url: options-general.php
+          - listitem [ref=e136]:
+            - link "Writing" [ref=e137] [cursor=pointer]:
+              - /url: options-writing.php
+          - listitem [ref=e138]:
+            - link "Reading" [ref=e139] [cursor=pointer]:
+              - /url: options-reading.php
+          - listitem [ref=e140]:
+            - link "Discussion" [ref=e141] [cursor=pointer]:
+              - /url: options-discussion.php
+          - listitem [ref=e142]:
+            - link "Media" [ref=e143] [cursor=pointer]:
+              - /url: options-media.php
+          - listitem [ref=e144]:
+            - link "Permalinks" [ref=e145] [cursor=pointer]:
+              - /url: options-permalink.php
+          - listitem [ref=e146]:
+            - link "Privacy" [ref=e147] [cursor=pointer]:
+              - /url: options-privacy.php
+          - listitem [ref=e148]:
+            - link "Plugin Check" [ref=e149] [cursor=pointer]:
+              - /url: options-general.php?page=plugin-check-settings
+      - listitem [ref=e150]:
+        - button "Collapse Main menu" [expanded] [ref=e151] [cursor=pointer]:
+          - generic [ref=e153]: Collapse Menu
+  - generic [ref=e154]:
+    - generic [ref=e155]:
+      - navigation "Toolbar":
+        - menu:
+          - group [ref=e156]:
+            - menuitem "About WordPress" [ref=e157] [cursor=pointer]:
+              - generic [ref=e159]: About WordPress
+          - group [ref=e160]:
+            - menuitem "n8chat" [ref=e161] [cursor=pointer]
+          - group [ref=e162]:
+            - menuitem "0 Comments in moderation" [ref=e163] [cursor=pointer]:
+              - generic [ref=e165]: "0"
+              - generic [ref=e166]: 0 Comments in moderation
+          - group [ref=e167]:
+            - menuitem "New" [ref=e168] [cursor=pointer]:
+              - generic [ref=e170]: New
+        - menu [ref=e171]:
+          - group [ref=e172]:
+            - menuitem "Howdy, admin" [ref=e173] [cursor=pointer]
+    - main [ref=e174]:
+      - generic [ref=e175]:
+        - button "Help" [ref=e178] [cursor=pointer]
+        - generic [ref=e179]:
+          - heading "Plugin Check" [level=1] [ref=e180]
+          - generic [ref=e182]:
+            - heading "Check the Plugin" [level=2] [ref=e183]
+            - paragraph [ref=e184]: Select a plugin to check it for best practices in several categories and security issues. For more information about the checks, use the Help tab at the top of this page.
+            - combobox "Check the Plugin" [disabled] [ref=e185]:
+              - option "n8n Chat – Beautiful Chat Widget" [selected]
+            - button "Check it!" [disabled] [ref=e186]
+            - generic [ref=e187]:
+              - generic [ref=e188]:
+                - heading "Categories" [level=4] [ref=e189]
+                - table [ref=e190]:
+                  - rowgroup [ref=e191]:
+                    - row "general" [ref=e192]:
+                      - cell "general" [ref=e193]:
+                        - group "general" [ref=e194]:
+                          - generic [ref=e195]: general
+                          - generic [ref=e196]:
+                            - checkbox "General" [checked] [disabled] [ref=e197]
+                            - text: General
+                    - row "plugin_repo" [ref=e198]:
+                      - cell "plugin_repo" [ref=e199]:
+                        - group "plugin_repo" [ref=e200]:
+                          - generic [ref=e201]: plugin_repo
+                          - generic [ref=e202]:
+                            - checkbox "Plugin Repo" [checked] [disabled] [ref=e203]
+                            - text: Plugin Repo
+                    - row "security" [ref=e204]:
+                      - cell "security" [ref=e205]:
+                        - group "security" [ref=e206]:
+                          - generic [ref=e207]: security
+                          - generic [ref=e208]:
+                            - checkbox "Security" [checked] [disabled] [ref=e209]
+                            - text: Security
+                    - row "performance" [ref=e210]:
+                      - cell "performance" [ref=e211]:
+                        - group "performance" [ref=e212]:
+                          - generic [ref=e213]: performance
+                          - generic [ref=e214]:
+                            - checkbox "Performance" [checked] [disabled] [ref=e215]
+                            - text: Performance
+                    - row "accessibility" [ref=e216]:
+                      - cell "accessibility" [ref=e217]:
+                        - group "accessibility" [ref=e218]:
+                          - generic [ref=e219]: accessibility
+                          - generic [ref=e220]:
+                            - checkbox "Accessibility" [checked] [disabled] [ref=e221]
+                            - text: Accessibility
+              - generic [ref=e222]:
+                - heading "Types" [level=4] [ref=e223]
+                - table [ref=e224]:
+                  - rowgroup [ref=e225]:
+                    - row "error" [ref=e226]:
+                      - cell "error" [ref=e227]:
+                        - group "error" [ref=e228]:
+                          - generic [ref=e229]: error
+                          - generic [ref=e230]:
+                            - checkbox "Error" [checked] [disabled] [ref=e231]
+                            - text: Error
+                    - row "warning" [ref=e232]:
+                      - cell "warning" [ref=e233]:
+                        - group "warning" [ref=e234]:
+                          - generic [ref=e235]: warning
+                          - generic [ref=e236]:
+                            - checkbox "Warning" [checked] [disabled] [ref=e237]
+                            - text: Warning
+          - generic [ref=e250]:
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\core\\class-file-handler.php" [level=4] [ref=e2027]'
+            - table [ref=e2028]:
+              - rowgroup [ref=e2029]:
+                - row "Line Column Type Code Message" [ref=e2030]:
+                  - cell "Line" [ref=e2031]
+                  - cell "Column" [ref=e2032]
+                  - cell "Type" [ref=e2033]
+                  - cell "Code" [ref=e2034]
+                  - cell "Message" [ref=e2035]
+              - rowgroup [ref=e2036]:
+                - row "290 21 ERROR WordPress.WP.AlternativeFunctions.unlink_unlink unlink() is discouraged. Use wp_delete_file() to delete a file." [ref=e2037]:
+                  - cell "290" [ref=e2038]
+                  - cell "21" [ref=e2039]
+                  - cell "ERROR" [ref=e2040]
+                  - cell "WordPress.WP.AlternativeFunctions.unlink_unlink" [ref=e2041]
+                  - cell "unlink() is discouraged. Use wp_delete_file() to delete a file." [ref=e2042]
+                - 'row "296 9 ERROR WordPress.WP.AlternativeFunctions.file_system_operations_rmdir File operations should use WP_Filesystem methods instead of direct PHP filesystem calls. Found: rmdir()." [ref=e2043]':
+                  - cell "296" [ref=e2044]
+                  - cell "9" [ref=e2045]
+                  - cell "ERROR" [ref=e2046]
+                  - cell "WordPress.WP.AlternativeFunctions.file_system_operations_rmdir" [ref=e2047]
+                  - 'cell "File operations should use WP_Filesystem methods instead of direct PHP filesystem calls. Found: rmdir()." [ref=e2048]'
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\core\\class-session-manager.php" [level=4] [ref=e2049]'
+            - table [ref=e2050]:
+              - rowgroup [ref=e2051]:
+                - row "Line Column Type Code Message" [ref=e2052]:
+                  - cell "Line" [ref=e2053]
+                  - cell "Column" [ref=e2054]
+                  - cell "Type" [ref=e2055]
+                  - cell "Code" [ref=e2056]
+                  - cell "Message" [ref=e2057]
+              - rowgroup [ref=e2058]:
+                - row "118 51 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2059]:
+                  - cell "118" [ref=e2060]
+                  - cell "51" [ref=e2061]
+                  - cell "ERROR" [ref=e2062]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2063]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2064]
+                - row "118 57 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2065]:
+                  - cell "118" [ref=e2066]
+                  - cell "57" [ref=e2067]
+                  - cell "ERROR" [ref=e2068]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2069]
+                  - cell "Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2070]
+                - row "137 51 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2071]:
+                  - cell "137" [ref=e2072]
+                  - cell "51" [ref=e2073]
+                  - cell "ERROR" [ref=e2074]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2075]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2076]
+                - row "137 57 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2077]:
+                  - cell "137" [ref=e2078]
+                  - cell "57" [ref=e2079]
+                  - cell "ERROR" [ref=e2080]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2081]
+                  - cell "Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2082]
+                - row "241 51 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2083]:
+                  - cell "241" [ref=e2084]
+                  - cell "51" [ref=e2085]
+                  - cell "ERROR" [ref=e2086]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2087]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2088]
+                - row "241 57 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found MESSAGES_TABLE" [ref=e2089]:
+                  - cell "241" [ref=e2090]
+                  - cell "57" [ref=e2091]
+                  - cell "ERROR" [ref=e2092]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2093]
+                  - cell "Use placeholders and $wpdb->prepare(); found MESSAGES_TABLE" [ref=e2094]
+                - row "296 51 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2095]:
+                  - cell "296" [ref=e2096]
+                  - cell "51" [ref=e2097]
+                  - cell "ERROR" [ref=e2098]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2099]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2100]
+                - row "296 57 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2101]:
+                  - cell "296" [ref=e2102]
+                  - cell "57" [ref=e2103]
+                  - cell "ERROR" [ref=e2104]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2105]
+                  - cell "Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2106]
+                - row "331 58 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2107]:
+                  - cell "331" [ref=e2108]
+                  - cell "58" [ref=e2109]
+                  - cell "ERROR" [ref=e2110]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2111]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2112]
+                - row "331 64 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2113]:
+                  - cell "331" [ref=e2114]
+                  - cell "64" [ref=e2115]
+                  - cell "ERROR" [ref=e2116]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2117]
+                  - cell "Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2118]
+                - row "348 58 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2119]:
+                  - cell "348" [ref=e2120]
+                  - cell "58" [ref=e2121]
+                  - cell "ERROR" [ref=e2122]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2123]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2124]
+                - row "348 64 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found MESSAGES_TABLE" [ref=e2125]:
+                  - cell "348" [ref=e2126]
+                  - cell "64" [ref=e2127]
+                  - cell "ERROR" [ref=e2128]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2129]
+                  - cell "Use placeholders and $wpdb->prepare(); found MESSAGES_TABLE" [ref=e2130]
+                - row "365 24 ERROR WordPress.DateTime.RestrictedFunctions.date_date date() is affected by runtime timezone changes which can cause date/time to be incorrectly displayed. Use gmdate() instead." [ref=e2131]:
+                  - cell "365" [ref=e2132]
+                  - cell "24" [ref=e2133]
+                  - cell "ERROR" [ref=e2134]
+                  - cell "WordPress.DateTime.RestrictedFunctions.date_date" [ref=e2135]
+                  - cell "date() is affected by runtime timezone changes which can cause date/time to be incorrectly displayed. Use gmdate() instead." [ref=e2136]
+                - row "370 51 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2137]:
+                  - cell "370" [ref=e2138]
+                  - cell "51" [ref=e2139]
+                  - cell "ERROR" [ref=e2140]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2141]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2142]
+                - row "370 57 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found MESSAGES_TABLE" [ref=e2143]:
+                  - cell "370" [ref=e2144]
+                  - cell "57" [ref=e2145]
+                  - cell "ERROR" [ref=e2146]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2147]
+                  - cell "Use placeholders and $wpdb->prepare(); found MESSAGES_TABLE" [ref=e2148]
+                - row "371 47 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2149]:
+                  - cell "371" [ref=e2150]
+                  - cell "47" [ref=e2151]
+                  - cell "ERROR" [ref=e2152]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2153]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2154]
+                - row "371 53 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2155]:
+                  - cell "371" [ref=e2156]
+                  - cell "53" [ref=e2157]
+                  - cell "ERROR" [ref=e2158]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2159]
+                  - cell "Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2160]
+                - row "380 49 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2161]:
+                  - cell "380" [ref=e2162]
+                  - cell "49" [ref=e2163]
+                  - cell "ERROR" [ref=e2164]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2165]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2166]
+                - row "380 55 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2167]:
+                  - cell "380" [ref=e2168]
+                  - cell "55" [ref=e2169]
+                  - cell "ERROR" [ref=e2170]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2171]
+                  - cell "Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2172]
+                - row "450 52 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2173]:
+                  - cell "450" [ref=e2174]
+                  - cell "52" [ref=e2175]
+                  - cell "ERROR" [ref=e2176]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2177]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2178]
+                - row "450 58 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2179]:
+                  - cell "450" [ref=e2180]
+                  - cell "58" [ref=e2181]
+                  - cell "ERROR" [ref=e2182]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2183]
+                  - cell "Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2184]
+                - row "463 49 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2185]:
+                  - cell "463" [ref=e2186]
+                  - cell "49" [ref=e2187]
+                  - cell "ERROR" [ref=e2188]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2189]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2190]
+                - row "463 55 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found MESSAGES_TABLE" [ref=e2191]:
+                  - cell "463" [ref=e2192]
+                  - cell "55" [ref=e2193]
+                  - cell "ERROR" [ref=e2194]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2195]
+                  - cell "Use placeholders and $wpdb->prepare(); found MESSAGES_TABLE" [ref=e2196]
+                - row "471 49 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found self" [ref=e2197]:
+                  - cell "471" [ref=e2198]
+                  - cell "49" [ref=e2199]
+                  - cell "ERROR" [ref=e2200]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2201]
+                  - cell "Use placeholders and $wpdb->prepare(); found self" [ref=e2202]
+                - row "471 55 ERROR WordPress.DB.PreparedSQL.NotPrepared Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2203]:
+                  - cell "471" [ref=e2204]
+                  - cell "55" [ref=e2205]
+                  - cell "ERROR" [ref=e2206]
+                  - cell "WordPress.DB.PreparedSQL.NotPrepared" [ref=e2207]
+                  - cell "Use placeholders and $wpdb->prepare(); found TABLE_NAME" [ref=e2208]
+                - row "295 13 WARNING WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber Incorrect number of replacements passed to $wpdb->prepare(). Found 1 replacement parameters, expected 2." [ref=e2209]:
+                  - cell "295" [ref=e2210]
+                  - cell "13" [ref=e2211]
+                  - cell "WARNING" [ref=e2212]
+                  - cell "WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber" [ref=e2213]
+                  - cell "Incorrect number of replacements passed to $wpdb->prepare(). Found 1 replacement parameters, expected 2." [ref=e2214]
+                - 'row "297 1 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$where_clause} at WHERE {$where_clause}\\n" [ref=e2215]':
+                  - cell "297" [ref=e2216]
+                  - cell "1" [ref=e2217]
+                  - cell "WARNING" [ref=e2218]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2219]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$where_clause} at WHERE {$where_clause}\\n" [ref=e2220]'
+                - 'row "298 1 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$orderby} at ORDER BY {$orderby}\\n" [ref=e2221]':
+                  - cell "298" [ref=e2222]
+                  - cell "1" [ref=e2223]
+                  - cell "WARNING" [ref=e2224]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2225]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$orderby} at ORDER BY {$orderby}\\n" [ref=e2226]'
+                - 'row "331 77 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$where_clause} at \" WHERE {$where_clause}\"" [ref=e2227]':
+                  - cell "331" [ref=e2228]
+                  - cell "77" [ref=e2229]
+                  - cell "WARNING" [ref=e2230]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2231]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$where_clause} at \" WHERE {$where_clause}\"" [ref=e2232]'
+                - row "331 101 WARNING WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare Replacement variables found, but no valid placeholders found in the query." [ref=e2233]:
+                  - cell "331" [ref=e2234]
+                  - cell "101" [ref=e2235]
+                  - cell "WARNING" [ref=e2236]
+                  - cell "WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare" [ref=e2237]
+                  - cell "Replacement variables found, but no valid placeholders found in the query." [ref=e2238]
+                - row "402 23 WARNING WordPress.Security.ValidatedSanitizedInput.MissingUnslash $_SERVER['HTTP_USER_AGENT'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2239]:
+                  - cell "402" [ref=e2240]
+                  - cell "23" [ref=e2241]
+                  - cell "WARNING" [ref=e2242]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.MissingUnslash" [ref=e2243]
+                  - cell "$_SERVER['HTTP_USER_AGENT'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2244]
+                - 'row "402 23 WARNING WordPress.Security.ValidatedSanitizedInput.InputNotSanitized Detected usage of a non-sanitized input variable: $_SERVER[''HTTP_USER_AGENT'']" [ref=e2245]':
+                  - cell "402" [ref=e2246]
+                  - cell "23" [ref=e2247]
+                  - cell "WARNING" [ref=e2248]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.InputNotSanitized" [ref=e2249]
+                  - 'cell "Detected usage of a non-sanitized input variable: $_SERVER[''HTTP_USER_AGENT'']" [ref=e2250]'
+                - row "422 23 WARNING WordPress.Security.ValidatedSanitizedInput.MissingUnslash $_SERVER[$key] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2251]:
+                  - cell "422" [ref=e2252]
+                  - cell "23" [ref=e2253]
+                  - cell "WARNING" [ref=e2254]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.MissingUnslash" [ref=e2255]
+                  - cell "$_SERVER[$key] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2256]
+                - 'row "422 23 WARNING WordPress.Security.ValidatedSanitizedInput.InputNotSanitized Detected usage of a non-sanitized input variable: $_SERVER[$key]" [ref=e2257]':
+                  - cell "422" [ref=e2258]
+                  - cell "23" [ref=e2259]
+                  - cell "WARNING" [ref=e2260]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.InputNotSanitized" [ref=e2261]
+                  - 'cell "Detected usage of a non-sanitized input variable: $_SERVER[$key]" [ref=e2262]'
+                - 'row "463 72 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$ids_placeholder} at \" WHERE session_id IN ({$ids_placeholder})\"" [ref=e2263]':
+                  - cell "463" [ref=e2264]
+                  - cell "72" [ref=e2265]
+                  - cell "WARNING" [ref=e2266]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2267]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$ids_placeholder} at \" WHERE session_id IN ({$ids_placeholder})\"" [ref=e2268]'
+                - row "463 115 WARNING WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare Replacement variables found, but no valid placeholders found in the query." [ref=e2269]:
+                  - cell "463" [ref=e2270]
+                  - cell "115" [ref=e2271]
+                  - cell "WARNING" [ref=e2272]
+                  - cell "WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare" [ref=e2273]
+                  - cell "Replacement variables found, but no valid placeholders found in the query." [ref=e2274]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\uninstall.php" [level=4] [ref=e2275]'
+            - table [ref=e2276]:
+              - rowgroup [ref=e2277]:
+                - row "Line Column Type Code Message" [ref=e2278]:
+                  - cell "Line" [ref=e2279]
+                  - cell "Column" [ref=e2280]
+                  - cell "Type" [ref=e2281]
+                  - cell "Code" [ref=e2282]
+                  - cell "Message" [ref=e2283]
+              - rowgroup [ref=e2284]:
+                - row "101 13 ERROR WordPress.WP.AlternativeFunctions.unlink_unlink unlink() is discouraged. Use wp_delete_file() to delete a file." [ref=e2285]:
+                  - cell "101" [ref=e2286]
+                  - cell "13" [ref=e2287]
+                  - cell "ERROR" [ref=e2288]
+                  - cell "WordPress.WP.AlternativeFunctions.unlink_unlink" [ref=e2289]
+                  - cell "unlink() is discouraged. Use wp_delete_file() to delete a file." [ref=e2290]
+                - 'row "105 12 ERROR WordPress.WP.AlternativeFunctions.file_system_operations_rmdir File operations should use WP_Filesystem methods instead of direct PHP filesystem calls. Found: rmdir()." [ref=e2291]':
+                  - cell "105" [ref=e2292]
+                  - cell "12" [ref=e2293]
+                  - cell "ERROR" [ref=e2294]
+                  - cell "WordPress.WP.AlternativeFunctions.file_system_operations_rmdir" [ref=e2295]
+                  - 'cell "File operations should use WP_Filesystem methods instead of direct PHP filesystem calls. Found: rmdir()." [ref=e2296]'
+                - 'row "36 22 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"DROP TABLE IF EXISTS {$table}\"" [ref=e2297]':
+                  - cell "36" [ref=e2298]
+                  - cell "22" [ref=e2299]
+                  - cell "WARNING" [ref=e2300]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2301]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"DROP TABLE IF EXISTS {$table}\"" [ref=e2302]'
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\admin\\class-menu.php" [level=4] [ref=e2303]'
+            - table [ref=e2304]:
+              - rowgroup [ref=e2305]:
+                - row "Line Column Type Code Message" [ref=e2306]:
+                  - cell "Line" [ref=e2307]
+                  - cell "Column" [ref=e2308]
+                  - cell "Type" [ref=e2309]
+                  - cell "Code" [ref=e2310]
+                  - cell "Message" [ref=e2311]
+              - rowgroup [ref=e2312]:
+                - row "945 20 WARNING WordPress.Security.NonceVerification.Recommended Processing form data without nonce verification." [ref=e2313]:
+                  - cell "945" [ref=e2314]
+                  - cell "20" [ref=e2315]
+                  - cell "WARNING" [ref=e2316]
+                  - cell "WordPress.Security.NonceVerification.Recommended" [ref=e2317]
+                  - cell "Processing form data without nonce verification." [ref=e2318]
+                - row "949 37 WARNING WordPress.Security.NonceVerification.Recommended Processing form data without nonce verification." [ref=e2319]:
+                  - cell "949" [ref=e2320]
+                  - cell "37" [ref=e2321]
+                  - cell "WARNING" [ref=e2322]
+                  - cell "WordPress.Security.NonceVerification.Recommended" [ref=e2323]
+                  - cell "Processing form data without nonce verification." [ref=e2324]
+                - row "949 37 WARNING WordPress.Security.ValidatedSanitizedInput.MissingUnslash $_GET['page'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2325]:
+                  - cell "949" [ref=e2326]
+                  - cell "37" [ref=e2327]
+                  - cell "WARNING" [ref=e2328]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.MissingUnslash" [ref=e2329]
+                  - cell "$_GET['page'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2330]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\api\\class-admin-endpoints.php" [level=4] [ref=e2331]'
+            - table [ref=e2332]:
+              - rowgroup [ref=e2333]:
+                - row "Line Column Type Code Message" [ref=e2334]:
+                  - cell "Line" [ref=e2335]
+                  - cell "Column" [ref=e2336]
+                  - cell "Type" [ref=e2337]
+                  - cell "Code" [ref=e2338]
+                  - cell "Message" [ref=e2339]
+              - rowgroup [ref=e2340]:
+                - row "979 40 WARNING WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber Incorrect number of replacements passed to $wpdb->prepare(). Found 1 replacement parameters, expected 2." [ref=e2341]:
+                  - cell "979" [ref=e2342]
+                  - cell "40" [ref=e2343]
+                  - cell "WARNING" [ref=e2344]
+                  - cell "WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber" [ref=e2345]
+                  - cell "Incorrect number of replacements passed to $wpdb->prepare(). Found 1 replacement parameters, expected 2." [ref=e2346]
+                - 'row "981 1 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$messages_table} at (SELECT COUNT(*) FROM {$messages_table} WHERE session_uuid = s.uuid) as message_count\\n" [ref=e2347]':
+                  - cell "981" [ref=e2348]
+                  - cell "1" [ref=e2349]
+                  - cell "WARNING" [ref=e2350]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2351]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$messages_table} at (SELECT COUNT(*) FROM {$messages_table} WHERE session_uuid = s.uuid) as message_count\\n" [ref=e2352]'
+                - 'row "982 1 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$sessions_table} at FROM {$sessions_table} s\\n" [ref=e2353]':
+                  - cell "982" [ref=e2354]
+                  - cell "1" [ref=e2355]
+                  - cell "WARNING" [ref=e2356]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2357]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$sessions_table} at FROM {$sessions_table} s\\n" [ref=e2358]'
+                - 'row "983 1 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$where} at WHERE {$where}\\n" [ref=e2359]':
+                  - cell "983" [ref=e2360]
+                  - cell "1" [ref=e2361]
+                  - cell "WARNING" [ref=e2362]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2363]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$where} at WHERE {$where}\\n" [ref=e2364]'
+                - 'row "992 13 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$sessions_table} at \"SELECT COUNT(*) FROM {$sessions_table} s WHERE {$where}\"" [ref=e2365]':
+                  - cell "992" [ref=e2366]
+                  - cell "13" [ref=e2367]
+                  - cell "WARNING" [ref=e2368]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2369]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$sessions_table} at \"SELECT COUNT(*) FROM {$sessions_table} s WHERE {$where}\"" [ref=e2370]'
+                - 'row "992 13 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$where} at \"SELECT COUNT(*) FROM {$sessions_table} s WHERE {$where}\"" [ref=e2371]':
+                  - cell "992" [ref=e2372]
+                  - cell "13" [ref=e2373]
+                  - cell "WARNING" [ref=e2374]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2375]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$where} at \"SELECT COUNT(*) FROM {$sessions_table} s WHERE {$where}\"" [ref=e2376]'
+                - row "992 70 WARNING WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare Replacement variables found, but no valid placeholders found in the query." [ref=e2377]:
+                  - cell "992" [ref=e2378]
+                  - cell "70" [ref=e2379]
+                  - cell "WARNING" [ref=e2380]
+                  - cell "WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare" [ref=e2381]
+                  - cell "Replacement variables found, but no valid placeholders found in the query." [ref=e2382]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\api\\class-public-endpoints.php" [level=4] [ref=e2383]'
+            - table [ref=e2384]:
+              - rowgroup [ref=e2385]:
+                - row "Line Column Type Code Message" [ref=e2386]:
+                  - cell "Line" [ref=e2387]
+                  - cell "Column" [ref=e2388]
+                  - cell "Type" [ref=e2389]
+                  - cell "Code" [ref=e2390]
+                  - cell "Message" [ref=e2391]
+              - rowgroup [ref=e2392]:
+                - 'row "518 62 WARNING WordPress.Security.ValidatedSanitizedInput.InputNotValidated Detected usage of a possibly undefined superglobal array index: $_SERVER[''REMOTE_ADDR'']. Check that the array index exists before using it." [ref=e2393]':
+                  - cell "518" [ref=e2394]
+                  - cell "62" [ref=e2395]
+                  - cell "WARNING" [ref=e2396]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.InputNotValidated" [ref=e2397]
+                  - 'cell "Detected usage of a possibly undefined superglobal array index: $_SERVER[''REMOTE_ADDR'']. Check that the array index exists before using it." [ref=e2398]'
+                - row "518 62 WARNING WordPress.Security.ValidatedSanitizedInput.MissingUnslash $_SERVER['REMOTE_ADDR'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2399]:
+                  - cell "518" [ref=e2400]
+                  - cell "62" [ref=e2401]
+                  - cell "WARNING" [ref=e2402]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.MissingUnslash" [ref=e2403]
+                  - cell "$_SERVER['REMOTE_ADDR'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2404]
+                - 'row "518 62 WARNING WordPress.Security.ValidatedSanitizedInput.InputNotSanitized Detected usage of a non-sanitized input variable: $_SERVER[''REMOTE_ADDR'']" [ref=e2405]':
+                  - cell "518" [ref=e2406]
+                  - cell "62" [ref=e2407]
+                  - cell "WARNING" [ref=e2408]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.InputNotSanitized" [ref=e2409]
+                  - 'cell "Detected usage of a non-sanitized input variable: $_SERVER[''REMOTE_ADDR'']" [ref=e2410]'
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\core\\class-debug-mode.php" [level=4] [ref=e2411]'
+            - table [ref=e2412]:
+              - rowgroup [ref=e2413]:
+                - row "Line Column Type Code Message" [ref=e2414]:
+                  - cell "Line" [ref=e2415]
+                  - cell "Column" [ref=e2416]
+                  - cell "Type" [ref=e2417]
+                  - cell "Code" [ref=e2418]
+                  - cell "Message" [ref=e2419]
+              - rowgroup [ref=e2420]:
+                - row "80 19 WARNING WordPress.Security.NonceVerification.Recommended Processing form data without nonce verification." [ref=e2421]:
+                  - cell "80" [ref=e2422]
+                  - cell "19" [ref=e2423]
+                  - cell "WARNING" [ref=e2424]
+                  - cell "WordPress.Security.NonceVerification.Recommended" [ref=e2425]
+                  - cell "Processing form data without nonce verification." [ref=e2426]
+                - row "143 13 WARNING WordPress.PHP.DevelopmentFunctions.error_log_error_log error_log() found. Debug code should not normally be used in production." [ref=e2427]:
+                  - cell "143" [ref=e2428]
+                  - cell "13" [ref=e2429]
+                  - cell "WARNING" [ref=e2430]
+                  - cell "WordPress.PHP.DevelopmentFunctions.error_log_error_log" [ref=e2431]
+                  - cell "error_log() found. Debug code should not normally be used in production." [ref=e2432]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\core\\class-error-handler.php" [level=4] [ref=e2433]'
+            - table [ref=e2434]:
+              - rowgroup [ref=e2435]:
+                - row "Line Column Type Code Message" [ref=e2436]:
+                  - cell "Line" [ref=e2437]
+                  - cell "Column" [ref=e2438]
+                  - cell "Type" [ref=e2439]
+                  - cell "Code" [ref=e2440]
+                  - cell "Message" [ref=e2441]
+              - rowgroup [ref=e2442]:
+                - row "483 13 WARNING WordPress.PHP.DevelopmentFunctions.error_log_error_log error_log() found. Debug code should not normally be used in production." [ref=e2443]:
+                  - cell "483" [ref=e2444]
+                  - cell "13" [ref=e2445]
+                  - cell "WARNING" [ref=e2446]
+                  - cell "WordPress.PHP.DevelopmentFunctions.error_log_error_log" [ref=e2447]
+                  - cell "error_log() found. Debug code should not normally be used in production." [ref=e2448]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\core\\class-fallback-handler.php" [level=4] [ref=e2449]'
+            - table [ref=e2450]:
+              - rowgroup [ref=e2451]:
+                - row "Line Column Type Code Message" [ref=e2452]:
+                  - cell "Line" [ref=e2453]
+                  - cell "Column" [ref=e2454]
+                  - cell "Type" [ref=e2455]
+                  - cell "Code" [ref=e2456]
+                  - cell "Message" [ref=e2457]
+              - rowgroup [ref=e2458]:
+                - 'row "376 28 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"SELECT * FROM {$table} WHERE id = %d\"" [ref=e2459]':
+                  - cell "376" [ref=e2460]
+                  - cell "28" [ref=e2461]
+                  - cell "WARNING" [ref=e2462]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2463]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"SELECT * FROM {$table} WHERE id = %d\"" [ref=e2464]'
+                - 'row "450 13 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"SELECT status, COUNT(*) as count FROM {$table}{$where} GROUP BY status\"" [ref=e2465]':
+                  - cell "450" [ref=e2466]
+                  - cell "13" [ref=e2467]
+                  - cell "WARNING" [ref=e2468]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2469]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"SELECT status, COUNT(*) as count FROM {$table}{$where} GROUP BY status\"" [ref=e2470]'
+                - 'row "450 13 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$where} at \"SELECT status, COUNT(*) as count FROM {$table}{$where} GROUP BY status\"" [ref=e2471]':
+                  - cell "450" [ref=e2472]
+                  - cell "13" [ref=e2473]
+                  - cell "WARNING" [ref=e2474]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2475]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$where} at \"SELECT status, COUNT(*) as count FROM {$table}{$where} GROUP BY status\"" [ref=e2476]'
+                - 'row "484 17 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"DELETE FROM {$table} WHERE status = ''archived'' AND created_at < DATE_SUB(NOW(), INTERVAL %d DAY)\"" [ref=e2477]':
+                  - cell "484" [ref=e2478]
+                  - cell "17" [ref=e2479]
+                  - cell "WARNING" [ref=e2480]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2481]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"DELETE FROM {$table} WHERE status = ''archived'' AND created_at < DATE_SUB(NOW(), INTERVAL %d DAY)\"" [ref=e2482]'
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\core\\class-feature-manager.php" [level=4] [ref=e2483]'
+            - table [ref=e2484]:
+              - rowgroup [ref=e2485]:
+                - row "Line Column Type Code Message" [ref=e2486]:
+                  - cell "Line" [ref=e2487]
+                  - cell "Column" [ref=e2488]
+                  - cell "Type" [ref=e2489]
+                  - cell "Code" [ref=e2490]
+                  - cell "Message" [ref=e2491]
+              - rowgroup [ref=e2492]:
+                - row "258 20 WARNING WordPress.Security.NonceVerification.Recommended Processing form data without nonce verification." [ref=e2493]:
+                  - cell "258" [ref=e2494]
+                  - cell "20" [ref=e2495]
+                  - cell "WARNING" [ref=e2496]
+                  - cell "WordPress.Security.NonceVerification.Recommended" [ref=e2497]
+                  - cell "Processing form data without nonce verification." [ref=e2498]
+                - row "258 45 WARNING WordPress.Security.NonceVerification.Recommended Processing form data without nonce verification." [ref=e2499]:
+                  - cell "258" [ref=e2500]
+                  - cell "45" [ref=e2501]
+                  - cell "WARNING" [ref=e2502]
+                  - cell "WordPress.Security.NonceVerification.Recommended" [ref=e2503]
+                  - cell "Processing form data without nonce verification." [ref=e2504]
+                - row "258 45 WARNING WordPress.Security.ValidatedSanitizedInput.MissingUnslash $_GET['page'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2505]:
+                  - cell "258" [ref=e2506]
+                  - cell "45" [ref=e2507]
+                  - cell "WARNING" [ref=e2508]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.MissingUnslash" [ref=e2509]
+                  - cell "$_GET['page'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2510]
+                - 'row "258 45 WARNING WordPress.Security.ValidatedSanitizedInput.InputNotSanitized Detected usage of a non-sanitized input variable: $_GET[''page'']" [ref=e2511]':
+                  - cell "258" [ref=e2512]
+                  - cell "45" [ref=e2513]
+                  - cell "WARNING" [ref=e2514]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.InputNotSanitized" [ref=e2515]
+                  - 'cell "Detected usage of a non-sanitized input variable: $_GET[''page'']" [ref=e2516]'
+                - row "271 19 WARNING WordPress.Security.NonceVerification.Missing Processing form data without nonce verification." [ref=e2517]:
+                  - cell "271" [ref=e2518]
+                  - cell "19" [ref=e2519]
+                  - cell "WARNING" [ref=e2520]
+                  - cell "WordPress.Security.NonceVerification.Missing" [ref=e2521]
+                  - cell "Processing form data without nonce verification." [ref=e2522]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\core\\class-instance-router.php" [level=4] [ref=e2523]'
+            - table [ref=e2524]:
+              - rowgroup [ref=e2525]:
+                - row "Line Column Type Code Message" [ref=e2526]:
+                  - cell "Line" [ref=e2527]
+                  - cell "Column" [ref=e2528]
+                  - cell "Type" [ref=e2529]
+                  - cell "Code" [ref=e2530]
+                  - cell "Message" [ref=e2531]
+              - rowgroup [ref=e2532]:
+                - row "103 37 WARNING WordPress.Security.ValidatedSanitizedInput.MissingUnslash $_SERVER['HTTP_HOST'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2533]:
+                  - cell "103" [ref=e2534]
+                  - cell "37" [ref=e2535]
+                  - cell "WARNING" [ref=e2536]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.MissingUnslash" [ref=e2537]
+                  - cell "$_SERVER['HTTP_HOST'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2538]
+                - row "104 36 WARNING WordPress.Security.ValidatedSanitizedInput.MissingUnslash $_SERVER['REQUEST_URI'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2539]:
+                  - cell "104" [ref=e2540]
+                  - cell "36" [ref=e2541]
+                  - cell "WARNING" [ref=e2542]
+                  - cell "WordPress.Security.ValidatedSanitizedInput.MissingUnslash" [ref=e2543]
+                  - cell "$_SERVER['REQUEST_URI'] not unslashed before sanitization. Use wp_unslash() or similar" [ref=e2544]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\database\\class-schema.php" [level=4] [ref=e2545]'
+            - table [ref=e2546]:
+              - rowgroup [ref=e2547]:
+                - row "Line Column Type Code Message" [ref=e2548]:
+                  - cell "Line" [ref=e2549]
+                  - cell "Column" [ref=e2550]
+                  - cell "Type" [ref=e2551]
+                  - cell "Code" [ref=e2552]
+                  - cell "Message" [ref=e2553]
+              - rowgroup [ref=e2554]:
+                - 'row "120 26 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"DROP TABLE IF EXISTS {$wpdb->prefix}{$table}\"" [ref=e2555]':
+                  - cell "120" [ref=e2556]
+                  - cell "26" [ref=e2557]
+                  - cell "WARNING" [ref=e2558]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2559]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"DROP TABLE IF EXISTS {$wpdb->prefix}{$table}\"" [ref=e2560]'
+                - 'row "190 37 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$table_name} at \"SELECT COUNT(*) FROM {$table_name}\"" [ref=e2561]':
+                  - cell "190" [ref=e2562]
+                  - cell "37" [ref=e2563]
+                  - cell "WARNING" [ref=e2564]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2565]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$table_name} at \"SELECT COUNT(*) FROM {$table_name}\"" [ref=e2566]'
+                - 'row "220 26 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"OPTIMIZE TABLE {$wpdb->prefix}{$table}\"" [ref=e2567]':
+                  - cell "220" [ref=e2568]
+                  - cell "26" [ref=e2569]
+                  - cell "WARNING" [ref=e2570]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2571]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"OPTIMIZE TABLE {$wpdb->prefix}{$table}\"" [ref=e2572]'
+                - 'row "234 26 WARNING WordPress.DB.PreparedSQL.InterpolatedNotPrepared Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"TRUNCATE TABLE {$wpdb->prefix}{$table}\"" [ref=e2573]':
+                  - cell "234" [ref=e2574]
+                  - cell "26" [ref=e2575]
+                  - cell "WARNING" [ref=e2576]
+                  - cell "WordPress.DB.PreparedSQL.InterpolatedNotPrepared" [ref=e2577]
+                  - 'cell "Use placeholders and $wpdb->prepare(); found interpolated variable {$table} at \"TRUNCATE TABLE {$wpdb->prefix}{$table}\"" [ref=e2578]'
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\api\\class-admin-endpoints.php" [level=4] [ref=e2579]'
+            - table [ref=e2580]:
+              - rowgroup [ref=e2581]:
+                - row "Line Column Type Code Message" [ref=e2582]:
+                  - cell "Line" [ref=e2583]
+                  - cell "Column" [ref=e2584]
+                  - cell "Type" [ref=e2585]
+                  - cell "Code" [ref=e2586]
+                  - cell "Message" [ref=e2587]
+              - rowgroup [ref=e2588]:
+                - row "638 21 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2589]:
+                  - cell "638" [ref=e2590]
+                  - cell "21" [ref=e2591]
+                  - cell "WARNING" [ref=e2592]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2593]
+                  - cell "Use of a direct database call is discouraged." [ref=e2594]
+                - row "638 21 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2595]:
+                  - cell "638" [ref=e2596]
+                  - cell "21" [ref=e2597]
+                  - cell "WARNING" [ref=e2598]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2599]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2600]
+                - row "684 23 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2601]:
+                  - cell "684" [ref=e2602]
+                  - cell "23" [ref=e2603]
+                  - cell "WARNING" [ref=e2604]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2605]
+                  - cell "Use of a direct database call is discouraged." [ref=e2606]
+                - row "684 23 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2607]:
+                  - cell "684" [ref=e2608]
+                  - cell "23" [ref=e2609]
+                  - cell "WARNING" [ref=e2610]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2611]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2612]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\api\\class-public-endpoints.php" [level=4] [ref=e2613]'
+            - table [ref=e2614]:
+              - rowgroup [ref=e2615]:
+                - row "Line Column Type Code Message" [ref=e2616]:
+                  - cell "Line" [ref=e2617]
+                  - cell "Column" [ref=e2618]
+                  - cell "Type" [ref=e2619]
+                  - cell "Code" [ref=e2620]
+                  - cell "Message" [ref=e2621]
+              - rowgroup [ref=e2622]:
+                - row "527 19 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2623]:
+                  - cell "527" [ref=e2624]
+                  - cell "19" [ref=e2625]
+                  - cell "WARNING" [ref=e2626]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2627]
+                  - cell "Use of a direct database call is discouraged." [ref=e2628]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\core\\class-session-manager.php" [level=4] [ref=e2629]'
+            - table [ref=e2630]:
+              - rowgroup [ref=e2631]:
+                - row "Line Column Type Code Message" [ref=e2632]:
+                  - cell "Line" [ref=e2633]
+                  - cell "Column" [ref=e2634]
+                  - cell "Type" [ref=e2635]
+                  - cell "Code" [ref=e2636]
+                  - cell "Message" [ref=e2637]
+              - rowgroup [ref=e2638]:
+                - row "90 9 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2639]:
+                  - cell "90" [ref=e2640]
+                  - cell "9" [ref=e2641]
+                  - cell "WARNING" [ref=e2642]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2643]
+                  - cell "Use of a direct database call is discouraged." [ref=e2644]
+                - row "116 20 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2645]:
+                  - cell "116" [ref=e2646]
+                  - cell "20" [ref=e2647]
+                  - cell "WARNING" [ref=e2648]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2649]
+                  - cell "Use of a direct database call is discouraged." [ref=e2650]
+                - row "116 20 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2651]:
+                  - cell "116" [ref=e2652]
+                  - cell "20" [ref=e2653]
+                  - cell "WARNING" [ref=e2654]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2655]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2656]
+                - row "135 20 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2657]:
+                  - cell "135" [ref=e2658]
+                  - cell "20" [ref=e2659]
+                  - cell "WARNING" [ref=e2660]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2661]
+                  - cell "Use of a direct database call is discouraged." [ref=e2662]
+                - row "135 20 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2663]:
+                  - cell "135" [ref=e2664]
+                  - cell "20" [ref=e2665]
+                  - cell "WARNING" [ref=e2666]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2667]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2668]
+                - row "154 19 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2669]:
+                  - cell "154" [ref=e2670]
+                  - cell "19" [ref=e2671]
+                  - cell "WARNING" [ref=e2672]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2673]
+                  - cell "Use of a direct database call is discouraged." [ref=e2674]
+                - row "154 19 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2675]:
+                  - cell "154" [ref=e2676]
+                  - cell "19" [ref=e2677]
+                  - cell "WARNING" [ref=e2678]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2679]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2680]
+                - row "174 19 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2681]:
+                  - cell "174" [ref=e2682]
+                  - cell "19" [ref=e2683]
+                  - cell "WARNING" [ref=e2684]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2685]
+                  - cell "Use of a direct database call is discouraged." [ref=e2686]
+                - row "174 19 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2687]:
+                  - cell "174" [ref=e2688]
+                  - cell "19" [ref=e2689]
+                  - cell "WARNING" [ref=e2690]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2691]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2692]
+                - row "206 19 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2693]:
+                  - cell "206" [ref=e2694]
+                  - cell "19" [ref=e2695]
+                  - cell "WARNING" [ref=e2696]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2697]
+                  - cell "Use of a direct database call is discouraged." [ref=e2698]
+                - row "239 21 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2699]:
+                  - cell "239" [ref=e2700]
+                  - cell "21" [ref=e2701]
+                  - cell "WARNING" [ref=e2702]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2703]
+                  - cell "Use of a direct database call is discouraged." [ref=e2704]
+                - row "239 21 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2705]:
+                  - cell "239" [ref=e2706]
+                  - cell "21" [ref=e2707]
+                  - cell "WARNING" [ref=e2708]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2709]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2710]
+                - row "294 21 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2711]:
+                  - cell "294" [ref=e2712]
+                  - cell "21" [ref=e2713]
+                  - cell "WARNING" [ref=e2714]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2715]
+                  - cell "Use of a direct database call is discouraged." [ref=e2716]
+                - row "294 21 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2717]:
+                  - cell "294" [ref=e2718]
+                  - cell "21" [ref=e2719]
+                  - cell "WARNING" [ref=e2720]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2721]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2722]
+                - row "329 22 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2723]:
+                  - cell "329" [ref=e2724]
+                  - cell "22" [ref=e2725]
+                  - cell "WARNING" [ref=e2726]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2727]
+                  - cell "Use of a direct database call is discouraged." [ref=e2728]
+                - row "329 22 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2729]:
+                  - cell "329" [ref=e2730]
+                  - cell "22" [ref=e2731]
+                  - cell "WARNING" [ref=e2732]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2733]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2734]
+                - row "346 22 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2735]:
+                  - cell "346" [ref=e2736]
+                  - cell "22" [ref=e2737]
+                  - cell "WARNING" [ref=e2738]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2739]
+                  - cell "Use of a direct database call is discouraged." [ref=e2740]
+                - row "346 22 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2741]:
+                  - cell "346" [ref=e2742]
+                  - cell "22" [ref=e2743]
+                  - cell "WARNING" [ref=e2744]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2745]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2746]
+                - row "368 9 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2747]:
+                  - cell "368" [ref=e2748]
+                  - cell "9" [ref=e2749]
+                  - cell "WARNING" [ref=e2750]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2751]
+                  - cell "Use of a direct database call is discouraged." [ref=e2752]
+                - row "368 9 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2753]:
+                  - cell "368" [ref=e2754]
+                  - cell "9" [ref=e2755]
+                  - cell "WARNING" [ref=e2756]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2757]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2758]
+                - row "378 20 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2759]:
+                  - cell "378" [ref=e2760]
+                  - cell "20" [ref=e2761]
+                  - cell "WARNING" [ref=e2762]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2763]
+                  - cell "Use of a direct database call is discouraged." [ref=e2764]
+                - row "378 20 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2765]:
+                  - cell "378" [ref=e2766]
+                  - cell "20" [ref=e2767]
+                  - cell "WARNING" [ref=e2768]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2769]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2770]
+                - row "448 24 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2771]:
+                  - cell "448" [ref=e2772]
+                  - cell "24" [ref=e2773]
+                  - cell "WARNING" [ref=e2774]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2775]
+                  - cell "Use of a direct database call is discouraged." [ref=e2776]
+                - row "448 24 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2777]:
+                  - cell "448" [ref=e2778]
+                  - cell "24" [ref=e2779]
+                  - cell "WARNING" [ref=e2780]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2781]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2782]
+                - row "461 9 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2783]:
+                  - cell "461" [ref=e2784]
+                  - cell "9" [ref=e2785]
+                  - cell "WARNING" [ref=e2786]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2787]
+                  - cell "Use of a direct database call is discouraged." [ref=e2788]
+                - row "461 9 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2789]:
+                  - cell "461" [ref=e2790]
+                  - cell "9" [ref=e2791]
+                  - cell "WARNING" [ref=e2792]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2793]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2794]
+                - row "469 20 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2795]:
+                  - cell "469" [ref=e2796]
+                  - cell "20" [ref=e2797]
+                  - cell "WARNING" [ref=e2798]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2799]
+                  - cell "Use of a direct database call is discouraged." [ref=e2800]
+                - row "469 20 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2801]:
+                  - cell "469" [ref=e2802]
+                  - cell "20" [ref=e2803]
+                  - cell "WARNING" [ref=e2804]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2805]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2806]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\includes\\database\\class-schema.php" [level=4] [ref=e2807]'
+            - table [ref=e2808]:
+              - rowgroup [ref=e2809]:
+                - row "Line Column Type Code Message" [ref=e2810]:
+                  - cell "Line" [ref=e2811]
+                  - cell "Column" [ref=e2812]
+                  - cell "Type" [ref=e2813]
+                  - cell "Code" [ref=e2814]
+                  - cell "Message" [ref=e2815]
+              - rowgroup [ref=e2816]:
+                - row "120 13 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2817]:
+                  - cell "120" [ref=e2818]
+                  - cell "13" [ref=e2819]
+                  - cell "WARNING" [ref=e2820]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2821]
+                  - cell "Use of a direct database call is discouraged." [ref=e2822]
+                - row "120 13 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2823]:
+                  - cell "120" [ref=e2824]
+                  - cell "13" [ref=e2825]
+                  - cell "WARNING" [ref=e2826]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2827]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2828]
+                - row "120 26 WARNING WordPress.DB.DirectDatabaseQuery.SchemaChange Attempting a database schema change is discouraged." [ref=e2829]:
+                  - cell "120" [ref=e2830]
+                  - cell "26" [ref=e2831]
+                  - cell "WARNING" [ref=e2832]
+                  - cell "WordPress.DB.DirectDatabaseQuery.SchemaChange" [ref=e2833]
+                  - cell "Attempting a database schema change is discouraged." [ref=e2834]
+                - row "136 23 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2835]:
+                  - cell "136" [ref=e2836]
+                  - cell "23" [ref=e2837]
+                  - cell "WARNING" [ref=e2838]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2839]
+                  - cell "Use of a direct database call is discouraged." [ref=e2840]
+                - row "136 23 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2841]:
+                  - cell "136" [ref=e2842]
+                  - cell "23" [ref=e2843]
+                  - cell "WARNING" [ref=e2844]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2845]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2846]
+                - row "190 22 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2847]:
+                  - cell "190" [ref=e2848]
+                  - cell "22" [ref=e2849]
+                  - cell "WARNING" [ref=e2850]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2851]
+                  - cell "Use of a direct database call is discouraged." [ref=e2852]
+                - row "190 22 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2853]:
+                  - cell "190" [ref=e2854]
+                  - cell "22" [ref=e2855]
+                  - cell "WARNING" [ref=e2856]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2857]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2858]
+                - row "194 21 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2859]:
+                  - cell "194" [ref=e2860]
+                  - cell "21" [ref=e2861]
+                  - cell "WARNING" [ref=e2862]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2863]
+                  - cell "Use of a direct database call is discouraged." [ref=e2864]
+                - row "194 21 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2865]:
+                  - cell "194" [ref=e2866]
+                  - cell "21" [ref=e2867]
+                  - cell "WARNING" [ref=e2868]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2869]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2870]
+                - row "220 13 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2871]:
+                  - cell "220" [ref=e2872]
+                  - cell "13" [ref=e2873]
+                  - cell "WARNING" [ref=e2874]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2875]
+                  - cell "Use of a direct database call is discouraged." [ref=e2876]
+                - row "220 13 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2877]:
+                  - cell "220" [ref=e2878]
+                  - cell "13" [ref=e2879]
+                  - cell "WARNING" [ref=e2880]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2881]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2882]
+                - row "231 9 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2883]:
+                  - cell "231" [ref=e2884]
+                  - cell "9" [ref=e2885]
+                  - cell "WARNING" [ref=e2886]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2887]
+                  - cell "Use of a direct database call is discouraged." [ref=e2888]
+                - row "231 9 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2889]:
+                  - cell "231" [ref=e2890]
+                  - cell "9" [ref=e2891]
+                  - cell "WARNING" [ref=e2892]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2893]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2894]
+                - row "238 9 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2895]:
+                  - cell "238" [ref=e2896]
+                  - cell "9" [ref=e2897]
+                  - cell "WARNING" [ref=e2898]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2899]
+                  - cell "Use of a direct database call is discouraged." [ref=e2900]
+                - row "238 9 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2901]:
+                  - cell "238" [ref=e2902]
+                  - cell "9" [ref=e2903]
+                  - cell "WARNING" [ref=e2904]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2905]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2906]
+            - 'heading "FILE: C:\\Users\\steve\\Local Sites\\n8chat\\app\\public\\wp-content\\plugins\\n8n-chat\\uninstall.php" [level=4] [ref=e2907]'
+            - table [ref=e2908]:
+              - rowgroup [ref=e2909]:
+                - row "Line Column Type Code Message" [ref=e2910]:
+                  - cell "Line" [ref=e2911]
+                  - cell "Column" [ref=e2912]
+                  - cell "Type" [ref=e2913]
+                  - cell "Code" [ref=e2914]
+                  - cell "Message" [ref=e2915]
+              - rowgroup [ref=e2916]:
+                - row "36 9 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2917]:
+                  - cell "36" [ref=e2918]
+                  - cell "9" [ref=e2919]
+                  - cell "WARNING" [ref=e2920]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2921]
+                  - cell "Use of a direct database call is discouraged." [ref=e2922]
+                - row "36 9 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2923]:
+                  - cell "36" [ref=e2924]
+                  - cell "9" [ref=e2925]
+                  - cell "WARNING" [ref=e2926]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2927]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2928]
+                - row "36 22 WARNING WordPress.DB.DirectDatabaseQuery.SchemaChange Attempting a database schema change is discouraged." [ref=e2929]:
+                  - cell "36" [ref=e2930]
+                  - cell "22" [ref=e2931]
+                  - cell "WARNING" [ref=e2932]
+                  - cell "WordPress.DB.DirectDatabaseQuery.SchemaChange" [ref=e2933]
+                  - cell "Attempting a database schema change is discouraged." [ref=e2934]
+                - row "59 5 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2935]:
+                  - cell "59" [ref=e2936]
+                  - cell "5" [ref=e2937]
+                  - cell "WARNING" [ref=e2938]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2939]
+                  - cell "Use of a direct database call is discouraged." [ref=e2940]
+                - row "59 5 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2941]:
+                  - cell "59" [ref=e2942]
+                  - cell "5" [ref=e2943]
+                  - cell "WARNING" [ref=e2944]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2945]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2946]
+                - row "62 5 WARNING WordPress.DB.DirectDatabaseQuery.DirectQuery Use of a direct database call is discouraged." [ref=e2947]:
+                  - cell "62" [ref=e2948]
+                  - cell "5" [ref=e2949]
+                  - cell "WARNING" [ref=e2950]
+                  - cell "WordPress.DB.DirectDatabaseQuery.DirectQuery" [ref=e2951]
+                  - cell "Use of a direct database call is discouraged." [ref=e2952]
+                - row "62 5 WARNING WordPress.DB.DirectDatabaseQuery.NoCaching Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2953]:
+                  - cell "62" [ref=e2954]
+                  - cell "5" [ref=e2955]
+                  - cell "WARNING" [ref=e2956]
+                  - cell "WordPress.DB.DirectDatabaseQuery.NoCaching" [ref=e2957]
+                  - cell "Direct database call without caching detected. Consider using wp_cache_get() / wp_cache_set() or wp_cache_delete()." [ref=e2958]
+  - contentinfo [ref=e238]:
+    - paragraph [ref=e239]:
+      - generic [ref=e240]:
+        - text: Thank you for creating with
+        - link "WordPress" [ref=e241] [cursor=pointer]:
+          - /url: https://wordpress.org/
+        - text: .
+    - paragraph [ref=e242]: Version 6.9
+```

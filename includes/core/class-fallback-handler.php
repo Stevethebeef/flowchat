@@ -192,13 +192,14 @@ class Fallback_Handler {
             'page_url' => esc_url_raw($data['page_url'] ?? ''),
             'user_id' => get_current_user_id(),
             'ip_address' => $this->get_client_ip(),
-            'user_agent' => sanitize_text_field($_SERVER['HTTP_USER_AGENT'] ?? ''),
+            'user_agent' => isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '',
             'metadata' => wp_json_encode($data['metadata'] ?? []),
             'status' => 'new',
             'created_at' => current_time('mysql'),
         ];
 
         // Insert into database
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- Inserting fallback message into custom table
         $result = $wpdb->insert($table, $insert_data, [
             '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%s', '%s', '%s', '%s', '%s',
         ]);
@@ -251,25 +252,14 @@ class Fallback_Handler {
             $instance_name
         );
 
+        /* translators: %1$s: instance name, %2$s: user name, %3$s: user email, %4$s: user phone, %5$s: page URL, %6$s: user message */
         $body = sprintf(
-            /* translators: Message notification template */
-            __(
-                "New message received via n8n Chat fallback form.\n\n" .
-                "Instance: %1\$s\n" .
-                "Name: %2\$s\n" .
-                "Email: %3\$s\n" .
-                "Phone: %4\$s\n" .
-                "Page URL: %5\$s\n\n" .
-                "Message:\n%6\$s\n\n" .
-                "---\n" .
-                "View all messages in your WordPress admin.",
-                'n8n-chat'
-            ),
+            __( "New message received via n8n Chat fallback form.\n\nInstance: %1\$s\nName: %2\$s\nEmail: %3\$s\nPhone: %4\$s\nPage URL: %5\$s\n\nMessage:\n%6\$s\n\n---\nView all messages in your WordPress admin.", 'n8n-chat' ),
             $instance_name,
-            $data['name'] ?: 'Not provided',
-            $data['email'] ?: 'Not provided',
-            $data['phone'] ?: 'Not provided',
-            $data['page_url'] ?: 'Unknown',
+            $data['name'] ?: __( 'Not provided', 'n8n-chat' ),
+            $data['email'] ?: __( 'Not provided', 'n8n-chat' ),
+            $data['phone'] ?: __( 'Not provided', 'n8n-chat' ),
+            $data['page_url'] ?: __( 'Unknown', 'n8n-chat' ),
             $data['message']
         );
 
@@ -297,6 +287,7 @@ class Fallback_Handler {
         ];
 
         foreach ($ip_keys as $key) {
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Properly sanitized with wp_unslash and sanitize_text_field
             if (!empty($_SERVER[$key])) {
                 $ip = sanitize_text_field(wp_unslash($_SERVER[$key]));
                 if (strpos($ip, ',') !== false) {
@@ -360,9 +351,11 @@ class Fallback_Handler {
         $values[] = $args['offset'];
 
         if (!empty($values)) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- SQL is dynamically constructed but properly prepared with $wpdb->prepare()
             $sql = $wpdb->prepare($sql, $values);
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- SQL is prepared above
         $results = $wpdb->get_results($sql, ARRAY_A);
 
         return $results ?: [];
@@ -379,6 +372,7 @@ class Fallback_Handler {
 
         $table = $wpdb->prefix . self::TABLE_NAME;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name safely constructed from $wpdb->prefix
         $result = $wpdb->get_row(
             $wpdb->prepare("SELECT * FROM {$table} WHERE id = %d", $message_id),
             ARRAY_A
@@ -404,6 +398,7 @@ class Fallback_Handler {
             return false;
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Updating fallback message status
         $result = $wpdb->update(
             $table,
             [
@@ -429,6 +424,7 @@ class Fallback_Handler {
 
         $table = $wpdb->prefix . self::TABLE_NAME;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Deleting fallback message
         $result = $wpdb->delete($table, ['id' => $message_id], ['%d']);
 
         return $result !== false;
@@ -450,6 +446,7 @@ class Fallback_Handler {
             $where = $wpdb->prepare(' WHERE instance_id = %d', $instance_id);
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared -- Table name safely constructed, where clause is prepared
         $results = $wpdb->get_results(
             "SELECT status, COUNT(*) as count FROM {$table}{$where} GROUP BY status",
             ARRAY_A
@@ -482,6 +479,7 @@ class Fallback_Handler {
         $table = $wpdb->prefix . self::TABLE_NAME;
 
         // Delete archived messages older than X days
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name safely constructed from $wpdb->prefix
         $wpdb->query(
             $wpdb->prepare(
                 "DELETE FROM {$table} WHERE status = 'archived' AND created_at < DATE_SUB(NOW(), INTERVAL %d DAY)",
@@ -501,6 +499,7 @@ class Fallback_Handler {
     public function export_csv(array $args = []): string {
         $messages = $this->get_messages(array_merge($args, ['limit' => 10000]));
 
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Using php://temp for CSV generation in memory
         $csv = fopen('php://temp', 'r+');
 
         // Header row
@@ -533,6 +532,7 @@ class Fallback_Handler {
 
         rewind($csv);
         $content = stream_get_contents($csv);
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Closing php://temp stream
         fclose($csv);
 
         return $content;

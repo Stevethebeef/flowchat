@@ -23,12 +23,34 @@ export interface N8nChatConfig {
   autoOpen: AutoOpenConfig;
   features: FeaturesConfig;
   fallback: FallbackConfig;
+  rules?: RulesConfig;
   // Additional nested config groups
   appearance?: AppearanceConfig;
   connection?: ConnectionConfig;
   window?: WindowConfig;
   messages?: MessagesConfig;
   display?: DisplayConfig;
+}
+
+export interface RulesConfig {
+  deviceTargeting?: {
+    desktop?: boolean;
+    tablet?: boolean;
+    mobile?: boolean;
+  };
+  requireLogin?: boolean;
+  pageTargeting?: {
+    enabled: boolean;
+    include?: string[];
+    exclude?: string[];
+  };
+  schedule?: {
+    enabled: boolean;
+    days?: string[];
+    startTime?: string;
+    endTime?: string;
+    timezone?: string;
+  };
 }
 
 export interface AppearanceConfig {
@@ -41,6 +63,21 @@ export interface AppearanceConfig {
   fontSize?: number;
   borderRadius?: number;
   shadows?: boolean;
+  stylePreset?: string;
+  customCss?: string;
+  theme?: 'light' | 'dark' | 'auto';
+  avatarUrl?: string;
+  avatar?: {
+    type: 'default' | 'custom' | 'initials';
+    url?: string;
+    initials?: string;
+  };
+  colors?: {
+    primary: string;
+    secondary: string;
+    background: string;
+    text: string;
+  };
 }
 
 export interface ConnectionConfig {
@@ -54,6 +91,8 @@ export interface ConnectionConfig {
 }
 
 export interface WindowConfig {
+  width?: number;
+  height?: number;
   showHeader: boolean;
   showTimestamp: boolean;
   showAvatar: boolean;
@@ -80,17 +119,16 @@ export interface DisplayConfig {
 export interface BubbleConfig {
   enabled: boolean;
   showOnAllPages?: boolean;
-  showOnAllPages?: boolean; // Site-wide floating bubble
   defaultInstance?: string;
-  icon: 'chat' | 'message' | 'help' | 'custom';
+  icon?: 'chat' | 'message' | 'help' | 'headphones' | 'sparkles' | 'camera' | 'custom';
   customIconUrl?: string;
   text?: string;
-  position: 'bottom-right' | 'bottom-left';
-  offsetX: number;
-  offsetY: number;
-  size: 'small' | 'medium' | 'large';
-  showUnreadBadge: boolean;
-  pulseAnimation: boolean;
+  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  offsetX?: number;
+  offsetY?: number;
+  size?: 'small' | 'medium' | 'large';
+  showUnreadBadge?: boolean;
+  pulseAnimation?: boolean;
 }
 
 export interface AutoOpenConfig {
@@ -364,5 +402,46 @@ export interface N8nChatInitConfig {
 }
 
 // ============================================================================
+// Type Aliases for UI Components
+// ============================================================================
+
+// Simplified config type for UI components
+export type ChatConfig = N8nChatConfig;
+
+// ============================================================================
 // Admin Types
-// ==============================================
+// ============================================================================
+
+export interface AdminInstance {
+  id: string;
+  name: string;
+  webhookUrl: string;
+  isDefault: boolean;
+  createdAt: string;
+  updatedAt: string;
+  status: 'active' | 'inactive' | 'draft';
+  config: N8nChatConfig;
+}
+
+export interface AdminSettings {
+  globalBubble: {
+    enabled: boolean;
+    showOnAllPages: boolean;
+    defaultInstance: string;
+  };
+  performance: {
+    lazyLoad: boolean;
+    debounceMs: number;
+    cacheEnabled: boolean;
+  };
+  privacy: {
+    anonymizeIp: boolean;
+    cookieConsent: boolean;
+    dataRetentionDays: number;
+  };
+  advanced: {
+    debugMode: boolean;
+    customEndpoint: string;
+    proxyEnabled: boolean;
+  };
+}

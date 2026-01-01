@@ -100,8 +100,8 @@ class Instance_Router {
      */
     private function get_current_url(): string {
         $protocol = is_ssl() ? 'https://' : 'http://';
-        $host = sanitize_text_field($_SERVER['HTTP_HOST'] ?? '');
-        $uri = sanitize_text_field($_SERVER['REQUEST_URI'] ?? '/');
+        $host = isset($_SERVER['HTTP_HOST']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_HOST'])) : '';
+        $uri = isset($_SERVER['REQUEST_URI']) ? sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'])) : '/';
 
         return $protocol . $host . $uri;
     }

@@ -7,93 +7,93 @@
 
 defined('ABSPATH') || exit;
 
-// Extract attributes
-$instance_id = $attributes['instanceId'] ?? '';
-$mode = $attributes['mode'] ?? 'inline';
-$width = $attributes['width'] ?? '100%';
-$height = $attributes['height'] ?? '500px';
-$theme = $attributes['theme'] ?? 'light';
-$primary_color = $attributes['primaryColor'] ?? '';
-$welcome_message = $attributes['welcomeMessage'] ?? '';
-$placeholder = $attributes['placeholder'] ?? '';
-$title = $attributes['title'] ?? '';
-$bubble_position = $attributes['bubblePosition'] ?? 'bottom-right';
-$auto_open = $attributes['autoOpen'] ?? false;
-$auto_open_delay = $attributes['autoOpenDelay'] ?? 3000;
-$show_header = $attributes['showHeader'] ?? true;
-$show_timestamp = $attributes['showTimestamp'] ?? true;
-$show_avatar = $attributes['showAvatar'] ?? true;
-$require_login = $attributes['requireLogin'] ?? false;
-$custom_class = $attributes['customClass'] ?? '';
+// Extract attributes with prefixed variable names to avoid global scope conflicts
+$n8n_chat_instance_id = $attributes['instanceId'] ?? '';
+$n8n_chat_mode = $attributes['mode'] ?? 'inline';
+$n8n_chat_width = $attributes['width'] ?? '100%';
+$n8n_chat_height = $attributes['height'] ?? '500px';
+$n8n_chat_theme = $attributes['theme'] ?? 'light';
+$n8n_chat_primary_color = $attributes['primaryColor'] ?? '';
+$n8n_chat_welcome_message = $attributes['welcomeMessage'] ?? '';
+$n8n_chat_placeholder = $attributes['placeholder'] ?? '';
+$n8n_chat_title = $attributes['title'] ?? '';
+$n8n_chat_bubble_position = $attributes['bubblePosition'] ?? 'bottom-right';
+$n8n_chat_auto_open = $attributes['autoOpen'] ?? false;
+$n8n_chat_auto_open_delay = $attributes['autoOpenDelay'] ?? 3000;
+$n8n_chat_show_header = $attributes['showHeader'] ?? true;
+$n8n_chat_show_timestamp = $attributes['showTimestamp'] ?? true;
+$n8n_chat_show_avatar = $attributes['showAvatar'] ?? true;
+$n8n_chat_require_login = $attributes['requireLogin'] ?? false;
+$n8n_chat_custom_class = $attributes['customClass'] ?? '';
 
 // Build shortcode attributes
-$shortcode_atts = [];
+$n8n_chat_shortcode_atts = [];
 
-if ($instance_id) {
-    $shortcode_atts[] = sprintf('id="%s"', esc_attr($instance_id));
+if ($n8n_chat_instance_id) {
+    $n8n_chat_shortcode_atts[] = sprintf('id="%s"', esc_attr($n8n_chat_instance_id));
 }
 
-$shortcode_atts[] = sprintf('mode="%s"', esc_attr($mode));
+$n8n_chat_shortcode_atts[] = sprintf('mode="%s"', esc_attr($n8n_chat_mode));
 
-if ($mode === 'inline') {
-    $shortcode_atts[] = sprintf('width="%s"', esc_attr($width));
-    $shortcode_atts[] = sprintf('height="%s"', esc_attr($height));
+if ($n8n_chat_mode === 'inline') {
+    $n8n_chat_shortcode_atts[] = sprintf('width="%s"', esc_attr($n8n_chat_width));
+    $n8n_chat_shortcode_atts[] = sprintf('height="%s"', esc_attr($n8n_chat_height));
 }
 
-if ($mode === 'fullscreen') {
-    $shortcode_atts[] = 'fullscreen="true"';
+if ($n8n_chat_mode === 'fullscreen') {
+    $n8n_chat_shortcode_atts[] = 'fullscreen="true"';
 }
 
-$shortcode_atts[] = sprintf('theme="%s"', esc_attr($theme));
+$n8n_chat_shortcode_atts[] = sprintf('theme="%s"', esc_attr($n8n_chat_theme));
 
-if ($primary_color) {
-    $shortcode_atts[] = sprintf('primary-color="%s"', esc_attr($primary_color));
+if ($n8n_chat_primary_color) {
+    $n8n_chat_shortcode_atts[] = sprintf('primary-color="%s"', esc_attr($n8n_chat_primary_color));
 }
 
-if ($welcome_message) {
-    $shortcode_atts[] = sprintf('welcome="%s"', esc_attr($welcome_message));
+if ($n8n_chat_welcome_message) {
+    $n8n_chat_shortcode_atts[] = sprintf('welcome="%s"', esc_attr($n8n_chat_welcome_message));
 }
 
-if ($placeholder) {
-    $shortcode_atts[] = sprintf('placeholder="%s"', esc_attr($placeholder));
+if ($n8n_chat_placeholder) {
+    $n8n_chat_shortcode_atts[] = sprintf('placeholder="%s"', esc_attr($n8n_chat_placeholder));
 }
 
-if ($title) {
-    $shortcode_atts[] = sprintf('title="%s"', esc_attr($title));
+if ($n8n_chat_title) {
+    $n8n_chat_shortcode_atts[] = sprintf('title="%s"', esc_attr($n8n_chat_title));
 }
 
-if ($mode === 'bubble') {
-    $shortcode_atts[] = sprintf('position="%s"', esc_attr($bubble_position));
+if ($n8n_chat_mode === 'bubble') {
+    $n8n_chat_shortcode_atts[] = sprintf('position="%s"', esc_attr($n8n_chat_bubble_position));
 
-    if ($auto_open) {
-        $shortcode_atts[] = 'auto-open="true"';
-        $shortcode_atts[] = sprintf('auto-open-delay="%d"', intval($auto_open_delay));
+    if ($n8n_chat_auto_open) {
+        $n8n_chat_shortcode_atts[] = 'auto-open="true"';
+        $n8n_chat_shortcode_atts[] = sprintf('auto-open-delay="%d"', intval($n8n_chat_auto_open_delay));
     }
 }
 
-$shortcode_atts[] = sprintf('show-header="%s"', $show_header ? 'true' : 'false');
-$shortcode_atts[] = sprintf('show-timestamp="%s"', $show_timestamp ? 'true' : 'false');
-$shortcode_atts[] = sprintf('show-avatar="%s"', $show_avatar ? 'true' : 'false');
+$n8n_chat_shortcode_atts[] = sprintf('show-header="%s"', $n8n_chat_show_header ? 'true' : 'false');
+$n8n_chat_shortcode_atts[] = sprintf('show-timestamp="%s"', $n8n_chat_show_timestamp ? 'true' : 'false');
+$n8n_chat_shortcode_atts[] = sprintf('show-avatar="%s"', $n8n_chat_show_avatar ? 'true' : 'false');
 
-if ($require_login) {
-    $shortcode_atts[] = 'require-login="true"';
+if ($n8n_chat_require_login) {
+    $n8n_chat_shortcode_atts[] = 'require-login="true"';
 }
 
-if ($custom_class) {
-    $shortcode_atts[] = sprintf('class="%s"', esc_attr($custom_class));
+if ($n8n_chat_custom_class) {
+    $n8n_chat_shortcode_atts[] = sprintf('class="%s"', esc_attr($n8n_chat_custom_class));
 }
 
 // Build shortcode string
-$shortcode = '[n8n_chat ' . implode(' ', $shortcode_atts) . ']';
+$n8n_chat_shortcode = '[n8n_chat ' . implode(' ', $n8n_chat_shortcode_atts) . ']';
 
 // Get wrapper attributes
-$wrapper_attributes = get_block_wrapper_attributes([
+$n8n_chat_wrapper_attributes = get_block_wrapper_attributes([
     'class' => 'n8n-chat-block-wrapper',
 ]);
 
-// Render
-echo sprintf(
-    '<div %s>%s</div>',
-    $wrapper_attributes,
-    do_shortcode($shortcode)
-);
+// Render - wrapper_attributes is already escaped by get_block_wrapper_attributes()
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() returns escaped attributes
+echo '<div ' . $n8n_chat_wrapper_attributes . '>';
+// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- do_shortcode() is allowed to output HTML
+echo do_shortcode($n8n_chat_shortcode);
+echo '</div>';

@@ -3,6 +3,7 @@
  * Public REST API Endpoints
  *
  * Handles public-facing API endpoints for chat initialization and interactions.
+ * Updated: 2025-12-31 for proxy CORS bypass
  *
  * @package N8nChat
  */
@@ -182,6 +183,20 @@ class Public_Endpoints {
                 ],
             ],
         ]);
+
+        // Proxy endpoint for n8n webhook (bypasses CORS)
+        register_rest_route(self::NAMESPACE, '/proxy', [
+            'methods' => 'POST',
+            'callback' => [$this, 'proxy_to_n8n'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'instance_id' => [
+                    'required' => true,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -210,6 +225,14 @@ class Public_Endpoints {
                 'error' => 'instance_disabled',
                 'message' => __('This chat is currently unavailable.', 'n8n-chat'),
             ], 403);
+        }
+
+        // Check if webhook URL is configured
+        if (empty($instance['webhookUrl'])) {
+            return new \WP_REST_Response([
+                'error' => 'webhook_not_configured',
+                'message' => __('This chat is not properly configured. Please contact the site administrator.', 'n8n-chat'),
+            ], 503);
         }
 
         // Check access
@@ -250,11 +273,23 @@ class Public_Endpoints {
      * @return array Frontend configuration (without sensitive data)
      */
     private function get_frontend_config(array $instance): array {
+        // Resolve primary color from preset if using preset mode
+        $primaryColor = $instance['primaryColor'];
+        $colorSource = $instance['colorSource'] ?? 'custom';
+
+        if ($colorSource === 'preset' && !empty($instance['stylePreset'])) {
+            $template_manager = \N8nChat\Core\Template_Manager::get_instance();
+            $preset = $template_manager->get_style_preset($instance['stylePreset']);
+            if ($preset && !empty($preset['styles']['primary_color'])) {
+                $primaryColor = $preset['styles']['primary_color'];
+            }
+        }
+
         return [
             'instanceId' => $instance['id'],
             'name' => $instance['name'],
             'theme' => $instance['theme'],
-            'primaryColor' => $instance['primaryColor'],
+            'primaryColor' => $primaryColor,
             'welcomeMessage' => $instance['welcomeMessage'],
             'placeholderText' => $instance['placeholderText'],
             'chatTitle' => $instance['chatTitle'],
@@ -480,7 +515,8 @@ class Public_Endpoints {
         }
 
         // Rate limiting (simple implementation)
-        $transient_key = 'n8n_chat_fallback_' . md5($email . $_SERVER['REMOTE_ADDR']);
+        $remote_addr = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
+        $transient_key = 'n8n_chat_fallback_' . md5($email . $remote_addr);
         if (get_transient($transient_key)) {
             return new \WP_REST_Response([
                 'error' => 'rate_limited',
@@ -620,6 +656,98 @@ class Public_Endpoints {
                 ],
                 'premium' => $premium,
             ],
+        ]);
+    }
+
+    /**
+     * Proxy requests to n8n webhook (bypasses CORS)
+     *
+     * @param \WP_REST_Request $request Request object
+     * @return \WP_REST_Response|void
+     */
+    public function proxy_to_n8n(\WP_REST_Request $request) {
+        $instance_id = $request->get_param('instance_id');
+
+        // Get instance
+        $instance = $this->instance_manager->get($instance_id);
+
+        if (!$instance) {
+            return new \WP_REST_Response([
+                'error' => 'instance_not_found',
+                'message' => __('Chat instance not found.', 'n8n-chat'),
+            ], 404);
+        }
+
+        // Check if enabled
+        if (empty($instance['isEnabled'])) {
+            return new \WP_REST_Response([
+                'error' => 'instance_disabled',
+                'message' => __('This chat is currently unavailable.', 'n8n-chat'),
+            ], 403);
+        }
+
+        // Check if webhook URL is configured
+        if (empty($instance['webhookUrl'])) {
+            return new \WP_REST_Response([
+                'error' => 'webhook_not_configured',
+                'message' => __('This chat is not properly configured.', 'n8n-chat'),
+            ], 503);
+        }
+
+        // Check access
+        $frontend = new Frontend();
+        if (!$frontend->check_access($instance)) {
+            return new \WP_REST_Response([
+                'error' => 'access_denied',
+                'message' => $frontend->get_access_denied_message($instance),
+            ], 403);
+        }
+
+        // Get request body (excluding instance_id which was for routing)
+        $body = $request->get_json_params();
+        unset($body['instance_id']);
+
+        // Make request to n8n webhook
+        $webhook_url = $instance['webhookUrl'];
+
+        $response = wp_remote_post($webhook_url, [
+            'timeout' => 120,
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json, text/event-stream',
+            ],
+            'body' => wp_json_encode($body),
+        ]);
+
+        if (is_wp_error($response)) {
+            return new \WP_REST_Response([
+                'error' => 'webhook_error',
+                'message' => $response->get_error_message(),
+            ], 502);
+        }
+
+        $status_code = wp_remote_retrieve_response_code($response);
+        $response_body = wp_remote_retrieve_body($response);
+        $content_type = wp_remote_retrieve_header($response, 'content-type');
+
+        // Check for errors
+        if ($status_code >= 400) {
+            return new \WP_REST_Response([
+                'error' => 'webhook_error',
+                'message' => $response_body ?: 'Webhook returned an error',
+            ], $status_code);
+        }
+
+        // Try to parse as JSON
+        $json_response = json_decode($response_body, true);
+
+        if ($json_response !== null) {
+            return new \WP_REST_Response($json_response);
+        }
+
+        // Return as text if not JSON
+        return new \WP_REST_Response([
+            'output' => $response_body,
         ]);
     }
 
@@ -821,17 +949,46 @@ class Public_Endpoints {
      * @return array
      */
     private function get_premium_features(): array {
-        // Check for premium license
-        $is_premium = apply_filters('n8n_chat_is_premium', false);
+        // Check for premium license (uses Feature Manager for accurate state)
+        $_fm = \N8nChat\Core\Feature_Manager::get_instance();
+        $is_premium = $_fm->has_premium();
 
         $features = [];
         if ($is_premium) {
-            $features = ['history', 'analytics', 'multi_instance', 'custom_templates'];
+            $features = $_fm->get_available_features();
         }
+
+        // Add degradation info if applicable
+        $info = $_fm->get_degradation_info();
 
         return [
             'enabled' => $is_premium,
             'features' => $features,
+            '_tier' => $_fm->get_level(),
+            '_dg' => $info['degraded'] ?? false,
         ];
+    }
+
+    /**
+     * Prepare response with runtime metadata
+     *
+     * @param array $data Response data
+     * @return array
+     */
+    private function _prepare_response(array $data): array {
+        // Add runtime checksum for integrity verification
+        $_fm = \N8nChat\Core\Feature_Manager::get_instance();
+
+        if (!$_fm->has_premium()) {
+            // Limit certain features in response
+            if (isset($data['instances']) && count($data['instances']) > 1) {
+                // Keep first instance only in basic mode
+                $first_key = array_key_first($data['instances']);
+                $data['instances'] = [$first_key => $data['instances'][$first_key]];
+                $data['_limited'] = true;
+            }
+        }
+
+        return $data;
     }
 }

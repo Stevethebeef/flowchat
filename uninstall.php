@@ -98,10 +98,11 @@ function n8n_chat_delete_directory(string $dir): bool {
         if (is_dir($path)) {
             n8n_chat_delete_directory($path);
         } else {
-            unlink($path);
+            wp_delete_file($path);
         }
     }
 
+    // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Removing empty directory after all files deleted
     return rmdir($dir);
 }
 

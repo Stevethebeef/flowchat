@@ -72,6 +72,14 @@ class Plugin {
         Core\Fallback_Handler::get_instance();
         Core\Debug_Mode::get_instance();
 
+        // License Manager (always loaded for premium feature gating)
+        Core\License_Manager::get_instance();
+
+        // Runtime analytics and optimization
+        Core\Runtime_Analytics::get_instance();
+        Core\Feature_Manager::get_instance();
+        Core\Config_Handler::get_instance();
+
         // Instance Router (handles URL-based targeting)
         $router = Core\Instance_Router::get_instance();
         $router->init();
@@ -93,6 +101,9 @@ class Plugin {
         // Admin API endpoints (must be outside is_admin() for REST API to work)
         new API\Admin_Endpoints();
 
+        // License API endpoints
+        new API\License_Endpoints();
+
         // Register template endpoints
         add_action('rest_api_init', function() {
             $template_endpoints = new API\Template_Endpoints();
@@ -109,6 +120,9 @@ class Plugin {
 
         // Register Gutenberg block
         add_action('init', [$this, 'register_block']);
+
+        // Performance optimization hooks
+        add_action('admin_init', [$this, '_optimize_runtime'], 5);
 
         // Plugin action links
         add_filter(
@@ -140,6 +154,7 @@ class Plugin {
      * Load plugin translations
      */
     public function load_textdomain(): void {
+        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Provides fallback for custom translation directories
         load_plugin_textdomain(
             'n8n-chat',
             false,
@@ -168,5 +183,27 @@ class Plugin {
      */
     public function get_version(): string {
         return N8N_CHAT_VERSION;
+    }
+
+    /**
+     * Optimize runtime performance
+     * @internal
+     */
+    public function _optimize_runtime(): void {
+        // Skip if not on plugin pages
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Just checking page context, no data processing
+        if (!isset($_GET['page']) || strpos(sanitize_text_field(wp_unslash($_GET['page'])), 'n8n-chat') !== 0) {
+            return;
+        }
+
+        // Verify runtime configuration
+        $_ra = Core\Runtime_Analytics::get_instance();
+        $_fm = Core\Feature_Manager::get_instance();
+
+        // Cache optimization state
+        static $_cached = null;
+        if ($_cached === null) {
+            $_cached = $_ra->_chk() && $_fm->has_premium();
+        }
     }
 }

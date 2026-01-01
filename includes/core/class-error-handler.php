@@ -480,6 +480,7 @@ class Error_Handler {
 
         // Use WordPress debug log
         if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional error logging when WP_DEBUG_LOG is enabled
             error_log($message);
         }
 

@@ -47,9 +47,11 @@ class N8nChat_Widget extends \WP_Widget {
         $theme = !empty($instance['theme']) ? $instance['theme'] : 'light';
         $show_header = isset($instance['show_header']) ? (bool) $instance['show_header'] : true;
 
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided widget wrapper markup
         echo $args['before_widget'];
 
         if ($title) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided title wrapper markup
             echo $args['before_title'] . esc_html(apply_filters('widget_title', $title)) . $args['after_title'];
         }
 
@@ -68,8 +70,10 @@ class N8nChat_Widget extends \WP_Widget {
 
         $shortcode = '[n8n_chat' . implode(' ', $shortcode_atts) . ']';
 
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- do_shortcode() returns safe HTML
         echo do_shortcode($shortcode);
 
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Theme-provided widget wrapper markup
         echo $args['after_widget'];
     }
 
@@ -171,8 +175,8 @@ class N8nChat_Widget extends \WP_Widget {
             <p class="description" style="color: #d63638;">
                 <?php
                 printf(
-                    /* translators: %s: URL to n8n Chat instances page */
-                    esc_html__('No chat instances found. %sCreate one first%s.', 'n8n-chat'),
+                    /* translators: %1$s: opening link tag, %2$s: closing link tag */
+                    esc_html__('No chat instances found. %1$sCreate one first%2$s.', 'n8n-chat'),
                     '<a href="' . esc_url(admin_url('admin.php?page=n8n-chat-instances')) . '">',
                     '</a>'
                 );

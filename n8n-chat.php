@@ -19,8 +19,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// Plugin constants
-define('N8N_CHAT_VERSION', '1.0.0');
+// Plugin constants - Updated for CORS proxy support
+define('N8N_CHAT_VERSION', '1.0.2');
 define('N8N_CHAT_PLUGIN_FILE', __FILE__);
 define('N8N_CHAT_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('N8N_CHAT_PLUGIN_URL', plugin_dir_url(__FILE__));

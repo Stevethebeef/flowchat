@@ -5,10 +5,11 @@
  */
 
 import { createRoot } from 'react-dom/client';
-import { ChatWidget } from './components/chat/ChatWidget';
-import { BubbleWidget } from './components/bubble/BubbleWidget';
+import { ChatWidget } from './components/ui/ChatWidget';
+import { BubbleWidget } from './components/ui/BubbleWidget';
 import type { N8nChatInitConfig, InitResponse } from './types';
-import './styles/chat.css';
+// Import new Tailwind styles with assistant-ui integration
+import './styles/tailwind.css';
 
 /**
  * Initialize an n8n Chat instance
@@ -119,7 +120,9 @@ window.N8nChat = {
 };
 
 // Export components for external use
-export { ChatWidget } from './components/chat/ChatWidget';
-export { BubbleWidget } from './components/bubble/BubbleWidget';
+export { ChatWidget } from './components/ui/ChatWidget';
+export { BubbleWidget } from './components/ui/BubbleWidget';
+export { Thread } from './components/ui/Thread';
+export { AssistantModal } from './components/ui/AssistantModal';
 export { N8nRuntimeAdapter } from './runtime/N8nRuntimeAdapter';
 export * from './types';

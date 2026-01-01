@@ -598,6 +598,7 @@ class Admin_Endpoints {
         $params[] = $limit;
         $params[] = $offset;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- Sessions need direct DB access, $where_clause contains prepared placeholders built dynamically
         $sessions = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}n8n_chat_sessions
@@ -615,6 +616,7 @@ class Admin_Endpoints {
                 ...array_slice($params, 0, -2)
             )
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
         return new \WP_REST_Response([
             'sessions' => $sessions,
@@ -686,6 +688,7 @@ class Admin_Endpoints {
 
             $rows = 0;
             if ($exists) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $table safely constructed from $wpdb->prefix
                 $rows = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table}");
             }
 
@@ -707,7 +710,8 @@ class Admin_Endpoints {
             'active_plugins' => $plugin_names,
             'database_tables' => $database_tables,
             'php_extensions' => $php_extensions,
-            'server_info' => $_SERVER['SERVER_SOFTWARE'] ?? 'Unknown',
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Server info is safe for display
+            'server_info' => isset($_SERVER['SERVER_SOFTWARE']) ? sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE'])) : 'Unknown',
             'memory_limit' => ini_get('memory_limit'),
             'max_execution_time' => ini_get('max_execution_time'),
             'curl_version' => $curl_version,
@@ -787,7 +791,13 @@ class Admin_Endpoints {
             'instances_imported' => $instances_imported,
             'settings_imported' => $settings_imported,
             'message' => sprintf(
-                __('Successfully imported %d instance(s).', 'n8n-chat'),
+                /* translators: %d: number of instances imported */
+                _n(
+                    'Successfully imported %d instance.',
+                    'Successfully imported %d instances.',
+                    $instances_imported,
+                    'n8n-chat'
+                ),
                 $instances_imported
             ),
         ]);
@@ -843,7 +853,7 @@ class Admin_Endpoints {
             default => 7,
         };
 
-        $start_date = date('Y-m-d H:i:s', strtotime("-{$days} days"));
+        $start_date = gmdate('Y-m-d H:i:s', strtotime("-{$days} days"));
         $sessions_table = $wpdb->prefix . 'n8n_chat_sessions';
         $messages_table = $wpdb->prefix . 'n8n_chat_messages';
 
@@ -855,6 +865,8 @@ class Admin_Endpoints {
             $where .= " AND instance_id = %s";
             $params[] = $instance_id;
         }
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Table names safely constructed from $wpdb->prefix, $where clause contains prepared placeholders
 
         // Get total conversations
         $total_conversations = (int) $wpdb->get_var($wpdb->prepare(
@@ -913,6 +925,8 @@ class Admin_Endpoints {
             ...$params
         ), ARRAY_A);
 
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber
+
         return new \WP_REST_Response([
             'success' => true,
             'data' => [
@@ -961,6 +975,7 @@ class Admin_Endpoints {
         $params[] = $offset;
 
         // Get sessions with message count
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are safely constructed from $wpdb->prefix
         $sessions = $wpdb->get_results($wpdb->prepare(
             "SELECT s.*,
                     (SELECT COUNT(*) FROM {$messages_table} WHERE session_uuid = s.uuid) as message_count
@@ -972,6 +987,7 @@ class Admin_Endpoints {
         ), ARRAY_A);
 
         // Get total count
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table names are safely constructed from $wpdb->prefix
         $total = (int) $wpdb->get_var($wpdb->prepare(
             "SELECT COUNT(*) FROM {$sessions_table} s WHERE {$where}",
             ...array_slice($params, 0, -2)

@@ -159,10 +159,12 @@ class Frontend {
         $settings = get_option('n8n_chat_global_settings', []);
 
         if (!empty($settings['custom_css'])) {
+            // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped -- CSS is sanitized via wp_strip_all_tags
             printf(
                 '<style id="n8n-chat-custom-css">%s</style>',
                 wp_strip_all_tags($settings['custom_css'])
             );
+            // phpcs:enable WordPress.Security.EscapeOutput.OutputNotEscaped
         }
     }
 

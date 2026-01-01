@@ -77,6 +77,7 @@ class Debug_Mode {
         }
 
         // Check query parameter (only for admins)
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only debug flag check, requires admin capability
         if (isset($_GET['n8n_chat_debug']) && current_user_can('manage_options')) {
             return true;
         }
@@ -140,6 +141,7 @@ class Debug_Mode {
                 $log_message .= ' | ' . wp_json_encode($context);
             }
 
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Intentional debug logging when WP_DEBUG_LOG is enabled
             error_log($log_message);
         }
     }
@@ -295,7 +297,8 @@ class Debug_Mode {
             ],
             'active_plugins' => $this->get_active_plugins_info(),
             'server' => [
-                'software' => sanitize_text_field($_SERVER['SERVER_SOFTWARE'] ?? 'Unknown'),
+                // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- sanitize_text_field is applied
+                'software' => isset($_SERVER['SERVER_SOFTWARE']) ? sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE'])) : 'Unknown',
                 'https' => is_ssl(),
             ],
         ];
@@ -318,6 +321,7 @@ class Debug_Mode {
         $status = [];
 
         foreach ($tables as $name => $table) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Checking table existence
             $exists = $wpdb->get_var(
                 $wpdb->prepare("SHOW TABLES LIKE %s", $table)
             ) === $table;
@@ -328,6 +332,7 @@ class Debug_Mode {
             ];
 
             if ($exists) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name safely constructed from $wpdb->prefix
                 $count = $wpdb->get_var("SELECT COUNT(*) FROM {$table}");
                 $status[$name]['rows'] = (int) $count;
             }
@@ -415,8 +420,9 @@ class Debug_Mode {
         echo '<!-- n8n Chat Debug -->';
         echo '<script>';
         echo 'console.group("n8n Chat Debug");';
-        echo 'console.log("Execution time: ' . $execution_time . 'ms");';
-        echo 'console.log("Peak memory: ' . $memory . 'MB");';
+        echo 'console.log("Execution time: ' . esc_js($execution_time) . 'ms");';
+        echo 'console.log("Peak memory: ' . esc_js($memory) . 'MB");';
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode() returns safe JSON
         echo 'console.log("Log entries:", ' . wp_json_encode($this->log_entries) . ');';
         echo 'console.groupEnd();';
         echo '</script>';
@@ -440,6 +446,7 @@ class Debug_Mode {
 
         echo '<script>';
         echo 'if (window.n8nChatAdmin) {';
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_json_encode() returns safe JSON
         echo '  window.n8nChatAdmin.debug = ' . wp_json_encode([
             'enabled' => true,
             'diagnostics' => $diagnostics,

@@ -1,0 +1,305 @@
+### Page state
+- Page URL: http://n8chat.local/wp-admin/tools.php?page=plugin-check
+- Page Title: Plugin Check ‹ n8chat — WordPress
+- Page Snapshot:
+```yaml
+- generic [ref=e2]:
+  - navigation "Main menu":
+    - link "Skip to main content" [ref=e3] [cursor=pointer]:
+      - /url: "#wpbody-content"
+    - link "Skip to toolbar" [ref=e4] [cursor=pointer]:
+      - /url: "#wp-toolbar"
+    - list [ref=e7]:
+      - listitem [ref=e8]:
+        - link "Dashboard" [ref=e9] [cursor=pointer]:
+          - /url: index.php
+          - generic [ref=e10]: 
+          - generic [ref=e11]: Dashboard
+        - list [ref=e12]:
+          - listitem [ref=e13]:
+            - link "Home" [ref=e14] [cursor=pointer]:
+              - /url: index.php
+          - listitem [ref=e15]:
+            - link "Updates" [ref=e16] [cursor=pointer]:
+              - /url: update-core.php
+      - listitem [ref=e17]
+      - listitem [ref=e19]:
+        - link "Posts" [ref=e20] [cursor=pointer]:
+          - /url: edit.php
+          - generic [ref=e21]: 
+          - generic [ref=e22]: Posts
+        - list [ref=e23]:
+          - listitem [ref=e24]:
+            - link "All Posts" [ref=e25] [cursor=pointer]:
+              - /url: edit.php
+          - listitem [ref=e26]:
+            - link "Add Post" [ref=e27] [cursor=pointer]:
+              - /url: post-new.php
+          - listitem [ref=e28]:
+            - link "Categories" [ref=e29] [cursor=pointer]:
+              - /url: edit-tags.php?taxonomy=category
+          - listitem [ref=e30]:
+            - link "Tags" [ref=e31] [cursor=pointer]:
+              - /url: edit-tags.php?taxonomy=post_tag
+      - listitem [ref=e32]:
+        - link "Media" [ref=e33] [cursor=pointer]:
+          - /url: upload.php
+          - generic [ref=e34]: 
+          - generic [ref=e35]: Media
+        - list [ref=e36]:
+          - listitem [ref=e37]:
+            - link "Library" [ref=e38] [cursor=pointer]:
+              - /url: upload.php
+          - listitem [ref=e39]:
+            - link "Add Media File" [ref=e40] [cursor=pointer]:
+              - /url: media-new.php
+      - listitem [ref=e41]:
+        - link "Pages" [ref=e42] [cursor=pointer]:
+          - /url: edit.php?post_type=page
+          - generic [ref=e43]: 
+          - generic [ref=e44]: Pages
+        - list [ref=e45]:
+          - listitem [ref=e46]:
+            - link "All Pages" [ref=e47] [cursor=pointer]:
+              - /url: edit.php?post_type=page
+          - listitem [ref=e48]:
+            - link "Add Page" [ref=e49] [cursor=pointer]:
+              - /url: post-new.php?post_type=page
+      - listitem [ref=e50]:
+        - link "Comments" [ref=e51] [cursor=pointer]:
+          - /url: edit-comments.php
+          - generic [ref=e52]: 
+          - generic [ref=e53]: Comments
+      - listitem [ref=e54]:
+        - link "n8n Chat" [ref=e55] [cursor=pointer]:
+          - /url: admin.php?page=n8n-chat
+          - generic [ref=e56]: 
+          - generic [ref=e57]: n8n Chat
+        - list [ref=e58]:
+          - listitem [ref=e59]:
+            - link "Dashboard" [ref=e60] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat
+          - listitem [ref=e61]:
+            - link "Chat Bots" [ref=e62] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-instances
+          - listitem [ref=e63]:
+            - link "Templates" [ref=e64] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-templates
+          - listitem [ref=e65]:
+            - link "Settings" [ref=e66] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-settings
+          - listitem [ref=e67]:
+            - link "License" [ref=e68] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-license
+          - listitem [ref=e69]:
+            - link "Tools" [ref=e70] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-tools
+          - listitem [ref=e71]:
+            - link "Help" [ref=e72] [cursor=pointer]:
+              - /url: admin.php?page=n8n-chat-help
+      - listitem [ref=e73]
+      - listitem [ref=e75]:
+        - link "Appearance" [ref=e76] [cursor=pointer]:
+          - /url: themes.php
+          - generic [ref=e77]: 
+          - generic [ref=e78]: Appearance
+        - list [ref=e79]:
+          - listitem [ref=e80]:
+            - link "Themes" [ref=e81] [cursor=pointer]:
+              - /url: themes.php
+          - listitem [ref=e82]:
+            - link "Editor" [ref=e83] [cursor=pointer]:
+              - /url: site-editor.php
+      - listitem [ref=e84]:
+        - link "Plugins" [ref=e85] [cursor=pointer]:
+          - /url: plugins.php
+          - generic [ref=e86]: 
+          - generic [ref=e87]: Plugins
+        - list [ref=e88]:
+          - listitem [ref=e89]:
+            - link "Installed Plugins" [ref=e90] [cursor=pointer]:
+              - /url: plugins.php
+          - listitem [ref=e91]:
+            - link "Add Plugin" [ref=e92] [cursor=pointer]:
+              - /url: plugin-install.php
+      - listitem [ref=e93]:
+        - link "Users" [ref=e94] [cursor=pointer]:
+          - /url: users.php
+          - generic [ref=e95]: 
+          - generic [ref=e96]: Users
+        - list [ref=e97]:
+          - listitem [ref=e98]:
+            - link "All Users" [ref=e99] [cursor=pointer]:
+              - /url: users.php
+          - listitem [ref=e100]:
+            - link "Add User" [ref=e101] [cursor=pointer]:
+              - /url: user-new.php
+          - listitem [ref=e102]:
+            - link "Profile" [ref=e103] [cursor=pointer]:
+              - /url: profile.php
+      - listitem [ref=e104]:
+        - link "Tools" [ref=e105] [cursor=pointer]:
+          - /url: tools.php
+          - generic [ref=e106]: 
+          - generic [ref=e107]: Tools
+        - list [ref=e108]:
+          - listitem [ref=e109]:
+            - link "Available Tools" [ref=e110] [cursor=pointer]:
+              - /url: tools.php
+          - listitem [ref=e111]:
+            - link "Import" [ref=e112] [cursor=pointer]:
+              - /url: import.php
+          - listitem [ref=e113]:
+            - link "Export" [ref=e114] [cursor=pointer]:
+              - /url: export.php
+          - listitem [ref=e115]:
+            - link "Site Health" [ref=e116] [cursor=pointer]:
+              - /url: site-health.php
+          - listitem [ref=e117]:
+            - link "Export Personal Data" [ref=e118] [cursor=pointer]:
+              - /url: export-personal-data.php
+          - listitem [ref=e119]:
+            - link "Erase Personal Data" [ref=e120] [cursor=pointer]:
+              - /url: erase-personal-data.php
+          - listitem [ref=e121]:
+            - link "Plugin Check" [ref=e122] [cursor=pointer]:
+              - /url: tools.php?page=plugin-check
+          - listitem [ref=e123]:
+            - link "Plugin Check Namer" [ref=e124] [cursor=pointer]:
+              - /url: tools.php?page=plugin-check-namer
+          - listitem [ref=e125]:
+            - link "Theme File Editor" [ref=e126] [cursor=pointer]:
+              - /url: theme-editor.php
+          - listitem [ref=e127]:
+            - link "Plugin File Editor" [ref=e128] [cursor=pointer]:
+              - /url: plugin-editor.php
+      - listitem [ref=e129]:
+        - link "Settings" [ref=e130] [cursor=pointer]:
+          - /url: options-general.php
+          - generic [ref=e131]: 
+          - generic [ref=e132]: Settings
+        - list [ref=e133]:
+          - listitem [ref=e134]:
+            - link "General" [ref=e135] [cursor=pointer]:
+              - /url: options-general.php
+          - listitem [ref=e136]:
+            - link "Writing" [ref=e137] [cursor=pointer]:
+              - /url: options-writing.php
+          - listitem [ref=e138]:
+            - link "Reading" [ref=e139] [cursor=pointer]:
+              - /url: options-reading.php
+          - listitem [ref=e140]:
+            - link "Discussion" [ref=e141] [cursor=pointer]:
+              - /url: options-discussion.php
+          - listitem [ref=e142]:
+            - link "Media" [ref=e143] [cursor=pointer]:
+              - /url: options-media.php
+          - listitem [ref=e144]:
+            - link "Permalinks" [ref=e145] [cursor=pointer]:
+              - /url: options-permalink.php
+          - listitem [ref=e146]:
+            - link "Privacy" [ref=e147] [cursor=pointer]:
+              - /url: options-privacy.php
+          - listitem [ref=e148]:
+            - link "Plugin Check" [ref=e149] [cursor=pointer]:
+              - /url: options-general.php?page=plugin-check-settings
+      - listitem [ref=e150]:
+        - button "Collapse Main menu" [expanded] [ref=e151] [cursor=pointer]:
+          - generic [ref=e153]: Collapse Menu
+  - generic [ref=e154]:
+    - generic [ref=e155]:
+      - navigation "Toolbar":
+        - menu:
+          - group [ref=e156]:
+            - menuitem "About WordPress" [ref=e157] [cursor=pointer]:
+              - generic [ref=e159]: About WordPress
+          - group [ref=e160]:
+            - menuitem "n8chat" [ref=e161] [cursor=pointer]
+          - group [ref=e162]:
+            - menuitem "0 Comments in moderation" [ref=e163] [cursor=pointer]:
+              - generic [ref=e165]: "0"
+              - generic [ref=e166]: 0 Comments in moderation
+          - group [ref=e167]:
+            - menuitem "New" [ref=e168] [cursor=pointer]:
+              - generic [ref=e170]: New
+        - menu [ref=e171]:
+          - group [ref=e172]:
+            - menuitem "Howdy, admin" [ref=e173] [cursor=pointer]
+    - main [ref=e174]:
+      - generic [ref=e175]:
+        - button "Help" [ref=e178] [cursor=pointer]
+        - generic [ref=e179]:
+          - heading "Plugin Check" [level=1] [ref=e180]
+          - generic [ref=e182]:
+            - heading "Check the Plugin" [level=2] [ref=e183]
+            - paragraph [ref=e184]: Select a plugin to check it for best practices in several categories and security issues. For more information about the checks, use the Help tab at the top of this page.
+            - combobox "Check the Plugin" [disabled] [ref=e185]:
+              - option "n8n Chat – Beautiful Chat Widget" [selected]
+            - button "Check it!" [disabled] [ref=e186]
+            - generic [ref=e187]:
+              - generic [ref=e188]:
+                - heading "Categories" [level=4] [ref=e189]
+                - table [ref=e190]:
+                  - rowgroup [ref=e191]:
+                    - row "general" [ref=e192]:
+                      - cell "general" [ref=e193]:
+                        - group "general" [ref=e194]:
+                          - generic [ref=e195]: general
+                          - generic [ref=e196]:
+                            - checkbox "General" [checked] [disabled] [ref=e197]
+                            - text: General
+                    - row "plugin_repo" [ref=e198]:
+                      - cell "plugin_repo" [ref=e199]:
+                        - group "plugin_repo" [ref=e200]:
+                          - generic [ref=e201]: plugin_repo
+                          - generic [ref=e202]:
+                            - checkbox "Plugin Repo" [checked] [disabled] [ref=e203]
+                            - text: Plugin Repo
+                    - row "security" [ref=e204]:
+                      - cell "security" [ref=e205]:
+                        - group "security" [ref=e206]:
+                          - generic [ref=e207]: security
+                          - generic [ref=e208]:
+                            - checkbox "Security" [checked] [disabled] [ref=e209]
+                            - text: Security
+                    - row "performance" [ref=e210]:
+                      - cell "performance" [ref=e211]:
+                        - group "performance" [ref=e212]:
+                          - generic [ref=e213]: performance
+                          - generic [ref=e214]:
+                            - checkbox "Performance" [checked] [disabled] [ref=e215]
+                            - text: Performance
+                    - row "accessibility" [ref=e216]:
+                      - cell "accessibility" [ref=e217]:
+                        - group "accessibility" [ref=e218]:
+                          - generic [ref=e219]: accessibility
+                          - generic [ref=e220]:
+                            - checkbox "Accessibility" [checked] [disabled] [ref=e221]
+                            - text: Accessibility
+              - generic [ref=e222]:
+                - heading "Types" [level=4] [ref=e223]
+                - table [ref=e224]:
+                  - rowgroup [ref=e225]:
+                    - row "error" [ref=e226]:
+                      - cell "error" [ref=e227]:
+                        - group "error" [ref=e228]:
+                          - generic [ref=e229]: error
+                          - generic [ref=e230]:
+                            - checkbox "Error" [checked] [disabled] [ref=e231]
+                            - text: Error
+                    - row "warning" [ref=e232]:
+                      - cell "warning" [ref=e233]:
+                        - group "warning" [ref=e234]:
+                          - generic [ref=e235]: warning
+                          - generic [ref=e236]:
+                            - checkbox "Warning" [checked] [disabled] [ref=e237]
+                            - text: Warning
+  - contentinfo [ref=e238]:
+    - paragraph [ref=e239]:
+      - generic [ref=e240]:
+        - text: Thank you for creating with
+        - link "WordPress" [ref=e241] [cursor=pointer]:
+          - /url: https://wordpress.org/
+        - text: .
+    - paragraph [ref=e242]: Version 6.9
+```

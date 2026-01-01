@@ -16,6 +16,9 @@ interface N8nConfig {
   sessionId: string;
   context: Record<string, unknown>;
   onError?: (error: Error) => void;
+  // Proxy configuration (for CORS bypass)
+  proxyUrl?: string;
+  instanceId?: string;
 }
 
 interface FileAttachment {
@@ -56,21 +59,49 @@ export class N8nRuntimeAdapter implements ChatModelAdapter {
    * Run the chat model - sends message to n8n and handles streaming response
    */
   async *run(options: ChatModelRunOptions): AsyncGenerator<ChatModelRunResult> {
+    // Determine which URL to use (proxy or direct webhook)
+    const useProxy = this.config.proxyUrl && this.config.instanceId;
+    const targetUrl = useProxy ? this.config.proxyUrl : this.config.webhookUrl;
+
+    // Validate URL before attempting to fetch
+    if (!targetUrl || targetUrl.trim() === '') {
+      const error = new Error('Webhook URL is not configured. Please configure the webhook URL in the chat instance settings.');
+      this.config.onError?.(error);
+      throw error;
+    }
+
     this.abortController = new AbortController();
 
+    // Build request body
+    // n8n Chat Trigger expects 'chatInput' as a string, not 'messages' array
+    const lastUserMessage = options.messages
+      .filter((m) => m.role === 'user')
+      .pop();
+    const chatInput = lastUserMessage?.content
+      .filter((c): c is { type: 'text'; text: string } => c.type === 'text')
+      .map((c) => c.text)
+      .join('') || '';
+
+    const requestBody: Record<string, unknown> = {
+      action: 'sendMessage',
+      sessionId: this.config.sessionId,
+      chatInput: chatInput,
+      context: this.config.context,
+    };
+
+    // Add instance_id when using proxy
+    if (useProxy) {
+      requestBody.instance_id = this.config.instanceId;
+    }
+
     try {
-      const response = await fetch(this.config.webhookUrl, {
+      const response = await fetch(targetUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'text/event-stream',
+          'Accept': useProxy ? 'application/json' : 'text/event-stream',
         },
-        body: JSON.stringify({
-          action: 'sendMessage',
-          sessionId: this.config.sessionId,
-          messages: this.formatMessages(options.messages),
-          context: this.config.context,
-        }),
+        body: JSON.stringify(requestBody),
         signal: this.abortController.signal,
       });
 

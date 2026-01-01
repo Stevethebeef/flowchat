@@ -85,7 +85,7 @@ class File_Handler {
         // Generate safe filename
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $filename = bin2hex(random_bytes(16)) . '.' . $ext;
-        $date_folder = date('Y-m-d');
+        $date_folder = gmdate('Y-m-d');
 
         // Get upload directory
         $upload_dir = wp_upload_dir();
@@ -100,11 +100,13 @@ class File_Handler {
         $target_path = $target_dir . '/' . $filename;
 
         // Move uploaded file
+        // phpcs:ignore Generic.PHP.ForbiddenFunctions.Found -- move_uploaded_file is required for file uploads from $_FILES
         if (!move_uploaded_file($file['tmp_name'], $target_path)) {
             return new \WP_Error('upload_failed', __('Failed to save uploaded file.', 'n8n-chat'));
         }
 
         // Set proper permissions
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_chmod -- Setting permissions on uploaded file
         chmod($target_path, 0644);
 
         // Generate URL
@@ -120,7 +122,7 @@ class File_Handler {
             'filename' => $file['name'],
             'mime_type' => $file['type'],
             'size' => $file['size'],
-            'expires_at' => date('c', time() + ($retention_hours * 3600)),
+            'expires_at' => gmdate('c', time() + ($retention_hours * 3600)),
         ];
     }
 
@@ -285,12 +287,14 @@ class File_Handler {
             if (is_dir($path)) {
                 $deleted += $this->delete_directory($path);
             } else {
-                if (unlink($path)) {
+                wp_delete_file($path);
+                if (!file_exists($path)) {
                     $deleted++;
                 }
             }
         }
 
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir -- Removing empty directory after all files deleted
         rmdir($dir);
 
         return $deleted;

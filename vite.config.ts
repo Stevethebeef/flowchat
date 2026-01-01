@@ -1,9 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { resolve } from 'path';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
 
   build: {
     outDir: 'build/frontend',
@@ -64,8 +65,11 @@ export default defineConfig({
     },
   },
 
-  // Define environment variables
+  // Define environment variables - provide full process.env polyfill for browser
   define: {
-    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+    'process.env': JSON.stringify({
+      NODE_ENV: process.env.NODE_ENV || 'production',
+    }),
   },
 });

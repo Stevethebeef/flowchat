@@ -527,6 +527,7 @@ class Import_Export {
         header('Content-Length: ' . strlen($json));
         header('Cache-Control: no-cache, no-store, must-revalidate');
 
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- $json is a valid JSON string being sent as file download
         echo $json;
         exit;
     }

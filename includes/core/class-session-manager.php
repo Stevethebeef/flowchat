@@ -15,6 +15,8 @@ if (!defined('ABSPATH')) {
 
 /**
  * Class Session_Manager
+ *
+ * phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- TABLE_NAME and MESSAGES_TABLE are class constants (fixed strings), not dynamic variables
  */
 class Session_Manager {
 
@@ -289,6 +291,8 @@ class Session_Manager {
         $params[] = $args['limit'];
         $params[] = $args['offset'];
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Sessions need direct DB access
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where_clause and $orderby are safely constructed
         $sessions = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM {$wpdb->prefix}" . self::TABLE_NAME . "
@@ -322,6 +326,8 @@ class Session_Manager {
 
         $where_clause = implode(' AND ', $where);
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Count query
+        // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- $where_clause contains prepared placeholders
         return (int) $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT COUNT(*) FROM {$wpdb->prefix}" . self::TABLE_NAME . " WHERE {$where_clause}",
@@ -358,7 +364,7 @@ class Session_Manager {
         $settings = get_option('n8n_chat_global_settings', []);
         $retention_days = $settings['history_retention_days'] ?? 90;
 
-        $cutoff_date = date('Y-m-d H:i:s', strtotime("-{$retention_days} days"));
+        $cutoff_date = gmdate('Y-m-d H:i:s', strtotime("-{$retention_days} days"));
 
         // Delete old messages first (foreign key constraint)
         $wpdb->query(
@@ -395,7 +401,7 @@ class Session_Manager {
 
         // For guests, generate a consistent ID based on available data
         $ip = $this->get_client_ip();
-        $user_agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+        $user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? sanitize_text_field(wp_unslash($_SERVER['HTTP_USER_AGENT'])) : '';
 
         return 'guest_' . substr(md5($ip . $user_agent), 0, 16);
     }
@@ -414,8 +420,9 @@ class Session_Manager {
         ];
 
         foreach ($ip_keys as $key) {
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.ValidatedSanitizedInput.MissingUnslash -- Properly sanitized below
             if (!empty($_SERVER[$key])) {
-                $ip = $_SERVER[$key];
+                $ip = sanitize_text_field(wp_unslash($_SERVER[$key]));
 
                 // Handle comma-separated IPs (X-Forwarded-For)
                 if (str_contains($ip, ',')) {
