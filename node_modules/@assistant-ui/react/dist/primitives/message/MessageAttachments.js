@@ -1,0 +1,66 @@
+"use client";
+import { jsx as _jsx } from "react/jsx-runtime";
+import { memo, useMemo } from "react";
+import { useAssistantState, MessageAttachmentByIndexProvider, } from "../../context/index.js";
+const getComponent = (components, attachment) => {
+    const type = attachment.type;
+    switch (type) {
+        case "image":
+            return components?.Image ?? components?.Attachment;
+        case "document":
+            return components?.Document ?? components?.Attachment;
+        case "file":
+            return components?.File ?? components?.Attachment;
+        default:
+            const _exhaustiveCheck = type;
+            throw new Error(`Unknown attachment type: ${_exhaustiveCheck}`);
+    }
+};
+const AttachmentComponent = ({ components }) => {
+    const attachment = useAssistantState(({ attachment }) => attachment);
+    if (!attachment)
+        return null;
+    const Component = getComponent(components, attachment);
+    if (!Component)
+        return null;
+    return _jsx(Component, {});
+};
+/**
+ * Renders a single attachment at the specified index within the current message.
+ *
+ * This component provides direct access to render a specific attachment
+ * from the message's attachment list using the provided component configuration.
+ *
+ * @example
+ * ```tsx
+ * <MessagePrimitive.AttachmentByIndex
+ *   index={0}
+ *   components={{
+ *     Image: MyImageAttachment,
+ *     Document: MyDocumentAttachment
+ *   }}
+ * />
+ * ```
+ */
+export const MessagePrimitiveAttachmentByIndex = memo(({ index, components }) => {
+    return (_jsx(MessageAttachmentByIndexProvider, { index: index, children: _jsx(AttachmentComponent, { components: components }) }));
+}, (prev, next) => prev.index === next.index &&
+    prev.components?.Image === next.components?.Image &&
+    prev.components?.Document === next.components?.Document &&
+    prev.components?.File === next.components?.File &&
+    prev.components?.Attachment === next.components?.Attachment);
+MessagePrimitiveAttachmentByIndex.displayName =
+    "MessagePrimitive.AttachmentByIndex";
+export const MessagePrimitiveAttachments = ({ components }) => {
+    const attachmentsCount = useAssistantState(({ message }) => {
+        if (message.role !== "user")
+            return 0;
+        return message.attachments.length;
+    });
+    const attachmentElements = useMemo(() => {
+        return Array.from({ length: attachmentsCount }, (_, index) => (_jsx(MessagePrimitiveAttachmentByIndex, { index: index, components: components }, index)));
+    }, [attachmentsCount, components]);
+    return attachmentElements;
+};
+MessagePrimitiveAttachments.displayName = "MessagePrimitive.Attachments";
+//# sourceMappingURL=MessageAttachments.js.map

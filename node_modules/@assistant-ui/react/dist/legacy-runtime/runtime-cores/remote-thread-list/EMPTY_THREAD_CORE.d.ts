@@ -1,0 +1,3 @@
+import { ThreadRuntimeCore } from "../../../internal.js";
+export declare const EMPTY_THREAD_CORE: ThreadRuntimeCore;
+//# sourceMappingURL=EMPTY_THREAD_CORE.d.ts.map

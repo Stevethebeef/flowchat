@@ -1,0 +1,1 @@
+{"version":3,"file":"MessagePartRuntimeClient.d.ts","sourceRoot":"","sources":["../../../src/legacy-runtime/client/MessagePartRuntimeClient.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,kBAAkB,EAAE,yCAAsC;AAEnE,OAAO,EAAE,oBAAoB,EAAE,mCAAgC;AAC/D,eAAO,MAAM,iBAAiB;;;;;aACH,kBAAkB;EAkB5C,CAAC"}
