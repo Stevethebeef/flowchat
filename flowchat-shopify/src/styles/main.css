@@ -1,0 +1,676 @@
+/**
+ * FlowChat Widget Styles
+ * Styled for Assistant UI primitives
+ */
+
+/* ============================================================================
+   CSS Variables & Theming
+   ============================================================================ */
+
+#flowchat-widget-root {
+  /* Core Colors - Light Theme */
+  --fc-primary: #3b82f6;
+  --fc-primary-foreground: #ffffff;
+  --fc-background: #ffffff;
+  --fc-foreground: #111827;
+  --fc-muted: #f3f4f6;
+  --fc-muted-foreground: #6b7280;
+  --fc-border: #e5e7eb;
+
+  /* Message Bubbles */
+  --fc-user-bubble: var(--fc-primary);
+  --fc-user-bubble-foreground: var(--fc-primary-foreground);
+  --fc-bot-bubble: var(--fc-muted);
+  --fc-bot-bubble-foreground: var(--fc-foreground);
+
+  /* Dimensions */
+  --fc-bubble-offset-x: 20px;
+  --fc-bubble-offset-y: 20px;
+  --fc-panel-width: 380px;
+  --fc-panel-height: 550px;
+  --fc-border-radius: 16px;
+
+  /* Typography */
+  --fc-font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --fc-font-size: 14px;
+  --fc-line-height: 1.5;
+
+  /* Shadows */
+  --fc-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --fc-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --fc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --fc-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+  /* Animation */
+  --fc-transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Z-index */
+  --fc-z-index: 999999;
+
+  /* Reset */
+  font-family: var(--fc-font-family);
+  font-size: var(--fc-font-size);
+  line-height: var(--fc-line-height);
+  color: var(--fc-foreground);
+}
+
+/* Dark Theme */
+#flowchat-widget-root[data-theme="dark"] {
+  --fc-background: #1f2937;
+  --fc-foreground: #f9fafb;
+  --fc-muted: #374151;
+  --fc-muted-foreground: #9ca3af;
+  --fc-border: #4b5563;
+  --fc-bot-bubble: #374151;
+  --fc-bot-bubble-foreground: #f9fafb;
+}
+
+/* ============================================================================
+   Widget Container
+   ============================================================================ */
+
+.fc-widget-container {
+  position: fixed;
+  bottom: var(--fc-bubble-offset-y);
+  z-index: var(--fc-z-index);
+  font-family: var(--fc-font-family);
+}
+
+.fc-widget-container[data-position="bottom-right"] {
+  right: var(--fc-bubble-offset-x);
+}
+
+.fc-widget-container[data-position="bottom-left"] {
+  left: var(--fc-bubble-offset-x);
+}
+
+/* ============================================================================
+   Bubble Trigger
+   ============================================================================ */
+
+.fc-bubble-trigger {
+  position: relative;
+  width: var(--fc-bubble-size, 56px);
+  height: var(--fc-bubble-size, 56px);
+  border: none;
+  border-radius: 50%;
+  background: var(--fc-primary);
+  color: var(--fc-primary-foreground);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--fc-shadow-lg);
+  transition: transform var(--fc-transition), box-shadow var(--fc-transition);
+}
+
+.fc-bubble-trigger:hover {
+  transform: scale(1.05);
+  box-shadow: var(--fc-shadow-xl);
+}
+
+.fc-bubble-trigger:focus {
+  outline: none;
+  box-shadow: var(--fc-shadow-xl), 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.fc-bubble-trigger:active {
+  transform: scale(0.95);
+}
+
+.fc-bubble-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-bubble-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--fc-primary);
+  animation: fc-pulse-ring 2s ease-out infinite;
+  opacity: 0;
+}
+
+@keyframes fc-pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.fc-bubble-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  background: #ef4444;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-badge-dot {
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+}
+
+/* ============================================================================
+   Chat Panel
+   ============================================================================ */
+
+.fc-chat-panel {
+  position: absolute;
+  bottom: calc(var(--fc-bubble-size, 56px) + 16px);
+  width: var(--fc-panel-width);
+  height: var(--fc-panel-height);
+  max-height: calc(100vh - var(--fc-bubble-size, 56px) - var(--fc-bubble-offset-y) - 32px);
+  background: var(--fc-background);
+  border-radius: var(--fc-border-radius);
+  box-shadow: var(--fc-shadow-xl);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fc-slide-up 0.3s ease-out;
+}
+
+.fc-chat-panel[data-position="bottom-right"] {
+  right: 0;
+}
+
+.fc-chat-panel[data-position="bottom-left"] {
+  left: 0;
+}
+
+@keyframes fc-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================================
+   Chat Header
+   ============================================================================ */
+
+.fc-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--fc-primary);
+  color: var(--fc-primary-foreground);
+  flex-shrink: 0;
+}
+
+.fc-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fc-header-avatar {
+  width: 32px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-header-title h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.fc-header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+.fc-header-btn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--fc-transition);
+}
+
+.fc-header-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ============================================================================
+   Assistant UI Thread Root
+   ============================================================================ */
+
+.fc-thread-root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ============================================================================
+   Thread Viewport (Messages Container)
+   ============================================================================ */
+
+.fc-thread-viewport {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ============================================================================
+   Welcome Screen
+   ============================================================================ */
+
+.fc-welcome-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.fc-welcome-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 16px;
+  color: var(--fc-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fc-welcome-message {
+  margin: 0 0 24px;
+  font-size: 16px;
+  color: var(--fc-foreground);
+}
+
+.fc-suggested-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.fc-prompt-btn {
+  padding: 10px 16px;
+  border: 1px solid var(--fc-border);
+  border-radius: 8px;
+  background: var(--fc-background);
+  color: var(--fc-foreground);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--fc-transition), border-color var(--fc-transition);
+}
+
+.fc-prompt-btn:hover {
+  background: var(--fc-muted);
+  border-color: var(--fc-primary);
+}
+
+/* ============================================================================
+   Messages
+   ============================================================================ */
+
+.fc-message {
+  display: flex;
+  gap: 8px;
+  max-width: 85%;
+  animation: fc-fade-in 0.2s ease-out;
+}
+
+@keyframes fc-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fc-message-user {
+  flex-direction: row-reverse;
+  margin-left: auto;
+}
+
+.fc-message-assistant {
+  margin-right: auto;
+}
+
+.fc-message-avatar {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  background: var(--fc-muted);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--fc-primary);
+}
+
+.fc-message-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.fc-message-bubble {
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.fc-message-user .fc-message-bubble {
+  background: var(--fc-user-bubble);
+  color: var(--fc-user-bubble-foreground);
+  border-bottom-right-radius: 4px;
+}
+
+.fc-message-assistant .fc-message-bubble {
+  background: var(--fc-bot-bubble);
+  color: var(--fc-bot-bubble-foreground);
+  border-bottom-left-radius: 4px;
+}
+
+/* Markdown content styles */
+.fc-message-bubble a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.fc-message-bubble code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+  padding: 2px 6px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.fc-message-bubble pre {
+  margin: 8px 0;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.fc-message-bubble pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.fc-message-bubble strong {
+  font-weight: 600;
+}
+
+.fc-message-bubble em {
+  font-style: italic;
+}
+
+/* ============================================================================
+   Action Bar (Copy, Regenerate)
+   ============================================================================ */
+
+.fc-action-bar {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity var(--fc-transition);
+}
+
+.fc-message:hover .fc-action-bar {
+  opacity: 1;
+}
+
+.fc-action-btn {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  color: var(--fc-muted-foreground);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--fc-transition), background var(--fc-transition);
+}
+
+.fc-action-btn:hover {
+  color: var(--fc-foreground);
+  background: var(--fc-muted);
+}
+
+/* ============================================================================
+   Branch Picker
+   ============================================================================ */
+
+.fc-branch-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--fc-muted-foreground);
+}
+
+.fc-branch-btn {
+  width: 20px;
+  height: 20px;
+  border: none;
+  background: var(--fc-muted);
+  color: var(--fc-muted-foreground);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.fc-branch-btn:hover {
+  color: var(--fc-foreground);
+}
+
+.fc-branch-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fc-branch-number,
+.fc-branch-count {
+  min-width: 12px;
+  text-align: center;
+}
+
+.fc-branch-separator {
+  color: var(--fc-muted-foreground);
+}
+
+/* ============================================================================
+   Composer
+   ============================================================================ */
+
+.fc-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid var(--fc-border);
+  background: var(--fc-background);
+  flex-shrink: 0;
+}
+
+.fc-composer-input {
+  flex: 1;
+  border: 1px solid var(--fc-border);
+  border-radius: 20px;
+  background: var(--fc-muted);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--fc-foreground);
+  resize: none;
+  min-height: 40px;
+  max-height: 120px;
+  padding: 8px 16px;
+  outline: none;
+  transition: border-color var(--fc-transition), box-shadow var(--fc-transition);
+}
+
+.fc-composer-input::placeholder {
+  color: var(--fc-muted-foreground);
+}
+
+.fc-composer-input:focus {
+  border-color: var(--fc-primary);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.fc-composer-btn {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: transparent;
+  color: var(--fc-muted-foreground);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--fc-transition), background var(--fc-transition);
+  flex-shrink: 0;
+}
+
+.fc-composer-btn:hover:not(:disabled) {
+  color: var(--fc-foreground);
+}
+
+.fc-composer-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fc-send-btn {
+  background: var(--fc-primary);
+  color: var(--fc-primary-foreground);
+}
+
+.fc-send-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  color: var(--fc-primary-foreground);
+}
+
+.fc-cancel-btn {
+  background: #ef4444;
+  color: #ffffff;
+}
+
+.fc-cancel-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  color: #ffffff;
+}
+
+/* ============================================================================
+   Typing Indicator (Assistant UI handles this automatically)
+   ============================================================================ */
+
+/* Assistant UI shows a loading state automatically when running */
+
+/* ============================================================================
+   Mobile Responsive
+   ============================================================================ */
+
+@media (max-width: 480px) {
+  .fc-chat-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+    border-radius: 0;
+  }
+
+  .fc-bubble-trigger {
+    --fc-bubble-size: 52px;
+  }
+}
+
+/* ============================================================================
+   Reduced Motion
+   ============================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .fc-bubble-pulse {
+    animation: none;
+  }
+
+  .fc-chat-panel {
+    animation: none;
+  }
+
+  .fc-message {
+    animation: none;
+  }
+}
+
+/* ============================================================================
+   Scrollbar Styling
+   ============================================================================ */
+
+.fc-thread-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fc-thread-viewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fc-thread-viewport::-webkit-scrollbar-thumb {
+  background: var(--fc-border);
+  border-radius: 3px;
+}
+
+.fc-thread-viewport::-webkit-scrollbar-thumb:hover {
+  background: var(--fc-muted-foreground);
+}

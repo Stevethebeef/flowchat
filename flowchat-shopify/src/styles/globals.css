@@ -1,0 +1,921 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ═══════════════════════════════════════════════════════════════
+       n8n Chat Design Tokens - Light Theme
+       ═══════════════════════════════════════════════════════════════ */
+    --fc-background: 0 0% 100%;
+    --fc-foreground: 222.2 84% 4.9%;
+
+    --fc-muted: 210 40% 96.1%;
+    --fc-muted-foreground: 215.4 16.3% 46.9%;
+
+    --fc-border: 214.3 31.8% 91.4%;
+    --fc-input: 214.3 31.8% 91.4%;
+
+    --fc-primary: 221.2 83.2% 53.3%;
+    --fc-primary-foreground: 210 40% 98%;
+
+    --fc-accent: 210 40% 96.1%;
+    --fc-accent-foreground: 222.2 84% 4.9%;
+
+    --fc-destructive: 0 84.2% 60.2%;
+    --fc-destructive-foreground: 210 40% 98%;
+
+    --fc-ring: 221.2 83.2% 53.3%;
+    --fc-radius: 0.75rem;
+
+    /* Message bubbles */
+    --fc-user-bubble: var(--fc-primary);
+    --fc-user-bubble-foreground: var(--fc-primary-foreground);
+    --fc-assistant-bubble: var(--fc-muted);
+    --fc-assistant-bubble-foreground: var(--fc-foreground);
+
+    /* Glassmorphism */
+    --fc-glass-background: rgba(255, 255, 255, 0.85);
+    --fc-glass-border: rgba(255, 255, 255, 0.2);
+    --fc-backdrop-blur: blur(20px);
+
+    /* Shadows */
+    --fc-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --fc-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --fc-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --fc-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --fc-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+
+    /* Dimensions */
+    --fc-bubble-size: 56px;
+    --fc-bubble-size-small: 48px;
+    --fc-bubble-size-large: 64px;
+    --fc-panel-width: 380px;
+    --fc-panel-height: 600px;
+    --fc-panel-max-width: calc(100vw - 40px);
+    --fc-panel-max-height: calc(100vh - 120px);
+  }
+
+  [data-theme="dark"] {
+    --fc-background: 222.2 84% 4.9%;
+    --fc-foreground: 210 40% 98%;
+
+    --fc-muted: 217.2 32.6% 17.5%;
+    --fc-muted-foreground: 215 20.2% 65.1%;
+
+    --fc-border: 217.2 32.6% 17.5%;
+    --fc-input: 217.2 32.6% 17.5%;
+
+    --fc-primary: 217.2 91.2% 59.8%;
+    --fc-primary-foreground: 222.2 84% 4.9%;
+
+    --fc-accent: 217.2 32.6% 17.5%;
+    --fc-accent-foreground: 210 40% 98%;
+
+    --fc-destructive: 0 62.8% 30.6%;
+    --fc-destructive-foreground: 210 40% 98%;
+
+    /* Glassmorphism - Dark */
+    --fc-glass-background: rgba(15, 23, 42, 0.85);
+    --fc-glass-border: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Widget Container Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+#n8n-chat-widget-root {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.fc-widget-container {
+  position: fixed;
+  z-index: 2147483647; /* Maximum z-index to ensure widget is always on top */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.fc-widget-container[data-position="bottom-right"] {
+  bottom: 20px;
+  right: 20px;
+}
+
+.fc-widget-container[data-position="bottom-left"] {
+  bottom: 20px;
+  left: 20px;
+  align-items: flex-start;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Bubble Trigger Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+.fc-bubble-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: var(--fc-shadow-lg);
+}
+
+.fc-bubble-trigger:hover {
+  transform: scale(1.05);
+  box-shadow: var(--fc-shadow-xl);
+}
+
+.fc-bubble-trigger:active {
+  transform: scale(0.95);
+}
+
+.fc-bubble-pulse {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: inherit;
+  animation: fc-pulse-ring 2s ease-out infinite;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Chat Panel Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+.fc-chat-panel {
+  width: 380px;
+  max-width: calc(100vw - 40px);
+  height: 600px;
+  max-height: calc(100vh - 120px);
+  display: flex;
+  flex-direction: column;
+  background: var(--fc-glass-background);
+  backdrop-filter: var(--fc-backdrop-blur);
+  -webkit-backdrop-filter: var(--fc-backdrop-blur);
+  border-radius: 16px;
+  border: 1px solid var(--fc-glass-border);
+  box-shadow: var(--fc-shadow-xl);
+  overflow: hidden;
+  animation: fc-slide-up 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.fc-chat-panel.fc-closing {
+  animation: fc-slide-down 0.2s ease-in forwards;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Chat Header Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+.fc-chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid hsl(var(--fc-border));
+  background: hsl(var(--fc-background));
+}
+
+.fc-chat-header-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fc-chat-header-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: hsl(var(--fc-primary) / 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--fc-primary));
+}
+
+.fc-chat-header-info h3 {
+  font-size: 15px;
+  font-weight: 600;
+  color: hsl(var(--fc-foreground));
+  margin: 0;
+}
+
+.fc-chat-header-info p {
+  font-size: 12px;
+  color: hsl(var(--fc-muted-foreground));
+  margin: 0;
+}
+
+.fc-chat-header-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--fc-muted-foreground));
+  transition: all 0.2s;
+}
+
+.fc-chat-header-close:hover {
+  background: hsl(var(--fc-muted));
+  color: hsl(var(--fc-foreground));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Thread & Messages Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+.fc-thread-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.fc-thread-viewport {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 16px;
+  scroll-behavior: smooth;
+}
+
+.fc-thread-viewport::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fc-thread-viewport::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fc-thread-viewport::-webkit-scrollbar-thumb {
+  background: hsl(var(--fc-border));
+  border-radius: 3px;
+}
+
+.fc-thread-viewport::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--fc-muted-foreground) / 0.5);
+}
+
+/* Message base styles */
+.fc-message {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  animation: fc-message-appear 0.3s ease-out;
+}
+
+@keyframes fc-message-appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fc-message-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 85%;
+}
+
+.fc-message-bubble {
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* User message styles */
+.fc-message-user {
+  flex-direction: row-reverse;
+}
+
+.fc-message-user .fc-message-content {
+  align-items: flex-end;
+}
+
+.fc-message-user .fc-message-bubble {
+  background: hsl(var(--fc-user-bubble));
+  color: hsl(var(--fc-user-bubble-foreground));
+  border-bottom-right-radius: 4px;
+}
+
+/* Assistant message styles */
+.fc-message-assistant {
+  flex-direction: row;
+}
+
+.fc-message-assistant .fc-message-content {
+  align-items: flex-start;
+}
+
+.fc-message-assistant .fc-message-bubble {
+  background: hsl(var(--fc-assistant-bubble));
+  color: hsl(var(--fc-assistant-bubble-foreground));
+  border-bottom-left-radius: 4px;
+}
+
+.fc-message-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: hsl(var(--fc-primary) / 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--fc-primary));
+  flex-shrink: 0;
+}
+
+/* Action bar for messages */
+.fc-action-bar {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.fc-message:hover .fc-action-bar {
+  opacity: 1;
+}
+
+.fc-action-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--fc-muted-foreground));
+  transition: all 0.2s;
+}
+
+.fc-action-btn:hover {
+  background: hsl(var(--fc-muted));
+  color: hsl(var(--fc-foreground));
+}
+
+/* Branch picker for regenerated messages */
+.fc-branch-picker {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: hsl(var(--fc-muted-foreground));
+}
+
+.fc-branch-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--fc-muted-foreground));
+  transition: all 0.2s;
+}
+
+.fc-branch-btn:hover {
+  background: hsl(var(--fc-muted));
+  color: hsl(var(--fc-foreground));
+}
+
+.fc-branch-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fc-branch-info {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Composer Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+.fc-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid hsl(var(--fc-border));
+  background: hsl(var(--fc-background));
+}
+
+.fc-composer-input {
+  flex: 1;
+  min-height: 40px;
+  max-height: 120px;
+  padding: 10px 14px;
+  border: 1px solid hsl(var(--fc-border));
+  border-radius: 20px;
+  background: hsl(var(--fc-background));
+  color: hsl(var(--fc-foreground));
+  font-size: 14px;
+  line-height: 1.4;
+  resize: none;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.fc-composer-input:focus {
+  border-color: hsl(var(--fc-primary));
+  box-shadow: 0 0 0 3px hsl(var(--fc-primary) / 0.1);
+}
+
+.fc-composer-input::placeholder {
+  color: hsl(var(--fc-muted-foreground));
+}
+
+.fc-composer-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.fc-send-btn {
+  background: hsl(var(--fc-primary));
+  color: hsl(var(--fc-primary-foreground));
+}
+
+.fc-send-btn:hover {
+  transform: scale(1.05);
+  box-shadow: var(--fc-shadow-md);
+}
+
+.fc-send-btn:active {
+  transform: scale(0.95);
+}
+
+.fc-send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.fc-cancel-btn {
+  background: hsl(var(--fc-destructive));
+  color: hsl(var(--fc-destructive-foreground));
+}
+
+.fc-cancel-btn:hover {
+  transform: scale(1.05);
+}
+
+/* Voice input button */
+.fc-voice-btn {
+  background: transparent;
+  color: hsl(var(--fc-muted-foreground));
+  border: 1px solid hsl(var(--fc-border));
+}
+
+.fc-voice-btn:hover {
+  background: hsl(var(--fc-muted));
+  color: hsl(var(--fc-foreground));
+}
+
+.fc-voice-btn.fc-recording {
+  background: hsl(var(--fc-destructive));
+  color: hsl(var(--fc-destructive-foreground));
+  border-color: hsl(var(--fc-destructive));
+  animation: fc-voice-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes fc-voice-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 hsl(var(--fc-destructive) / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px hsl(var(--fc-destructive) / 0);
+  }
+}
+
+/* File upload button */
+.fc-file-btn {
+  background: transparent;
+  color: hsl(var(--fc-muted-foreground));
+  border: 1px solid hsl(var(--fc-border));
+}
+
+.fc-file-btn:hover {
+  background: hsl(var(--fc-muted));
+  color: hsl(var(--fc-foreground));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Bubble Badge Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+.fc-bubble-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: hsl(var(--fc-destructive));
+  color: hsl(var(--fc-destructive-foreground));
+  font-size: 11px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fc-badge-bounce 0.3s ease-out;
+}
+
+@keyframes fc-badge-bounce {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Proactive message tooltip */
+.fc-proactive-tooltip {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  right: 0;
+  max-width: 280px;
+  padding: 12px 16px;
+  background: hsl(var(--fc-background));
+  border: 1px solid hsl(var(--fc-border));
+  border-radius: 12px;
+  box-shadow: var(--fc-shadow-lg);
+  font-size: 14px;
+  line-height: 1.4;
+  color: hsl(var(--fc-foreground));
+  animation: fc-tooltip-appear 0.3s ease-out;
+}
+
+.fc-proactive-tooltip::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 20px;
+  width: 16px;
+  height: 16px;
+  background: hsl(var(--fc-background));
+  border-right: 1px solid hsl(var(--fc-border));
+  border-bottom: 1px solid hsl(var(--fc-border));
+  transform: rotate(45deg);
+}
+
+@keyframes fc-tooltip-appear {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fc-proactive-tooltip-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: none;
+  background: hsl(var(--fc-muted));
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--fc-muted-foreground));
+  font-size: 12px;
+  line-height: 1;
+  transition: all 0.2s;
+}
+
+.fc-proactive-tooltip-close:hover {
+  background: hsl(var(--fc-muted-foreground) / 0.2);
+  color: hsl(var(--fc-foreground));
+}
+
+.fc-proactive-tooltip-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: none;
+  background: hsl(var(--fc-primary));
+  color: hsl(var(--fc-primary-foreground));
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.fc-proactive-tooltip-action:hover {
+  transform: scale(1.02);
+  box-shadow: var(--fc-shadow-sm);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Welcome Screen Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+.fc-welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+  text-align: center;
+  height: 100%;
+}
+
+.fc-welcome-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: hsl(var(--fc-primary) / 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: hsl(var(--fc-primary));
+  margin-bottom: 16px;
+}
+
+.fc-welcome-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: hsl(var(--fc-foreground));
+  margin-bottom: 8px;
+}
+
+.fc-welcome-message {
+  font-size: 14px;
+  color: hsl(var(--fc-muted-foreground));
+  margin-bottom: 24px;
+  max-width: 280px;
+}
+
+.fc-welcome-prompts {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 280px;
+}
+
+.fc-welcome-prompt {
+  padding: 10px 16px;
+  border: 1px solid hsl(var(--fc-border));
+  border-radius: 20px;
+  background: transparent;
+  color: hsl(var(--fc-foreground));
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.fc-welcome-prompt:hover {
+  background: hsl(var(--fc-muted));
+  border-color: hsl(var(--fc-primary));
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Typing Indicator Styles
+   ═══════════════════════════════════════════════════════════════ */
+
+.fc-typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 12px 16px;
+  background: hsl(var(--fc-assistant-bubble));
+  border-radius: 16px;
+  border-bottom-left-radius: 4px;
+  width: fit-content;
+}
+
+.fc-typing-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: hsl(var(--fc-muted-foreground));
+  animation: fc-typing-dot 1.4s ease-in-out infinite;
+}
+
+.fc-typing-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.fc-typing-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Animations
+   ═══════════════════════════════════════════════════════════════ */
+
+@keyframes fc-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fc-slide-down {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+
+@keyframes fc-pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes fc-typing-dot {
+  0%, 60%, 100% {
+    opacity: 0.3;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Mobile Responsive
+   ═══════════════════════════════════════════════════════════════ */
+
+@media (max-width: 480px) {
+  .fc-widget-container {
+    bottom: 16px !important;
+    right: 16px !important;
+    left: 16px !important;
+  }
+
+  .fc-chat-panel {
+    width: 100%;
+    max-width: none;
+    height: calc(100vh - 100px);
+    max-height: none;
+    border-radius: 16px 16px 0 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   Accessibility
+   ═══════════════════════════════════════════════════════════════ */
+
+.fc-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Focus visible styles */
+.fc-bubble-trigger:focus-visible,
+.fc-chat-header-close:focus-visible,
+button:focus-visible {
+  outline: 2px solid hsl(var(--fc-ring));
+  outline-offset: 2px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RTL (Right-to-Left) Language Support
+   ═══════════════════════════════════════════════════════════════ */
+
+[dir="rtl"] .fc-widget-container[data-position="bottom-right"] {
+  right: auto;
+  left: 20px;
+  align-items: flex-start;
+}
+
+[dir="rtl"] .fc-widget-container[data-position="bottom-left"] {
+  left: auto;
+  right: 20px;
+  align-items: flex-end;
+}
+
+[dir="rtl"] .fc-message-user {
+  flex-direction: row;
+}
+
+[dir="rtl"] .fc-message-user .fc-message-content {
+  align-items: flex-start;
+}
+
+[dir="rtl"] .fc-message-user .fc-message-bubble {
+  border-bottom-right-radius: 16px;
+  border-bottom-left-radius: 4px;
+}
+
+[dir="rtl"] .fc-message-assistant {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .fc-message-assistant .fc-message-content {
+  align-items: flex-end;
+}
+
+[dir="rtl"] .fc-message-assistant .fc-message-bubble {
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 4px;
+}
+
+[dir="rtl"] .fc-composer {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .fc-header-actions {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .fc-proactive-tooltip {
+  right: auto;
+  left: 0;
+}
+
+[dir="rtl"] .fc-proactive-tooltip::after {
+  right: auto;
+  left: 20px;
+}

@@ -1,0 +1,119 @@
+api_version = "2024-10"
+
+[[extensions]]
+type = "theme"
+name = "n8n Chat Widget"
+handle = "n8n-chat-widget"
+
+  [[extensions.blocks]]
+  type = "app_embed"
+  name = "n8n Chat Widget"
+  handle = "n8n-chat-embed"
+  template = "blocks/n8n-chat-embed.liquid"
+
+    [extensions.blocks.settings]
+    # Connection
+    [[extensions.blocks.settings.fields]]
+    id = "enabled"
+    type = "checkbox"
+    label = "Enable Chat Widget"
+    default = false
+
+    [[extensions.blocks.settings.fields]]
+    id = "webhook_url"
+    type = "text"
+    label = "n8n Webhook URL"
+    info = "Your n8n webhook endpoint URL"
+
+    # Messages
+    [[extensions.blocks.settings.fields]]
+    id = "welcome_message"
+    type = "text"
+    label = "Welcome Message"
+    default = "Hi! How can I help you today?"
+
+    [[extensions.blocks.settings.fields]]
+    id = "chat_title"
+    type = "text"
+    label = "Chat Title"
+    default = "Chat with us"
+
+    [[extensions.blocks.settings.fields]]
+    id = "placeholder_text"
+    type = "text"
+    label = "Input Placeholder"
+    default = "Type your message..."
+
+    [[extensions.blocks.settings.fields]]
+    id = "suggested_prompts"
+    type = "textarea"
+    label = "Suggested Prompts"
+    info = "One prompt per line (max 4)"
+    default = "What products do you recommend?\nHow do I track my order?\nWhat's your return policy?"
+
+    # Appearance
+    [[extensions.blocks.settings.fields]]
+    id = "position"
+    type = "select"
+    label = "Widget Position"
+    default = "bottom-right"
+      [[extensions.blocks.settings.fields.options]]
+      value = "bottom-right"
+      label = "Bottom Right"
+      [[extensions.blocks.settings.fields.options]]
+      value = "bottom-left"
+      label = "Bottom Left"
+
+    [[extensions.blocks.settings.fields]]
+    id = "theme"
+    type = "select"
+    label = "Theme"
+    default = "auto"
+      [[extensions.blocks.settings.fields.options]]
+      value = "auto"
+      label = "Auto (System)"
+      [[extensions.blocks.settings.fields.options]]
+      value = "light"
+      label = "Light"
+      [[extensions.blocks.settings.fields.options]]
+      value = "dark"
+      label = "Dark"
+
+    [[extensions.blocks.settings.fields]]
+    id = "primary_color"
+    type = "color"
+    label = "Primary Color"
+    default = "#3b82f6"
+
+    [[extensions.blocks.settings.fields]]
+    id = "bubble_size"
+    type = "range"
+    label = "Bubble Size"
+    default = 56
+    min = 48
+    max = 72
+    step = 4
+    unit = "px"
+
+    # Behavior
+    [[extensions.blocks.settings.fields]]
+    id = "auto_open"
+    type = "checkbox"
+    label = "Auto-open Chat"
+    default = false
+
+    [[extensions.blocks.settings.fields]]
+    id = "auto_open_delay"
+    type = "range"
+    label = "Auto-open Delay"
+    default = 10
+    min = 5
+    max = 60
+    step = 5
+    unit = "s"
+
+    [[extensions.blocks.settings.fields]]
+    id = "show_on_mobile"
+    type = "checkbox"
+    label = "Show on Mobile"
+    default = true
