@@ -117,6 +117,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
             'X-WP-Nonce': (window as any).n8nChatAdmin.nonce,
           },
           body: JSON.stringify({
+            ...instance,
             isEnabled: !instance.isEnabled,
           }),
         }

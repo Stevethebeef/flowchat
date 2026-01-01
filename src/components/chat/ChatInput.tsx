@@ -306,16 +306,10 @@ const AttachmentIcon: React.FC = () => (
   <svg
     width="20"
     height="20"
-    viewBox="0 0 20 20"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
+    viewBox="0 0 24 24"
+    fill="currentColor"
   >
-    <path d="M17.5 10.833v2.5a4.167 4.167 0 01-4.167 4.167H6.667A4.167 4.167 0 012.5 13.333v-2.5" />
-    <path d="M10 12.5V2.5" />
-    <path d="M6.667 5.833L10 2.5l3.333 3.333" />
+    <path d="M16.5 6v11.5c0 2.21-1.79 4-4 4s-4-1.79-4-4V5c0-1.38 1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5v10.5c0 .55-.45 1-1 1s-1-.45-1-1V6H10v9.5c0 1.38 1.12 2.5 2.5 2.5s2.5-1.12 2.5-2.5V5c0-2.21-1.79-4-4-4S7 2.79 7 5v12.5c0 3.04 2.46 5.5 5.5 5.5s5.5-2.46 5.5-5.5V6h-1.5z" />
   </svg>
 );
 
@@ -323,10 +317,10 @@ const SendIcon: React.FC = () => (
   <svg
     width="20"
     height="20"
-    viewBox="0 0 20 20"
+    viewBox="0 0 24 24"
     fill="currentColor"
   >
-    <path d="M2.925 5.025L9.18333 7.70833L2.91667 6.875L2.925 5.025ZM9.175 12.2917L2.91667 14.975V13.125L9.175 12.2917ZM1.25833 2.5L1.25 8.33333L13.75 10L1.25 11.6667L1.25833 17.5L18.75 10L1.25833 2.5Z" />
+    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" />
   </svg>
 );
 

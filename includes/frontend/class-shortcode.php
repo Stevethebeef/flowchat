@@ -49,6 +49,7 @@ class Shortcode {
         $this->frontend = new Frontend();
 
         add_shortcode('n8n_chat', [$this, 'render']);
+        add_shortcode('n8n-chat', [$this, 'render']);  // Alias with hyphen
     }
 
     /**
