@@ -1,0 +1,55 @@
+# N8.chat Shopify App Configuration
+# https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "N8.chat"
+handle = "n8-chat"
+
+# ============================================================================
+# IMPORTANT: Update these values before deploying!
+# ============================================================================
+
+# Get this from Partner Dashboard after creating your app
+client_id = "5d81ec04296c138fa510584c4d1ec0c0"
+
+# Your Supabase project URL
+application_url = "https://fdxiilxmmrdwbdtbiixw.supabase.co/functions/v1/app"
+
+# Must be true for App Store distribution
+embedded = true
+
+[access_scopes]
+# No API scopes needed - we only use Theme App Extension
+scopes = ""
+
+[auth]
+# OAuth callback URL
+redirect_urls = ["https://fdxiilxmmrdwbdtbiixw.supabase.co/functions/v1/auth/callback"]
+
+[webhooks]
+api_version = "2024-10"
+
+# GDPR Mandatory Webhooks - Required for Shopify App Store
+
+[[webhooks.subscriptions]]
+topics = ["customers/data_request"]
+uri = "https://fdxiilxmmrdwbdtbiixw.supabase.co/functions/v1/gdpr-webhooks"
+
+[[webhooks.subscriptions]]
+topics = ["customers/redact"]
+uri = "https://fdxiilxmmrdwbdtbiixw.supabase.co/functions/v1/gdpr-webhooks"
+
+[[webhooks.subscriptions]]
+topics = ["shop/redact"]
+uri = "https://fdxiilxmmrdwbdtbiixw.supabase.co/functions/v1/gdpr-webhooks"
+
+# App uninstall webhook - to mark installation as uninstalled
+[[webhooks.subscriptions]]
+topics = ["app/uninstalled"]
+uri = "https://fdxiilxmmrdwbdtbiixw.supabase.co/functions/v1/gdpr-webhooks"
+
+[pos]
+embedded = false
+
+[build]
+automatically_update_urls_on_dev = true
+dev_store_url = ""

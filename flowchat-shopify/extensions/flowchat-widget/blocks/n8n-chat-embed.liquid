@@ -1,0 +1,475 @@
+{% comment %}
+  n8n Chat Widget - Theme App Extension
+  Powered by n8.chat
+{% endcomment %}
+
+{% if block.settings.enabled and block.settings.webhook_url != blank %}
+  <div
+    id="n8n-chat-widget-root"
+    data-config='{
+      "webhookUrl": {{ block.settings.webhook_url | json }},
+      "enabled": {{ block.settings.enabled | json }},
+      "welcomeMessage": {{ block.settings.welcome_message | json }},
+      "placeholderText": {{ block.settings.placeholder_text | json }},
+      "chatTitle": {{ block.settings.chat_title | json }},
+      "suggestedPrompts": {{ block.settings.suggested_prompts | newline_to_br | split: '<br />' | json }},
+      "position": {{ block.settings.position | json }},
+      "primaryColor": {{ block.settings.primary_color | json }},
+      "theme": {{ block.settings.theme | json }},
+      "bubbleSize": {{ block.settings.bubble_size | json }},
+      "bubbleIcon": {{ block.settings.bubble_icon | json }},
+      "bubblePulse": {{ block.settings.bubble_pulse | json }},
+      "autoOpen": {{ block.settings.auto_open | json }},
+      "autoOpenDelay": {{ block.settings.auto_open_delay | json }},
+      "showOnMobile": {{ block.settings.show_on_mobile | json }},
+      "enableVoice": {{ block.settings.enable_voice | json }},
+      "enableFileUpload": {{ block.settings.enable_file_upload | json }},
+      "locale": {{ request.locale.iso_code | json }},
+      "proactiveTriggers": [
+        {% if block.settings.trigger_exit_intent %}
+        {
+          "type": "exit_intent",
+          "enabled": true,
+          "message": {{ block.settings.trigger_exit_intent_message | json }},
+          "showOnce": {{ block.settings.trigger_exit_intent_once | json }},
+          "pageTypes": {{ block.settings.trigger_exit_intent_pages | split: ',' | json }}
+        }{% if block.settings.trigger_scroll_depth or block.settings.trigger_time_on_page or block.settings.trigger_idle_time or block.settings.trigger_cart_abandonment %},{% endif %}
+        {% endif %}
+        {% if block.settings.trigger_scroll_depth %}
+        {
+          "type": "scroll_depth",
+          "enabled": true,
+          "threshold": {{ block.settings.trigger_scroll_threshold | json }},
+          "message": {{ block.settings.trigger_scroll_message | json }},
+          "showOnce": {{ block.settings.trigger_scroll_once | json }}
+        }{% if block.settings.trigger_time_on_page or block.settings.trigger_idle_time or block.settings.trigger_cart_abandonment %},{% endif %}
+        {% endif %}
+        {% if block.settings.trigger_time_on_page %}
+        {
+          "type": "time_on_page",
+          "enabled": true,
+          "threshold": {{ block.settings.trigger_time_threshold | json }},
+          "message": {{ block.settings.trigger_time_message | json }},
+          "showOnce": {{ block.settings.trigger_time_once | json }}
+        }{% if block.settings.trigger_idle_time or block.settings.trigger_cart_abandonment %},{% endif %}
+        {% endif %}
+        {% if block.settings.trigger_idle_time %}
+        {
+          "type": "idle_time",
+          "enabled": true,
+          "threshold": {{ block.settings.trigger_idle_threshold | json }},
+          "message": {{ block.settings.trigger_idle_message | json }},
+          "showOnce": {{ block.settings.trigger_idle_once | json }}
+        }{% if block.settings.trigger_cart_abandonment %},{% endif %}
+        {% endif %}
+        {% if block.settings.trigger_cart_abandonment %}
+        {
+          "type": "cart_abandonment",
+          "enabled": true,
+          "message": {{ block.settings.trigger_cart_message | json }},
+          "showOnce": {{ block.settings.trigger_cart_once | json }}
+        }
+        {% endif %}
+      ]
+    }'
+    data-privacy-mode="{{ block.settings.privacy_mode | json }}"
+    data-shop='{
+      "name": {{ shop.name | json }},
+      "domain": {{ shop.domain | json }},
+      "permanent_domain": {{ shop.permanent_domain | json }},
+      "currency": {{ shop.currency | json }},
+      "money_format": {{ shop.money_format | json }}
+    }'
+    data-customer='{
+      "logged_in": {% if customer %}true{% else %}false{% endif %}{% unless block.settings.privacy_mode %},
+      {% if customer %}
+      "id": {{ customer.id | json }},
+      "email": {{ customer.email | json }},
+      "first_name": {{ customer.first_name | json }},
+      "last_name": {{ customer.last_name | json }},
+      "tags": {{ customer.tags | json }},
+      "orders_count": {{ customer.orders_count | json }},
+      "total_spent": {{ customer.total_spent | json }}
+      {% endif %}
+      {% endunless %}
+    }'
+    data-page='{
+      "type": {{ request.page_type | json }},
+      "url": {{ request.path | json }},
+      "full_url": {{ request.origin | append: request.path | json }},
+      "title": {{ page_title | json }}
+    }'
+    {% if product %}
+    data-product='{
+      "id": {{ product.id | json }},
+      "title": {{ product.title | json }},
+      "handle": {{ product.handle | json }},
+      "vendor": {{ product.vendor | json }},
+      "type": {{ product.type | json }},
+      "description": {{ product.description | strip_html | truncate: 500 | json }},
+      "price": {{ product.price | json }},
+      "compare_at_price": {{ product.compare_at_price | json }},
+      "available": {{ product.available | json }},
+      "url": {{ product.url | json }},
+      "featured_image": {{ product.featured_image | image_url: width: 400 | json }},
+      "tags": {{ product.tags | json }}
+    }'
+    {% endif %}
+    {% if collection %}
+    data-collection='{
+      "id": {{ collection.id | json }},
+      "title": {{ collection.title | json }},
+      "handle": {{ collection.handle | json }},
+      "description": {{ collection.description | strip_html | truncate: 300 | json }},
+      "products_count": {{ collection.products_count | json }},
+      "url": {{ collection.url | json }}
+    }'
+    {% endif %}
+    data-locale='{
+      "language": {{ request.locale.iso_code | json }},
+      "country": {{ localization.country.iso_code | json }},
+      "currency": {{ cart.currency.iso_code | json }}
+    }'
+    data-cart-url="/cart.js"
+  ></div>
+
+  {{ 'n8n-chat-widget.css' | asset_url | stylesheet_tag }}
+  <script src="{{ 'n8n-chat-widget.js' | asset_url }}" defer></script>
+
+  <style>
+    :root {
+      --fc-primary: {{ block.settings.primary_color }};
+    }
+
+    {% unless block.settings.show_on_mobile %}
+    @media (max-width: 768px) {
+      #n8n-chat-widget-root {
+        display: none !important;
+      }
+    }
+    {% endunless %}
+  </style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "n8n Chat Widget",
+  "target": "body",
+  "stylesheet": "n8n-chat-widget.css",
+  "javascript": "n8n-chat-widget.js",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Connection Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable Chat Widget",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "webhook_url",
+      "label": "n8n Webhook URL",
+      "info": "Your n8n workflow webhook URL for chat messages"
+    },
+    {
+      "type": "header",
+      "content": "Data & Privacy"
+    },
+    {
+      "type": "checkbox",
+      "id": "privacy_mode",
+      "label": "Privacy Mode (Recommended)",
+      "default": true,
+      "info": "When enabled, customer PII (name, email) is NOT sent to your webhook. Only anonymous context (cart, products, page) is shared."
+    },
+    {
+      "type": "paragraph",
+      "content": "Privacy Mode helps you comply with GDPR/CCPA. Disable only if your n8n workflow requires customer identification."
+    },
+    {
+      "type": "header",
+      "content": "Chat Messages"
+    },
+    {
+      "type": "text",
+      "id": "chat_title",
+      "label": "Chat Title",
+      "default": "Chat with us"
+    },
+    {
+      "type": "textarea",
+      "id": "welcome_message",
+      "label": "Welcome Message",
+      "default": "Hi there! 👋 How can I help you today?"
+    },
+    {
+      "type": "text",
+      "id": "placeholder_text",
+      "label": "Input Placeholder",
+      "default": "Type your message..."
+    },
+    {
+      "type": "textarea",
+      "id": "suggested_prompts",
+      "label": "Suggested Prompts",
+      "info": "One prompt per line. Displayed as clickable options."
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "select",
+      "id": "position",
+      "label": "Widget Position",
+      "options": [
+        { "value": "bottom-right", "label": "Bottom Right" },
+        { "value": "bottom-left", "label": "Bottom Left" }
+      ],
+      "default": "bottom-right"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary Color",
+      "default": "#4F46E5"
+    },
+    {
+      "type": "select",
+      "id": "theme",
+      "label": "Theme",
+      "options": [
+        { "value": "light", "label": "Light" },
+        { "value": "dark", "label": "Dark" },
+        { "value": "auto", "label": "Auto (System)" }
+      ],
+      "default": "auto"
+    },
+    {
+      "type": "select",
+      "id": "bubble_size",
+      "label": "Bubble Size",
+      "options": [
+        { "value": "small", "label": "Small (48px)" },
+        { "value": "medium", "label": "Medium (56px)" },
+        { "value": "large", "label": "Large (64px)" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "bubble_icon",
+      "label": "Bubble Icon",
+      "options": [
+        { "value": "chat", "label": "Chat Bubble" },
+        { "value": "message", "label": "Message" },
+        { "value": "help", "label": "Help Circle" },
+        { "value": "bot", "label": "Bot" },
+        { "value": "sparkles", "label": "Sparkles (AI)" }
+      ],
+      "default": "chat"
+    },
+    {
+      "type": "checkbox",
+      "id": "bubble_pulse",
+      "label": "Show Pulse Animation",
+      "default": true,
+      "info": "Adds attention-grabbing pulse effect to the bubble"
+    },
+    {
+      "type": "header",
+      "content": "Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_open",
+      "label": "Auto Open Chat",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "auto_open_delay",
+      "label": "Auto Open Delay (seconds)",
+      "min": 1,
+      "max": 60,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_mobile",
+      "label": "Show on Mobile",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Features"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_voice",
+      "label": "Enable Voice Input",
+      "default": false,
+      "info": "Allow users to send voice messages"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_file_upload",
+      "label": "Enable File Upload",
+      "default": false,
+      "info": "Allow users to upload files (images, documents)"
+    },
+    {
+      "type": "header",
+      "content": "Exit Intent Trigger"
+    },
+    {
+      "type": "checkbox",
+      "id": "trigger_exit_intent",
+      "label": "Enable Exit Intent",
+      "default": false,
+      "info": "Show chat when user tries to leave the page"
+    },
+    {
+      "type": "textarea",
+      "id": "trigger_exit_intent_message",
+      "label": "Exit Intent Message",
+      "default": "Wait! Before you go, is there anything I can help you with?"
+    },
+    {
+      "type": "checkbox",
+      "id": "trigger_exit_intent_once",
+      "label": "Show Once Per Session",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "trigger_exit_intent_pages",
+      "label": "Page Types (comma-separated)",
+      "info": "Leave empty for all pages. Options: product,collection,cart,page,index"
+    },
+    {
+      "type": "header",
+      "content": "Scroll Depth Trigger"
+    },
+    {
+      "type": "checkbox",
+      "id": "trigger_scroll_depth",
+      "label": "Enable Scroll Trigger",
+      "default": false,
+      "info": "Show chat when user scrolls down the page"
+    },
+    {
+      "type": "range",
+      "id": "trigger_scroll_threshold",
+      "label": "Scroll Depth (%)",
+      "min": 10,
+      "max": 90,
+      "step": 10,
+      "default": 50
+    },
+    {
+      "type": "textarea",
+      "id": "trigger_scroll_message",
+      "label": "Scroll Trigger Message",
+      "default": "Enjoying the content? Have any questions?"
+    },
+    {
+      "type": "checkbox",
+      "id": "trigger_scroll_once",
+      "label": "Show Once Per Session",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Time on Page Trigger"
+    },
+    {
+      "type": "checkbox",
+      "id": "trigger_time_on_page",
+      "label": "Enable Time Trigger",
+      "default": false,
+      "info": "Show chat after user spends time on page"
+    },
+    {
+      "type": "range",
+      "id": "trigger_time_threshold",
+      "label": "Time Threshold (seconds)",
+      "min": 5,
+      "max": 120,
+      "step": 5,
+      "default": 30
+    },
+    {
+      "type": "textarea",
+      "id": "trigger_time_message",
+      "label": "Time Trigger Message",
+      "default": "Need help finding what you're looking for?"
+    },
+    {
+      "type": "checkbox",
+      "id": "trigger_time_once",
+      "label": "Show Once Per Session",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Idle Time Trigger"
+    },
+    {
+      "type": "checkbox",
+      "id": "trigger_idle_time",
+      "label": "Enable Idle Trigger",
+      "default": false,
+      "info": "Show chat when user is inactive"
+    },
+    {
+      "type": "range",
+      "id": "trigger_idle_threshold",
+      "label": "Idle Time (seconds)",
+      "min": 10,
+      "max": 180,
+      "step": 10,
+      "default": 60
+    },
+    {
+      "type": "textarea",
+      "id": "trigger_idle_message",
+      "label": "Idle Trigger Message",
+      "default": "Still there? Let me know if you need any assistance!"
+    },
+    {
+      "type": "checkbox",
+      "id": "trigger_idle_once",
+      "label": "Show Once Per Session",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Cart Abandonment Trigger"
+    },
+    {
+      "type": "checkbox",
+      "id": "trigger_cart_abandonment",
+      "label": "Enable Cart Abandonment",
+      "default": false,
+      "info": "Show chat when user with items in cart tries to leave"
+    },
+    {
+      "type": "textarea",
+      "id": "trigger_cart_message",
+      "label": "Cart Abandonment Message",
+      "default": "You have items in your cart! Can I help you complete your purchase?"
+    },
+    {
+      "type": "checkbox",
+      "id": "trigger_cart_once",
+      "label": "Show Once Per Session",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
