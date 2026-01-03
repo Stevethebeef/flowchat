@@ -22,9 +22,10 @@ import {
     __experimentalUnitControl as UnitControl,
 } from '@wordpress/components';
 import { useState, useEffect } from '@wordpress/element';
-import { comment as chatIcon } from '@wordpress/icons';
+import { createElement } from '@wordpress/element';
 
 import metadata from './block.json';
+/** * N8.Chat branded icon - orange rounded box with "N8" text */const n8ChatIcon = createElement(    'svg',    {        width: 24,        height: 24,        viewBox: '0 0 512 512',        fill: 'none',        xmlns: 'http://www.w3.org/2000/svg',    },    createElement('rect', {        x: 32,        y: 32,        width: 448,        height: 448,        rx: 80,        fill: '#FF6B2C',    }),    createElement(        'text',        {            x: 256,            y: 310,            fontFamily: 'system-ui, -apple-system, sans-serif',            fontSize: 200,            fontWeight: 700,            fill: 'white',            textAnchor: 'middle',        },        'N8'    ));
 
 /**
  * Block Edit Component
@@ -247,17 +248,17 @@ function N8nChatEdit({ attributes, setAttributes }) {
 
             <div {...blockProps}>
                 {loading ? (
-                    <Placeholder icon={chatIcon} label={__('n8n Chat', 'n8n-chat')}>
+                    <Placeholder icon={n8ChatIcon} label={__('n8n Chat', 'n8n-chat')}>
                         <Spinner />
                         <p>{__('Loading instances...', 'n8n-chat')}</p>
                     </Placeholder>
                 ) : error ? (
-                    <Placeholder icon={chatIcon} label={__('n8n Chat', 'n8n-chat')}>
+                    <Placeholder icon={n8ChatIcon} label={__('n8n Chat', 'n8n-chat')}>
                         <p className="n8n-chat-block-error">{error}</p>
                     </Placeholder>
                 ) : !instanceId ? (
                     <Placeholder
-                        icon={chatIcon}
+                        icon={n8ChatIcon}
                         label={__('n8n Chat', 'n8n-chat')}
                         instructions={__('Select a chat instance to display.', 'n8n-chat')}
                     >
@@ -300,7 +301,7 @@ function N8nChatEdit({ attributes, setAttributes }) {
  * Register the block
  */
 registerBlockType(metadata.name, {
-    icon: chatIcon,
+    icon: n8ChatIcon,
     edit: N8nChatEdit,
     save: () => null, // Dynamic block, rendered via PHP
 });

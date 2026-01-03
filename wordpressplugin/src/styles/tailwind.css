@@ -1169,3 +1169,43 @@
   border-radius: var(--fc-border-radius);
   border-bottom-left-radius: 0.25rem;
 }
+
+/* ========================
+   RTL SUPPORT (MED-004)
+   ======================== */
+
+[dir="rtl"] .flowchat-message-user,
+[dir="rtl"] .n8n-chat-message-user {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .flowchat-bubble-button {
+  left: var(--fc-bubble-offset-x, 24px);
+  right: auto;
+}
+
+[dir="rtl"] .flowchat-input-area,
+[dir="rtl"] .n8n-chat-input-area {
+  flex-direction: row-reverse;
+}
+
+[dir="rtl"] .flowchat-message-content {
+  text-align: right;
+}
+
+/* ========================
+   REDUCED MOTION SUPPORT (LOW-004)
+   ======================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .flowchat-widget *,
+  .flowchat-widget *::before,
+  .flowchat-widget *::after,
+  .n8n-chat-widget *,
+  .n8n-chat-widget *::before,
+  .n8n-chat-widget *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -10,7 +10,7 @@ interface BubbleTriggerProps {
   isOpen: boolean;
   onClick: () => void;
   unreadCount: number;
-  icon: 'chat' | 'message' | 'help' | 'custom';
+  icon: 'chat' | 'message' | 'help' | 'headphones' | 'sparkles' | 'n8chat' | 'custom';
   customIconUrl?: string;
   text?: string;
   size: 'small' | 'medium' | 'large';
@@ -72,12 +72,18 @@ export const BubbleTrigger: React.FC<BubbleTriggerProps> = ({
  * Get icon component based on type
  */
 function getIconComponent(
-  icon: 'chat' | 'message' | 'help' | 'custom',
+  icon: 'chat' | 'message' | 'help' | 'headphones' | 'sparkles' | 'n8chat' | 'custom',
   customIconUrl?: string
 ): React.ReactNode {
   switch (icon) {
     case 'message':
       return <MessageIcon />;
+    case 'headphones':
+      return <HeadphonesIcon />;
+    case 'sparkles':
+      return <SparklesIcon />;
+    case 'n8chat':
+      return <N8ChatBubbleIcon />;
     case 'help':
       return <HelpIcon />;
     case 'custom':
@@ -154,6 +160,66 @@ const CloseIcon: React.FC = () => (
   >
     <line x1="18" y1="6" x2="6" y2="18" />
     <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
+
+
+const HeadphonesIcon: React.FC = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M3 18v-6a9 9 0 0118 0v6" />
+    <path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3v5z" />
+    <path d="M3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3v5z" />
+  </svg>
+);
+
+const SparklesIcon: React.FC = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M12 3l1.912 5.813a2 2 0 001.275 1.275L21 12l-5.813 1.912a2 2 0 00-1.275 1.275L12 21l-1.912-5.813a2 2 0 00-1.275-1.275L3 12l5.813-1.912a2 2 0 001.275-1.275L12 3z" />
+    <path d="M5 3v4" />
+    <path d="M3 5h4" />
+    <path d="M19 17v4" />
+    <path d="M17 19h4" />
+  </svg>
+);
+
+const N8ChatBubbleIcon: React.FC = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 512 512"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect x="32" y="32" width="448" height="448" rx="80" fill="currentColor" />
+    <text
+      x="256"
+      y="310"
+      fontFamily="system-ui, -apple-system, sans-serif"
+      fontSize="200"
+      fontWeight="700"
+      fill="white"
+      textAnchor="middle"
+    >
+      N8
+    </text>
   </svg>
 );
 

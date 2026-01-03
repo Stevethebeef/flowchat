@@ -59,14 +59,18 @@ export interface AppearanceConfig {
   textColor: string;
   userBubbleColor: string;
   assistantBubbleColor: string;
+  botBubbleColor?: string;
+  headerBackground?: string;
   font?: string;
-  fontSize?: number;
+  fontFamily?: string;
+  fontSize?: number | string;
   borderRadius?: number;
   shadows?: boolean;
   stylePreset?: string;
   customCss?: string;
   theme?: 'light' | 'dark' | 'auto';
   avatarUrl?: string;
+  enabled?: boolean;
   avatar?: {
     type: 'default' | 'custom' | 'initials';
     url?: string;
@@ -83,11 +87,15 @@ export interface AppearanceConfig {
 export interface ConnectionConfig {
   webhookUrl: string;
   authType: 'none' | 'basic' | 'bearer';
+  auth?: 'none' | 'basic' | 'bearer';
   username?: string;
   password?: string;
+  bearerToken?: string;
   apiKey?: string;
   timeout?: number;
-  enableStreaming: boolean;
+  enableStreaming?: boolean;
+  chatInputKey?: string;
+  sessionKey?: string;
 }
 
 export interface WindowConfig {
@@ -108,6 +116,7 @@ export interface MessagesConfig {
   showTypingIndicator: boolean;
   enableHistory: boolean;
   historyRetentionDays?: number;
+  showWelcomeScreen?: boolean;
 }
 
 export interface DisplayConfig {
@@ -412,6 +421,39 @@ export type ChatConfig = N8nChatConfig;
 // Admin Types
 // ============================================================================
 
+export interface TargetingRule {
+  type: 'url' | 'page_type' | 'user_role' | 'device' | 'custom';
+  operator: 'equals' | 'contains' | 'starts_with' | 'ends_with' | 'regex' | 'not_equals';
+  value: string;
+}
+
+export interface TargetingConfig {
+  enabled: boolean;
+  priority: number;
+  rules: TargetingRule[];
+}
+
+export interface AccessConfig {
+  requireLogin: boolean;
+  allowedRoles: string[];
+  deniedMessage: string;
+}
+
+export interface ScheduleConfig {
+  enabled: boolean;
+  startTime: string;
+  endTime: string;
+  timezone: string;
+  days: string[];
+  outsideHoursMessage: string;
+}
+
+export interface DevicesConfig {
+  desktop: boolean;
+  tablet: boolean;
+  mobile: boolean;
+}
+
 export interface AdminInstance {
   id: string;
   name: string;
@@ -421,6 +463,37 @@ export interface AdminInstance {
   updatedAt: string;
   status: 'active' | 'inactive' | 'draft';
   config: N8nChatConfig;
+  // Additional properties
+  isEnabled: boolean;
+  primaryColor: string;
+  avatarUrl: string;
+  theme: 'light' | 'dark' | 'auto';
+  colorSource: 'theme' | 'custom' | 'brand';
+  stylePreset: string;
+  customCss: string;
+  welcomeMessage: string;
+  placeholderText: string;
+  chatTitle: string;
+  systemPrompt: string;
+  suggestedPrompts: string[];
+  showHeader: boolean;
+  showTimestamp: boolean;
+  showAvatar: boolean;
+  // Nested configs
+  bubble: BubbleConfig;
+  autoOpen: AutoOpenConfig;
+  window: WindowConfig;
+  appearance: AppearanceConfig;
+  features: FeaturesConfig;
+  fallback: FallbackConfig;
+  connection: ConnectionConfig;
+  messages: MessagesConfig;
+  targeting: TargetingConfig;
+  access: AccessConfig;
+  schedule: ScheduleConfig;
+  devices: DevicesConfig;
+  // Analytics
+  sessionCount: number;
 }
 
 export interface AdminSettings {

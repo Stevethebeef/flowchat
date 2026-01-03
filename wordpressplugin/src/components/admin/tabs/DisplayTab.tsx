@@ -6,6 +6,9 @@
 
 import React, { useState } from 'react';
 import type { AdminInstance } from '../../../types';
+import { useFeatureFlags } from '../../../context/FeatureFlagsContext';
+import { PremiumFeature, PremiumLabel } from '../shared/PremiumFeature';
+import { ProBadge } from '../shared/ProBadge';
 
 interface DisplayTabProps {
   instance: Partial<AdminInstance>;
@@ -39,11 +42,15 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
   updateField,
 }) => {
   const [showBehaviorAdvanced, setShowBehaviorAdvanced] = useState(false);
+  const { hasFeature } = useFeatureFlags();
 
   const bubble = instance.bubble || {};
   const autoOpen = instance.autoOpen || {};
   const windowSettings = instance.window || {};
   const displayMode = bubble.enabled ? 'bubble' : 'inline';
+
+  // Premium feature check - only auto-open is Pro (bubble mode is FREE)
+  const hasAutoOpenFeature = hasFeature('autoOpen');
 
   const handleModeChange = (mode: string) => {
     if (mode === 'bubble') {
@@ -64,7 +71,7 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
         <h2 className="n8n-chat-section-title">Display Mode</h2>
 
         <div className="n8n-chat-mode-selector">
-          {/* Bubble Mode */}
+          {/* Bubble Mode - FREE for all users */}
           <div
             className={`n8n-chat-mode-card ${displayMode === 'bubble' ? 'is-selected' : ''}`}
             onClick={() => handleModeChange('bubble')}
@@ -320,19 +327,24 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
 
       {/* Auto-Open Behavior */}
       {displayMode === 'bubble' && (
-        <div className="n8n-chat-section">
-          <h2 className="n8n-chat-section-title">Auto-Open Behavior</h2>
+        <PremiumFeature feature="autoOpen" featureName="Auto-Open Triggers">
+          <div className="n8n-chat-section">
+            <h2 className="n8n-chat-section-title">
+              Auto-Open Behavior
+              {!hasAutoOpenFeature && <ProBadge variant="inline" />}
+            </h2>
 
-          <div className="n8n-chat-field">
-            <label className="n8n-chat-checkbox">
-              <input
-                type="checkbox"
-                checked={autoOpen.enabled || false}
-                onChange={(e) => updateField('autoOpen.enabled', e.target.checked)}
-              />
-              <span>Automatically open chat window</span>
-            </label>
-          </div>
+            <div className="n8n-chat-field">
+              <label className="n8n-chat-checkbox">
+                <input
+                  type="checkbox"
+                  checked={autoOpen.enabled || false}
+                  onChange={(e) => updateField('autoOpen.enabled', e.target.checked)}
+                  disabled={!hasAutoOpenFeature}
+                />
+                <span>Automatically open chat window</span>
+              </label>
+            </div>
 
           {autoOpen.enabled && (
             <>
@@ -481,7 +493,8 @@ export const DisplayTab: React.FC<DisplayTabProps> = ({
               )}
             </>
           )}
-        </div>
+          </div>
+        </PremiumFeature>
       )}
     </div>
   );

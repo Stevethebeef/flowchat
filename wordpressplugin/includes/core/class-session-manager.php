@@ -439,6 +439,112 @@ class Session_Manager {
     }
 
     /**
+     * Export user data for GDPR compliance
+     *
+     * @param string $session_id Session UUID
+     * @param string $email Optional email to also search fallback messages
+     * @return array User data including sessions, messages, and fallback_messages
+     */
+    public function export_user_data(string $session_id, string $email = ''): array {
+        global $wpdb;
+
+        $data = [
+            'sessions' => [],
+            'messages' => [],
+            'fallback_messages' => [],
+        ];
+
+        // Get session data
+        $session = $this->get_session_by_uuid($session_id);
+        if ($session) {
+            $data['sessions'][] = [
+                'uuid' => $session->uuid,
+                'instance_id' => $session->instance_id,
+                'status' => $session->status,
+                'started_at' => $session->started_at,
+                'last_activity_at' => $session->last_activity_at,
+                'closed_at' => $session->closed_at ?? null,
+            ];
+
+            // Get messages for this session
+            $data['messages'] = $this->get_messages($session_id);
+        }
+
+        // Get fallback messages by email if provided
+        if (!empty($email) && is_email($email)) {
+            $fallback_messages = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT id, instance_id, name, email, message, status, created_at
+                    FROM {$wpdb->prefix}n8n_chat_fallback_messages
+                    WHERE email = %s",
+                    $email
+                )
+            );
+
+            if ($fallback_messages) {
+                $data['fallback_messages'] = $fallback_messages;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Delete user data for GDPR compliance
+     *
+     * @param string $session_id Session UUID
+     * @param string $email Optional email to also delete fallback messages
+     * @return bool True if any data was deleted
+     */
+    public function delete_user_data(string $session_id, string $email = ''): bool {
+        global $wpdb;
+
+        $deleted = false;
+
+        // Get session
+        $session = $this->get_session_by_uuid($session_id);
+
+        if ($session) {
+            // Delete messages first (foreign key constraint)
+            $messages_deleted = $wpdb->delete(
+                $wpdb->prefix . self::MESSAGES_TABLE,
+                ['session_uuid' => $session_id],
+                ['%s']
+            );
+
+            if ($messages_deleted !== false && $messages_deleted > 0) {
+                $deleted = true;
+            }
+
+            // Delete session
+            $session_deleted = $wpdb->delete(
+                $wpdb->prefix . self::TABLE_NAME,
+                ['uuid' => $session_id],
+                ['%s']
+            );
+
+            if ($session_deleted !== false && $session_deleted > 0) {
+                $deleted = true;
+            }
+        }
+
+        // Delete fallback messages by email if provided
+        if (!empty($email) && is_email($email)) {
+            $fallback_deleted = $wpdb->delete(
+                $wpdb->prefix . 'n8n_chat_fallback_messages',
+                ['email' => $email],
+                ['%s']
+            );
+
+            if ($fallback_deleted !== false && $fallback_deleted > 0) {
+                $deleted = true;
+            }
+        }
+
+        return $deleted;
+    }
+
+    /**
      * Delete all sessions for an instance
      *
      * @param string $instance_id Instance ID

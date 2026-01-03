@@ -14,6 +14,8 @@ use N8nChat\Core\Instance_Manager;
 use N8nChat\Core\Session_Manager;
 use N8nChat\Core\Context_Builder;
 use N8nChat\Core\File_Handler;
+use N8nChat\Core\Feature_Manager;
+use N8nChat\Core\License_Manager;
 use N8nChat\Frontend\Frontend;
 
 if (!defined('ABSPATH')) {
@@ -197,6 +199,58 @@ class Public_Endpoints {
                 ],
             ],
         ]);
+
+        // Streaming proxy endpoint for SSE responses
+        register_rest_route(self::NAMESPACE, '/stream-proxy', [
+            'methods' => 'POST',
+            'callback' => [$this, 'stream_proxy_to_n8n'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'instance_id' => [
+                    'required' => true,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ],
+            ],
+        ]);
+
+        // GDPR: Export user data
+        register_rest_route(self::NAMESPACE, '/my-data', [
+            'methods' => 'GET',
+            'callback' => [$this, 'export_user_data'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'session_id' => [
+                    'required' => true,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ],
+                'email' => [
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_email',
+                ],
+            ],
+        ]);
+
+        // GDPR: Delete user data
+        register_rest_route(self::NAMESPACE, '/my-data', [
+            'methods' => 'DELETE',
+            'callback' => [$this, 'delete_user_data'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'session_id' => [
+                    'required' => true,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_text_field',
+                ],
+                'email' => [
+                    'required' => false,
+                    'type' => 'string',
+                    'sanitize_callback' => 'sanitize_email',
+                ],
+            ],
+        ]);
     }
 
     /**
@@ -208,6 +262,19 @@ class Public_Endpoints {
     public function init_chat(\WP_REST_Request $request): \WP_REST_Response {
         $instance_id = $request->get_param('instance_id');
         $existing_session_id = $request->get_param('session_id');
+
+        // Rate limiting for new sessions (10 per minute per IP)
+        if (empty($existing_session_id)) {
+            $rate_limit_key = 'n8n_chat_init_' . md5($this->get_client_ip());
+            $rate_count = (int) get_transient($rate_limit_key);
+            if ($rate_count >= 10) {
+                return new \WP_REST_Response([
+                    'error' => 'rate_limited',
+                    'message' => __('Too many requests. Please try again later.', 'n8n-chat'),
+                ], 429);
+            }
+            set_transient($rate_limit_key, $rate_count + 1, 60);
+        }
 
         // Get instance
         $instance = $this->instance_manager->get($instance_id);
@@ -256,13 +323,14 @@ class Public_Endpoints {
             $messages = $this->session_manager->get_messages($session_id);
         }
 
-        // Return config (webhook URL is the key secret!)
+        // Return config (webhook URL is NOT exposed - use proxy instead for security)
         return new \WP_REST_Response([
-            'webhookUrl' => $instance['webhookUrl'],
             'sessionId' => $session_id,
             'config' => $this->get_frontend_config($instance),
             'context' => $context,
             'messages' => $messages,
+            // Indicate that proxy should be used (webhookUrl is kept server-side)
+            'useProxy' => true,
         ]);
     }
 
@@ -285,6 +353,9 @@ class Public_Endpoints {
             }
         }
 
+        // Get appearance settings with defaults
+        $appearance = $instance['appearance'] ?? [];
+
         return [
             'instanceId' => $instance['id'],
             'name' => $instance['name'],
@@ -300,6 +371,48 @@ class Public_Endpoints {
             'avatarUrl' => $instance['avatarUrl'] ?? '',
             'bubble' => $instance['bubble'],
             'autoOpen' => $instance['autoOpen'],
+
+            // Appearance settings (colors, fonts, styling)
+            'appearance' => [
+                'userBubbleColor' => $appearance['userBubbleColor'] ?? '',
+                'botBubbleColor' => $appearance['botBubbleColor'] ?? '',
+                'backgroundColor' => $appearance['backgroundColor'] ?? '',
+                'textColor' => $appearance['textColor'] ?? '',
+                'borderRadius' => $appearance['borderRadius'] ?? 'medium',
+                'fontFamily' => $appearance['fontFamily'] ?? 'system',
+                'fontSize' => $appearance['fontSize'] ?? 'medium',
+                'customCss' => $appearance['customCss'] ?? '',
+            ],
+
+            // Connection settings
+            'connection' => [
+                'streaming' => $instance['connection']['streaming'] ?? true,
+                'timeout' => $instance['connection']['timeout'] ?? 30,
+            ],
+
+            // Messages settings (error messages customization)
+            'messages' => [
+                'showWelcomeScreen' => $instance['messages']['showWelcomeScreen'] ?? true,
+                'errorMessages' => [
+                    'connection' => $instance['messages']['errorMessages']['connection'] ?? __('Unable to connect. Please try again.', 'n8n-chat'),
+                    'timeout' => $instance['messages']['errorMessages']['timeout'] ?? __('Request timed out. Please try again.', 'n8n-chat'),
+                    'rateLimit' => $instance['messages']['errorMessages']['rateLimit'] ?? __('Too many requests. Please wait a moment.', 'n8n-chat'),
+                ],
+            ],
+
+            // Display settings (window dimensions) - supports both 'display' and 'window' keys (MED-003)
+            'display' => [
+                'windowWidth' => $instance['display']['windowWidth'] ?? $instance['window']['width'] ?? 400,
+                'windowHeight' => $instance['display']['windowHeight'] ?? $instance['window']['height'] ?? 600,
+            ],
+
+            // Device targeting
+            'devices' => $instance['devices'] ?? [
+                'desktop' => true,
+                'tablet' => true,
+                'mobile' => true,
+            ],
+
             'features' => [
                 'fileUpload' => $instance['features']['fileUpload'] ?? false,
                 'fileTypes' => $instance['features']['fileTypes'] ?? [],
@@ -322,8 +435,31 @@ class Public_Endpoints {
      * @return \WP_REST_Response
      */
     public function upload_file(\WP_REST_Request $request): \WP_REST_Response {
+        // Check if file upload feature is available
+        $feature_manager = Feature_Manager::get_instance();
+        if (!$feature_manager->has_feature('fileUpload')) {
+            $license_manager = License_Manager::get_instance();
+            return new \WP_REST_Response([
+                'error' => 'feature_locked',
+                'message' => __('File uploads require a Pro license.', 'n8n-chat'),
+                'feature' => 'fileUpload',
+                'upgrade_url' => $license_manager->get_purchase_url('file_upload'),
+            ], 403);
+        }
+
         $instance_id = $request->get_param('instance_id');
         $files = $request->get_file_params();
+
+        // Rate limiting for uploads (20 per minute per IP)
+        $rate_limit_key = 'n8n_chat_upload_' . md5($this->get_client_ip());
+        $rate_count = (int) get_transient($rate_limit_key);
+        if ($rate_count >= 20) {
+            return new \WP_REST_Response([
+                'error' => 'rate_limited',
+                'message' => __('Too many uploads. Please try again later.', 'n8n-chat'),
+            ], 429);
+        }
+        set_transient($rate_limit_key, $rate_count + 1, 60);
 
         if (empty($files['file'])) {
             return new \WP_REST_Response([
@@ -710,12 +846,33 @@ class Public_Endpoints {
         // Make request to n8n webhook
         $webhook_url = $instance['webhookUrl'];
 
+        // Build headers with authentication
+        $headers = [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json, text/event-stream',
+        ];
+
+        // Add authentication header based on auth type (CRIT-003 fix)
+        $auth_type = $instance['connection']['auth'] ?? 'none';
+        if ($auth_type === 'basic') {
+            $username = $instance['connection']['authUsername'] ?? '';
+            $password = $instance['connection']['authPassword'] ?? '';
+            if ($username && $password) {
+                $headers['Authorization'] = 'Basic ' . base64_encode($username . ':' . $password);
+            }
+        } elseif ($auth_type === 'bearer') {
+            $token = $instance['connection']['authToken'] ?? '';
+            if ($token) {
+                $headers['Authorization'] = 'Bearer ' . $token;
+            }
+        }
+
+        // Use configured timeout or default to 30 seconds (HIGH-006 fix)
+        $timeout = $instance['connection']['timeout'] ?? 30;
+
         $response = wp_remote_post($webhook_url, [
-            'timeout' => 120,
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json, text/event-stream',
-            ],
+            'timeout' => $timeout,
+            'headers' => $headers,
             'body' => wp_json_encode($body),
         ]);
 
@@ -749,6 +906,132 @@ class Public_Endpoints {
         return new \WP_REST_Response([
             'output' => $response_body,
         ]);
+    }
+
+    /**
+     * Stream proxy requests to n8n webhook with SSE support
+     *
+     * @param \WP_REST_Request $request Request object
+     * @return \WP_REST_Response|void
+     */
+    public function stream_proxy_to_n8n(\WP_REST_Request $request) {
+        $instance_id = $request->get_param('instance_id');
+
+        // Get instance
+        $instance = $this->instance_manager->get($instance_id);
+
+        if (!$instance) {
+            return new \WP_REST_Response([
+                'error' => 'instance_not_found',
+                'message' => __('Chat instance not found.', 'n8n-chat'),
+            ], 404);
+        }
+
+        // Check if enabled
+        if (empty($instance['isEnabled'])) {
+            return new \WP_REST_Response([
+                'error' => 'instance_disabled',
+                'message' => __('This chat is currently unavailable.', 'n8n-chat'),
+            ], 403);
+        }
+
+        // Check if webhook URL is configured
+        if (empty($instance['webhookUrl'])) {
+            return new \WP_REST_Response([
+                'error' => 'webhook_not_configured',
+                'message' => __('This chat is not properly configured.', 'n8n-chat'),
+            ], 503);
+        }
+
+        // Check access
+        $frontend = new Frontend();
+        if (!$frontend->check_access($instance)) {
+            return new \WP_REST_Response([
+                'error' => 'access_denied',
+                'message' => $frontend->get_access_denied_message($instance),
+            ], 403);
+        }
+
+        // Get request body (excluding instance_id which was for routing)
+        $body = $request->get_json_params();
+        unset($body['instance_id']);
+
+        $webhook_url = $instance['webhookUrl'];
+
+        // Build cURL headers with authentication (CRIT-003 fix)
+        $curl_headers = [
+            'Content-Type: application/json',
+            'Accept: text/event-stream',
+        ];
+
+        // Add authentication header based on auth type
+        $auth_type = $instance['connection']['auth'] ?? 'none';
+        if ($auth_type === 'basic') {
+            $username = $instance['connection']['authUsername'] ?? '';
+            $password = $instance['connection']['authPassword'] ?? '';
+            if ($username && $password) {
+                $curl_headers[] = 'Authorization: Basic ' . base64_encode($username . ':' . $password);
+            }
+        } elseif ($auth_type === 'bearer') {
+            $token = $instance['connection']['authToken'] ?? '';
+            if ($token) {
+                $curl_headers[] = 'Authorization: Bearer ' . $token;
+            }
+        }
+
+        // Use configured timeout or default to 30 seconds (HIGH-006 fix)
+        $timeout = $instance['connection']['timeout'] ?? 30;
+
+        // Disable output buffering for streaming
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        // Set SSE headers
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache');
+        header('Connection: keep-alive');
+        header('X-Accel-Buffering: no'); // Disable nginx buffering
+
+        // Flush headers
+        flush();
+
+        // Use cURL for streaming
+        $ch = curl_init();
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $webhook_url,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => wp_json_encode($body),
+            CURLOPT_HTTPHEADER => $curl_headers,
+            CURLOPT_TIMEOUT => $timeout,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_RETURNTRANSFER => false,
+            CURLOPT_WRITEFUNCTION => function($ch, $data) {
+                echo $data;
+                flush();
+                return strlen($data);
+            },
+            CURLOPT_SSL_VERIFYPEER => apply_filters('n8n_chat_ssl_verify', true),
+        ]);
+
+        $result = curl_exec($ch);
+        $error = curl_error($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        // If cURL failed, send error as SSE
+        if ($result === false || $http_code >= 400) {
+            $error_msg = $error ?: "HTTP error: $http_code";
+            echo "data: " . wp_json_encode(['error' => $error_msg]) . "\n\n";
+            flush();
+        }
+
+        // Send done marker
+        echo "data: [DONE]\n\n";
+        flush();
+
+        // Exit to prevent WordPress from sending additional response
+        exit;
     }
 
     /**
@@ -990,5 +1273,71 @@ class Public_Endpoints {
         }
 
         return $data;
+    }
+
+    /**
+     * Export user data (GDPR compliance)
+     *
+     * @param \WP_REST_Request $request Request object
+     * @return \WP_REST_Response
+     */
+    public function export_user_data(\WP_REST_Request $request): \WP_REST_Response {
+        $session_id = sanitize_text_field($request->get_param('session_id'));
+        $email = sanitize_email($request->get_param('email'));
+
+        $data = $this->session_manager->export_user_data($session_id, $email);
+
+        return new \WP_REST_Response(['success' => true, 'data' => $data]);
+    }
+
+    /**
+     * Delete user data (GDPR compliance)
+     *
+     * @param \WP_REST_Request $request Request object
+     * @return \WP_REST_Response
+     */
+    public function delete_user_data(\WP_REST_Request $request): \WP_REST_Response {
+        $session_id = sanitize_text_field($request->get_param('session_id'));
+        $email = sanitize_email($request->get_param('email'));
+
+        $deleted = $this->session_manager->delete_user_data($session_id, $email);
+
+        return new \WP_REST_Response([
+            'success' => $deleted,
+            'message' => $deleted ? __('Data deleted', 'n8n-chat') : __('No data found', 'n8n-chat'),
+        ]);
+    }
+
+    /**
+     * Get client IP address (handles proxies)
+     *
+     * @return string
+     */
+    private function get_client_ip(): string {
+        $ip = '';
+
+        // Check for proxy headers (in order of preference)
+        $headers = [
+            'HTTP_CF_CONNECTING_IP',     // Cloudflare
+            'HTTP_X_FORWARDED_FOR',      // Standard proxy header
+            'HTTP_X_REAL_IP',            // Nginx
+            'REMOTE_ADDR',               // Direct connection
+        ];
+
+        foreach ($headers as $header) {
+            if (!empty($_SERVER[$header])) {
+                // X-Forwarded-For can contain multiple IPs, take the first one
+                $ip = explode(',', sanitize_text_field(wp_unslash($_SERVER[$header])))[0];
+                $ip = trim($ip);
+
+                // Validate it's a proper IP
+                if (filter_var($ip, FILTER_VALIDATE_IP)) {
+                    break;
+                }
+            }
+        }
+
+        // Fallback to a hash if no valid IP found
+        return $ip ?: 'unknown';
     }
 }

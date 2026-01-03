@@ -7,6 +7,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type { AdminInstance } from '../../types';
 import { useAdminI18n } from '../../hooks/useAdminI18n';
+import { useFeatureFlags } from '../../context/FeatureFlagsContext';
+import { InstanceLimitGate, InstanceCountBadge } from './shared/InstanceLimitGate';
 
 interface InstanceListProps {
   onEdit: (instanceId: string) => void;
@@ -15,6 +17,7 @@ interface InstanceListProps {
 
 export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) => {
   const { t } = useAdminI18n();
+  const { limits, withinLimit } = useFeatureFlags();
   const [instances, setInstances] = useState<AdminInstance[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -153,21 +156,33 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
     );
   }
 
+  // Check if user can add more instances
+  const canAddInstance = withinLimit('maxInstances', instances.length);
+
   return (
     <div className="n8n-chat-instance-list">
       <div className="n8n-chat-instance-header">
-        <h1>{t('chatInstances', 'Chat Instances')}</h1>
-        <button className="button button-primary" onClick={onCreate}>
-          {t('addNewInstance', 'Add New Instance')}
-        </button>
+        <div className="n8n-chat-instance-header-left">
+          <h1>{t('chatInstances', 'Chat Instances')}</h1>
+          <InstanceCountBadge currentCount={instances.length} />
+        </div>
+        <InstanceLimitGate
+          currentCount={instances.length}
+          onAdd={onCreate}
+          buttonText={t('addNewInstance', 'Add New Instance')}
+          showCount={false}
+        />
       </div>
 
       {instances.length === 0 ? (
         <div className="n8n-chat-empty-state">
           <p>{t('noInstancesYet', 'No chat instances yet.')}</p>
-          <button className="button button-primary" onClick={onCreate}>
-            {t('createFirstInstance', 'Create Your First Instance')}
-          </button>
+          <InstanceLimitGate
+            currentCount={0}
+            onAdd={onCreate}
+            buttonText={t('createFirstInstance', 'Create Your First Instance')}
+            showCount={false}
+          />
         </div>
       ) : (
         <table className="wp-list-table widefat fixed striped">
@@ -230,6 +245,8 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onEdit, onCreate }) 
                     <button
                       className="button button-small"
                       onClick={() => handleDuplicate(instance.id)}
+                      disabled={!canAddInstance}
+                      title={!canAddInstance ? 'Instance limit reached' : t('duplicate', 'Duplicate')}
                     >
                       {t('duplicate', 'Duplicate')}
                     </button>

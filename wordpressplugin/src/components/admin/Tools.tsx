@@ -5,6 +5,9 @@
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import { useFeatureFlags } from '../../context/FeatureFlagsContext';
+import { PremiumFeature } from './shared/PremiumFeature';
+import { ProBadge } from './shared/ProBadge';
 
 type ToolsTabId = 'import-export' | 'debug' | 'system';
 
@@ -24,6 +27,7 @@ interface SystemInfo {
 }
 
 export const Tools: React.FC = () => {
+  const { hasFeature } = useFeatureFlags();
   const [activeTab, setActiveTab] = useState<ToolsTabId>('import-export');
   const [importing, setImporting] = useState(false);
   const [exporting, setExporting] = useState(false);
@@ -37,6 +41,9 @@ export const Tools: React.FC = () => {
   const [webhookResult, setWebhookResult] = useState<{ success: boolean; message: string } | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Premium feature check
+  const hasExportData = hasFeature('exportData');
 
   useEffect(() => {
     if (activeTab === 'system') {
@@ -300,48 +307,53 @@ ${systemInfo.active_plugins.join('\n')}
 
   const renderImportExportTab = () => (
     <div className="n8n-chat-tools-section">
-      <h2>Export</h2>
+      <h2>
+        Export
+        {!hasExportData && <ProBadge variant="inline" />}
+      </h2>
       <p className="n8n-chat-tools-description">
         Export your n8n Chat configuration to a JSON file for backup or migration.
       </p>
 
-      <div className="n8n-chat-export-options">
-        <div className="n8n-chat-export-option">
-          <h4>Export All</h4>
-          <p>Includes all instances, settings, and templates.</p>
-          <button
-            className="button button-primary"
-            onClick={handleExportAll}
-            disabled={exporting}
-          >
-            {exporting ? 'Exporting...' : 'Export Everything'}
-          </button>
-        </div>
+      <PremiumFeature feature="exportData" featureName="Data Export">
+        <div className="n8n-chat-export-options">
+          <div className="n8n-chat-export-option">
+            <h4>Export All</h4>
+            <p>Includes all instances, settings, and templates.</p>
+            <button
+              className="button button-primary"
+              onClick={handleExportAll}
+              disabled={exporting || !hasExportData}
+            >
+              {exporting ? 'Exporting...' : 'Export Everything'}
+            </button>
+          </div>
 
-        <div className="n8n-chat-export-option">
-          <h4>Export Instances Only</h4>
-          <p>Export all chat bot configurations.</p>
-          <button
-            className="button"
-            onClick={handleExportInstances}
-            disabled={exporting}
-          >
-            Export Instances
-          </button>
-        </div>
+          <div className="n8n-chat-export-option">
+            <h4>Export Instances Only</h4>
+            <p>Export all chat bot configurations.</p>
+            <button
+              className="button"
+              onClick={handleExportInstances}
+              disabled={exporting || !hasExportData}
+            >
+              Export Instances
+            </button>
+          </div>
 
-        <div className="n8n-chat-export-option">
-          <h4>Export Settings Only</h4>
-          <p>Export global plugin settings.</p>
-          <button
-            className="button"
-            onClick={handleExportSettings}
-            disabled={exporting}
-          >
-            Export Settings
-          </button>
+          <div className="n8n-chat-export-option">
+            <h4>Export Settings Only</h4>
+            <p>Export global plugin settings.</p>
+            <button
+              className="button"
+              onClick={handleExportSettings}
+              disabled={exporting || !hasExportData}
+            >
+              Export Settings
+            </button>
+          </div>
         </div>
-      </div>
+      </PremiumFeature>
 
       <hr />
 

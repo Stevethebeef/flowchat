@@ -21,7 +21,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({
   avatarUrl,
 }) => {
   return (
-    <ThreadPrimitive.Root className="n8n-chat-messages">
+    <ThreadPrimitive.Root className="n8n-chat-messages" aria-live="polite" role="log">
       <ThreadPrimitive.Viewport className="n8n-chat-messages-viewport">
         {/* Welcome message */}
         {welcomeMessage && (

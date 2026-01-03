@@ -11,6 +11,16 @@ import type {
   ChatModelRunResult,
 } from '@assistant-ui/react';
 
+/**
+ * Custom error messages configuration
+ */
+interface ErrorMessages {
+  connection?: string;
+  timeout?: string;
+  rateLimit?: string;
+  generic?: string;
+}
+
 interface N8nConfig {
   webhookUrl: string;
   sessionId: string;
@@ -19,6 +29,13 @@ interface N8nConfig {
   // Proxy configuration (for CORS bypass)
   proxyUrl?: string;
   instanceId?: string;
+  // Enable streaming via proxy
+  streaming?: boolean;
+  // Custom key names for n8n Chat Trigger compatibility
+  chatInputKey?: string;
+  sessionKey?: string;
+  // Custom error messages
+  errorMessages?: ErrorMessages;
 }
 
 interface FileAttachment {
@@ -56,12 +73,47 @@ export class N8nRuntimeAdapter implements ChatModelAdapter {
   }
 
   /**
+   * Get custom error message based on error type
+   */
+  private getErrorMessage(error: Error, statusCode?: number): string {
+    const errorMessages = this.config.errorMessages || {};
+
+    // Check for rate limit error
+    if (statusCode === 429) {
+      return errorMessages.rateLimit || 'Rate limit exceeded. Please wait a moment before trying again.';
+    }
+
+    // Check for timeout error
+    if (error.name === 'TimeoutError' || error.message.includes('timeout')) {
+      return errorMessages.timeout || 'Request timed out. Please try again.';
+    }
+
+    // Check for connection error
+    if (error.name === 'TypeError' && error.message.includes('fetch')) {
+      return errorMessages.connection || 'Unable to connect. Please check your connection and try again.';
+    }
+
+    // Generic error message
+    return errorMessages.generic || error.message || 'An error occurred. Please try again.';
+  }
+
+  /**
    * Run the chat model - sends message to n8n and handles streaming response
    */
   async *run(options: ChatModelRunOptions): AsyncGenerator<ChatModelRunResult> {
     // Determine which URL to use (proxy or direct webhook)
     const useProxy = this.config.proxyUrl && this.config.instanceId;
-    const targetUrl = useProxy ? this.config.proxyUrl : this.config.webhookUrl;
+    // Streaming is enabled by default, can be disabled via config
+    const useStreaming = this.config.streaming !== false && useProxy;
+
+    // Use streaming proxy endpoint if streaming is enabled
+    let targetUrl: string;
+    if (useProxy) {
+      const baseUrl = this.config.proxyUrl!.replace(/\/proxy$/, '');
+      targetUrl = useStreaming ? `${baseUrl}/stream-proxy` : this.config.proxyUrl!;
+    } else {
+      targetUrl = this.config.webhookUrl;
+    }
 
     // Validate URL before attempting to fetch
     if (!targetUrl || targetUrl.trim() === '') {
@@ -82,12 +134,35 @@ export class N8nRuntimeAdapter implements ChatModelAdapter {
       .map((c) => c.text)
       .join('') || '';
 
+    // Extract file attachments from the last user message
+    const attachments: FileAttachment[] = lastUserMessage?.content
+      .filter(
+        (c): c is { type: 'image' | 'file'; url: string; filename?: string; mimeType?: string } =>
+          c.type === 'image' || c.type === 'file'
+      )
+      .map((c) => ({
+        type: c.type as 'image' | 'file',
+        url: (c as { url: string }).url,
+        filename: (c as { filename?: string }).filename || 'attachment',
+        mimeType: (c as { mimeType?: string }).mimeType || 'application/octet-stream',
+      })) || [];
+
+    // Use custom key names or defaults
+    const chatInputKey = this.config.chatInputKey || 'chatInput';
+    const sessionKey = this.config.sessionKey || 'sessionId';
+
+    // Build request body with dynamic keys
     const requestBody: Record<string, unknown> = {
       action: 'sendMessage',
-      sessionId: this.config.sessionId,
-      chatInput: chatInput,
+      [sessionKey]: this.config.sessionId,
+      [chatInputKey]: chatInput,
       context: this.config.context,
     };
+
+    // Include attachments if any files were uploaded
+    if (attachments.length > 0) {
+      requestBody.attachments = attachments;
+    }
 
     // Add instance_id when using proxy
     if (useProxy) {
@@ -99,7 +174,8 @@ export class N8nRuntimeAdapter implements ChatModelAdapter {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': useProxy ? 'application/json' : 'text/event-stream',
+          // Request SSE when streaming is enabled (either direct or via streaming proxy)
+          'Accept': useStreaming || !useProxy ? 'text/event-stream' : 'application/json',
         },
         body: JSON.stringify(requestBody),
         signal: this.abortController.signal,
@@ -107,7 +183,11 @@ export class N8nRuntimeAdapter implements ChatModelAdapter {
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`HTTP ${response.status}: ${errorText}`);
+        const error = new Error(`HTTP ${response.status}: ${errorText}`);
+        const customMessage = this.getErrorMessage(error, response.status);
+        const customError = new Error(customMessage);
+        this.config.onError?.(customError);
+        throw customError;
       }
 
       const contentType = response.headers.get('content-type') || '';
@@ -128,8 +208,11 @@ export class N8nRuntimeAdapter implements ChatModelAdapter {
         return;
       }
 
-      this.config.onError?.(error instanceof Error ? error : new Error(String(error)));
-      throw error;
+      // Use custom error message if available
+      const customMessage = this.getErrorMessage(error instanceof Error ? error : new Error(String(error)));
+      const customError = new Error(customMessage);
+      this.config.onError?.(customError);
+      throw customError;
     }
   }
 

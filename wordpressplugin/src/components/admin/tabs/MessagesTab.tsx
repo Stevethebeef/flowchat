@@ -8,6 +8,9 @@ import React, { useState } from 'react';
 import type { AdminInstance } from '../../../types';
 import { useAdminI18n } from '../../../hooks/useAdminI18n';
 import { InfoIcon } from '../shared/InfoIcon';
+import { useFeatureFlags } from '../../../context/FeatureFlagsContext';
+import { PremiumFeature } from '../shared/PremiumFeature';
+import { ProBadge } from '../shared/ProBadge';
 
 /**
  * Format bytes to human-readable file size
@@ -28,10 +31,15 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
   updateField,
 }) => {
   const { t } = useAdminI18n();
+  const { hasFeature } = useFeatureFlags();
   const [showErrorMessages, setShowErrorMessages] = useState(false);
 
   const messages = instance.messages || {};
   const suggestedPrompts = instance.suggestedPrompts || [];
+
+  // Premium feature checks
+  const hasFileUpload = hasFeature('fileUpload');
+  const hasVoiceInput = hasFeature('voiceInput');
 
   const handleSuggestionChange = (index: number, value: string) => {
     const newPrompts = [...suggestedPrompts];
@@ -223,38 +231,50 @@ export const MessagesTab: React.FC<MessagesTabProps> = ({
         <h2 className="n8n-chat-section-title">{t('inputFeatures', 'Input Features')}</h2>
 
         {/* Voice Input */}
-        <div className="n8n-chat-field">
-          <label className="n8n-chat-checkbox">
-            <input
-              type="checkbox"
-              checked={instance.features?.voiceInput !== false}
-              onChange={(e) => updateField('features.voiceInput', e.target.checked)}
-            />
-            <span>{t('enableVoiceInput', 'Enable voice input')}</span>
-            <InfoIcon tooltip={t('tooltipVoiceInput', 'Uses Web Speech API. Supported in Chrome, Edge, and Safari. Firefox has limited support.')} />
-          </label>
-          <p className="description">
-            {t('voiceInputDesc', 'Allow users to dictate messages using their microphone.')}
-          </p>
-        </div>
+        <PremiumFeature feature="voiceInput" featureName="Voice Input" mode="disabled">
+          <div className="n8n-chat-field">
+            <label className="n8n-chat-checkbox">
+              <input
+                type="checkbox"
+                checked={instance.features?.voiceInput !== false}
+                onChange={(e) => hasVoiceInput && updateField('features.voiceInput', e.target.checked)}
+                disabled={!hasVoiceInput}
+              />
+              <span>
+                {t('enableVoiceInput', 'Enable voice input')}
+                {!hasVoiceInput && <ProBadge variant="inline" />}
+              </span>
+              <InfoIcon tooltip={t('tooltipVoiceInput', 'Uses Web Speech API. Supported in Chrome, Edge, and Safari. Firefox has limited support.')} />
+            </label>
+            <p className="description">
+              {t('voiceInputDesc', 'Allow users to dictate messages using their microphone.')}
+            </p>
+          </div>
+        </PremiumFeature>
 
         {/* File Upload */}
-        <div className="n8n-chat-field">
-          <label className="n8n-chat-checkbox">
-            <input
-              type="checkbox"
-              checked={instance.features?.fileUpload || false}
-              onChange={(e) => updateField('features.fileUpload', e.target.checked)}
-            />
-            <span>{t('enableFileUploads', 'Enable file uploads')}</span>
-            <InfoIcon tooltip={t('tooltipFileUpload', 'Files are uploaded to wp-content/uploads/n8n-chat/temp/ and auto-deleted after 24 hours.')} />
-          </label>
-          <p className="description">
-            {t('fileUploadsDesc', 'Allow users to attach files and images to their messages.')}
-          </p>
-        </div>
+        <PremiumFeature feature="fileUpload" featureName="File Uploads" mode="disabled">
+          <div className="n8n-chat-field">
+            <label className="n8n-chat-checkbox">
+              <input
+                type="checkbox"
+                checked={instance.features?.fileUpload || false}
+                onChange={(e) => hasFileUpload && updateField('features.fileUpload', e.target.checked)}
+                disabled={!hasFileUpload}
+              />
+              <span>
+                {t('enableFileUploads', 'Enable file uploads')}
+                {!hasFileUpload && <ProBadge variant="inline" />}
+              </span>
+              <InfoIcon tooltip={t('tooltipFileUpload', 'Files are uploaded to wp-content/uploads/n8n-chat/temp/ and auto-deleted after 24 hours.')} />
+            </label>
+            <p className="description">
+              {t('fileUploadsDesc', 'Allow users to attach files and images to their messages.')}
+            </p>
+          </div>
+        </PremiumFeature>
 
-        {instance.features?.fileUpload && (
+        {instance.features?.fileUpload && hasFileUpload && (
           <div className="n8n-chat-subsection">
             {/* Allowed File Types */}
             <div className="n8n-chat-field">

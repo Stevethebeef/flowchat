@@ -5,7 +5,7 @@
  */
 
 import React from 'react';
-import { MessagePrimitive } from '@assistant-ui/react';
+import { MessagePrimitive, useMessage } from '@assistant-ui/react';
 
 interface ChatMessageProps {
   role: 'user' | 'assistant';
@@ -59,9 +59,6 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
       {/* Actions for assistant messages */}
       {!isUser && (
         <div className="n8n-chat-message-actions">
-          <MessagePrimitive.If hasBranches>
-            <BranchNav />
-          </MessagePrimitive.If>
           <CopyButton />
         </div>
       )}
@@ -101,19 +98,28 @@ const AssistantAvatar: React.FC<AssistantAvatarProps> = ({ url }) => {
     );
   }
 
+  // Default to N8.Chat branded icon - orange rounded box with "N8" text
   return (
-    <div className="n8n-chat-avatar n8n-chat-avatar-assistant">
+    <div className="n8n-chat-avatar n8n-chat-avatar-assistant n8n-chat-avatar-n8">
       <svg
         width="20"
         height="20"
-        viewBox="0 0 20 20"
-        fill="currentColor"
+        viewBox="0 0 512 512"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        <path
-          fillRule="evenodd"
-          d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1-9a1 1 0 112 0v4a1 1 0 11-2 0V9zm1-4a1 1 0 100 2 1 1 0 000-2z"
-          clipRule="evenodd"
-        />
+        <rect x="32" y="32" width="448" height="448" rx="80" fill="#FF6B2C" />
+        <text
+          x="256"
+          y="310"
+          fontFamily="system-ui, -apple-system, sans-serif"
+          fontSize="200"
+          fontWeight="700"
+          fill="white"
+          textAnchor="middle"
+        >
+          N8
+        </text>
       </svg>
     </div>
   );
@@ -157,33 +163,28 @@ const MessageImage: React.FC<MessageImageProps> = ({ image }) => {
  * Message timestamp
  */
 const MessageTimestamp: React.FC = () => {
-  // Note: @assistant-ui/react doesn't provide timestamp out of the box
-  // This would need to be implemented based on your message structure
-  const now = new Date();
-  const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const message = useMessage();
+  // Use message createdAt if available, otherwise fallback to current time
+  const timestamp = message.createdAt ? new Date(message.createdAt) : new Date();
+  const time = timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
   return <span>{time}</span>;
 };
 
 /**
- * Branch navigation for message alternatives
- * Note: BranchPicker may not be available in all versions of @assistant-ui/react
- */
-const BranchNav: React.FC = () => {
-  // BranchPicker removed - not available in current version
-  return null;
-};
-
-/**
- * Copy button
+ * Copy button - uses useMessage hook to get correct message content
  */
 const CopyButton: React.FC = () => {
+  const message = useMessage();
+
   const handleCopy = () => {
-    // Find the parent message content and copy it
-    const messageEl = document.querySelector('.n8n-chat-message-text');
-    if (messageEl) {
-      navigator.clipboard.writeText(messageEl.textContent || '');
-    }
+    // Extract text content from the message content array
+    const textContent = message.content
+      .filter((c): c is { type: 'text'; text: string } => c.type === 'text')
+      .map((c) => c.text)
+      .join('\n');
+
+    navigator.clipboard.writeText(textContent);
   };
 
   return (
@@ -199,18 +200,6 @@ const CopyButton: React.FC = () => {
 };
 
 // Icons
-const ChevronLeftIcon: React.FC = () => (
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
-    <polyline points="8 10 4 6 8 2" />
-  </svg>
-);
-
-const ChevronRightIcon: React.FC = () => (
-  <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="2">
-    <polyline points="4 2 8 6 4 10" />
-  </svg>
-);
-
 const CopyIcon: React.FC = () => (
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5">
     <rect x="4" y="4" width="8" height="8" rx="1" />

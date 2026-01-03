@@ -8,6 +8,9 @@ import React, { useState } from 'react';
 import type { AdminInstance } from '../../../types';
 import { useAdminI18n } from '../../../hooks/useAdminI18n';
 import { InfoIcon } from '../shared/InfoIcon';
+import { useFeatureFlags } from '../../../context/FeatureFlagsContext';
+import { PremiumFeature } from '../shared/PremiumFeature';
+import { ProBadge } from '../shared/ProBadge';
 
 interface RulesTabProps {
   instance: Partial<AdminInstance>;
@@ -64,13 +67,17 @@ export const RulesTab: React.FC<RulesTabProps> = ({
   updateField,
 }) => {
   const { t } = useAdminI18n();
-  const [showProBadge] = useState(true); // For future pro features
+  const { hasFeature } = useFeatureFlags();
 
   const targeting = instance.targeting || {};
   const access = instance.access || {};
   const schedule = instance.schedule || {};
   const devices = instance.devices || { desktop: true, tablet: true, mobile: true };
   const rules = targeting.rules || [];
+
+  // Premium feature checks
+  const hasAdvancedTargeting = hasFeature('advancedTargeting');
+  const hasSchedule = hasFeature('schedule');
 
   const addRule = () => {
     const newRule: TargetingRule = {
@@ -112,25 +119,27 @@ export const RulesTab: React.FC<RulesTabProps> = ({
   return (
     <div className="n8n-chat-tab-content">
       {/* Page Targeting */}
-      <div className="n8n-chat-section">
-        <h2 className="n8n-chat-section-title">
-          {t('pageTargeting', 'Page Targeting')}
-          {showProBadge && <span className="n8n-chat-pro-badge">PRO</span>}
-        </h2>
+      <PremiumFeature feature="advancedTargeting" featureName="Advanced Page Targeting">
+        <div className="n8n-chat-section">
+          <h2 className="n8n-chat-section-title">
+            {t('pageTargeting', 'Page Targeting')}
+            {!hasAdvancedTargeting && <ProBadge variant="inline" />}
+          </h2>
 
-        <div className="n8n-chat-field">
-          <label className="n8n-chat-checkbox">
-            <input
-              type="checkbox"
-              checked={targeting.enabled || false}
-              onChange={(e) => updateField('targeting.enabled', e.target.checked)}
-            />
-            <span>{t('enablePageTargeting', 'Enable page targeting rules')}</span>
-          </label>
-          <p className="description">
-            {t('pageTargetingDesc', 'Show this chat only on specific pages or sections of your site.')}
-          </p>
-        </div>
+          <div className="n8n-chat-field">
+            <label className="n8n-chat-checkbox">
+              <input
+                type="checkbox"
+                checked={targeting.enabled || false}
+                onChange={(e) => hasAdvancedTargeting && updateField('targeting.enabled', e.target.checked)}
+                disabled={!hasAdvancedTargeting}
+              />
+              <span>{t('enablePageTargeting', 'Enable page targeting rules')}</span>
+            </label>
+            <p className="description">
+              {t('pageTargetingDesc', 'Show this chat only on specific pages or sections of your site.')}
+            </p>
+          </div>
 
         {targeting.enabled && (
           <>
@@ -253,7 +262,8 @@ export const RulesTab: React.FC<RulesTabProps> = ({
             </div>
           </>
         )}
-      </div>
+        </div>
+      </PremiumFeature>
 
       {/* User Access */}
       <div className="n8n-chat-section">
@@ -349,25 +359,27 @@ export const RulesTab: React.FC<RulesTabProps> = ({
       </div>
 
       {/* Schedule */}
-      <div className="n8n-chat-section">
-        <h2 className="n8n-chat-section-title">
-          {t('schedule', 'Schedule')}
-          {showProBadge && <span className="n8n-chat-pro-badge">PRO</span>}
-        </h2>
+      <PremiumFeature feature="schedule" featureName="Schedule Rules">
+        <div className="n8n-chat-section">
+          <h2 className="n8n-chat-section-title">
+            {t('schedule', 'Schedule')}
+            {!hasSchedule && <ProBadge variant="inline" />}
+          </h2>
 
-        <div className="n8n-chat-field">
-          <label className="n8n-chat-checkbox">
-            <input
-              type="checkbox"
-              checked={schedule.enabled || false}
-              onChange={(e) => updateField('schedule.enabled', e.target.checked)}
-            />
-            <span>{t('enableSchedule', 'Enable scheduled availability')}</span>
-          </label>
-          <p className="description">
-            {t('scheduleDesc', 'Only show the chat during specific hours/days.')}
-          </p>
-        </div>
+          <div className="n8n-chat-field">
+            <label className="n8n-chat-checkbox">
+              <input
+                type="checkbox"
+                checked={schedule.enabled || false}
+                onChange={(e) => hasSchedule && updateField('schedule.enabled', e.target.checked)}
+                disabled={!hasSchedule}
+              />
+              <span>{t('enableSchedule', 'Enable scheduled availability')}</span>
+            </label>
+            <p className="description">
+              {t('scheduleDesc', 'Only show the chat during specific hours/days.')}
+            </p>
+          </div>
 
         {schedule.enabled && (
           <>
@@ -444,7 +456,8 @@ export const RulesTab: React.FC<RulesTabProps> = ({
             </div>
           </>
         )}
-      </div>
+        </div>
+      </PremiumFeature>
     </div>
   );
 };

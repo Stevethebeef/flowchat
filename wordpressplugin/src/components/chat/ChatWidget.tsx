@@ -4,7 +4,7 @@
  * Main chat widget component that integrates with @assistant-ui/react.
  */
 
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import {
   AssistantRuntimeProvider,
   useLocalRuntime,
@@ -15,7 +15,10 @@ import { N8nChatProvider } from '../../context/N8nChatContext';
 import { ChatHeader } from './ChatHeader';
 import { ChatMessages } from './ChatMessages';
 import { ChatInput } from './ChatInput';
+import { ConnectionStatus } from './ConnectionStatus';
 import type { ChatWidgetProps } from '../../types';
+
+type ConnectionState = 'connected' | 'connecting' | 'disconnected' | 'error';
 
 export const ChatWidget: React.FC<ChatWidgetProps> = ({
   webhookUrl,
@@ -26,6 +29,21 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
   isPreview = false,
   onClose,
 }) => {
+  // Connection status state
+  const [connectionStatus, setConnectionStatus] = useState<ConnectionState>('connected');
+  const [connectionMessage, setConnectionMessage] = useState<string | undefined>();
+
+  // Handle connection retry
+  const handleRetry = useCallback(() => {
+    setConnectionStatus('connecting');
+    setConnectionMessage('Retrying connection...');
+    // The adapter will retry on next message send
+    setTimeout(() => {
+      setConnectionStatus('connected');
+      setConnectionMessage(undefined);
+    }, 1000);
+  }, []);
+
   // Create adapter instance with proxy support for CORS bypass
   const adapter = useMemo(
     () =>
@@ -38,6 +56,17 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
         instanceId: config.instanceId,
         onError: (error) => {
           console.error('n8n Chat error:', error);
+          // Update connection status on error
+          if (error.message.includes('fetch') || error.message.includes('connect')) {
+            setConnectionStatus('disconnected');
+            setConnectionMessage('Connection lost');
+          } else if (error.message.includes('timeout')) {
+            setConnectionStatus('error');
+            setConnectionMessage('Request timed out');
+          } else {
+            setConnectionStatus('error');
+            setConnectionMessage(error.message);
+          }
         },
       }),
     [webhookUrl, sessionId, context, apiUrl, config.instanceId]
@@ -86,6 +115,12 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
           {config.showHeader && (
             <ChatHeader title={config.chatTitle} onClose={onClose} />
           )}
+
+          <ConnectionStatus
+            state={connectionStatus}
+            message={connectionMessage}
+            onRetry={handleRetry}
+          />
 
           <ChatMessages
             welcomeMessage={config.welcomeMessage}

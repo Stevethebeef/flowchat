@@ -13,6 +13,8 @@ use N8nChat\Core\Instance_Manager;
 use N8nChat\Core\Session_Manager;
 use N8nChat\Core\Context_Builder;
 use N8nChat\Core\File_Handler;
+use N8nChat\Core\License_Manager;
+use N8nChat\Core\Feature_Manager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -340,6 +342,12 @@ class Admin_Endpoints {
             ], 400);
         }
 
+        // Check instance limit based on license
+        $limit_check = $this->check_instance_limit();
+        if ($limit_check !== true) {
+            return $limit_check;
+        }
+
         $id = $this->instance_manager->create_instance($data);
         $instance = $this->instance_manager->get($id);
 
@@ -420,6 +428,12 @@ class Admin_Endpoints {
     public function duplicate_instance(\WP_REST_Request $request): \WP_REST_Response {
         $id = $request->get_param('id');
 
+        // Check instance limit based on license
+        $limit_check = $this->check_instance_limit();
+        if ($limit_check !== true) {
+            return $limit_check;
+        }
+
         $new_id = $this->instance_manager->duplicate_instance($id);
 
         if (!$new_id) {
@@ -432,6 +446,37 @@ class Admin_Endpoints {
         $instance = $this->instance_manager->get($new_id);
 
         return new \WP_REST_Response($instance, 201);
+    }
+
+    /**
+     * Check if user can create more instances based on license
+     *
+     * @return true|\WP_REST_Response True if allowed, error response if not
+     */
+    private function check_instance_limit() {
+        $license_manager = License_Manager::get_instance();
+        $is_premium = $license_manager->is_premium();
+
+        // Pro users have unlimited instances
+        if ($is_premium) {
+            return true;
+        }
+
+        // Free tier: 1 instance limit
+        $max_instances = 1;
+        $current_count = count($this->instance_manager->get_all_instances());
+
+        if ($current_count >= $max_instances) {
+            return new \WP_REST_Response([
+                'error' => 'instance_limit_reached',
+                'message' => __('Instance limit reached. The Free plan allows 1 instance. Upgrade to Pro for unlimited instances.', 'n8n-chat'),
+                'limit' => $max_instances,
+                'current' => $current_count,
+                'upgrade_url' => $license_manager->get_purchase_url('instance_limit'),
+            ], 403);
+        }
+
+        return true;
     }
 
     /**
@@ -466,6 +511,48 @@ class Admin_Endpoints {
      */
     public function test_webhook_url(\WP_REST_Request $request): \WP_REST_Response {
         $url = $request->get_param('url');
+
+        // HIGH-003: SSRF vulnerability fix - validate URL scheme and check for private IPs
+        $parsed_url = wp_parse_url($url);
+
+        // Check URL scheme is http or https only
+        if (empty($parsed_url['scheme']) || !in_array(strtolower($parsed_url['scheme']), ['http', 'https'], true)) {
+            return new \WP_REST_Response([
+                'success' => false,
+                'error' => 'invalid_scheme',
+                'message' => __('Only HTTP and HTTPS URLs are allowed.', 'n8n-chat'),
+            ], 400);
+        }
+
+        // Resolve hostname to IP and check for private IP ranges
+        if (!empty($parsed_url['host'])) {
+            $host = $parsed_url['host'];
+
+            // Check if host is already an IP address
+            if (filter_var($host, FILTER_VALIDATE_IP)) {
+                $ip = $host;
+            } else {
+                // Resolve hostname to IP
+                $ip = gethostbyname($host);
+                // gethostbyname returns the hostname if resolution fails
+                if ($ip === $host) {
+                    return new \WP_REST_Response([
+                        'success' => false,
+                        'error' => 'dns_resolution_failed',
+                        'message' => __('Could not resolve hostname.', 'n8n-chat'),
+                    ], 400);
+                }
+            }
+
+            // Check if IP is in private or reserved range (SSRF protection)
+            if (!filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                return new \WP_REST_Response([
+                    'success' => false,
+                    'error' => 'private_ip_blocked',
+                    'message' => __('Webhook URLs pointing to private or reserved IP addresses are not allowed.', 'n8n-chat'),
+                ], 400);
+            }
+        }
 
         $result = $this->instance_manager->test_webhook($url);
 
@@ -726,6 +813,18 @@ class Admin_Endpoints {
      * @return \WP_REST_Response
      */
     public function export_data(\WP_REST_Request $request): \WP_REST_Response {
+        // Check if user has export feature
+        $feature_manager = Feature_Manager::get_instance();
+        if (!$feature_manager->has_feature('exportData')) {
+            $license_manager = License_Manager::get_instance();
+            return new \WP_REST_Response([
+                'error' => 'feature_locked',
+                'message' => __('Data export is a Pro feature. Upgrade to access this functionality.', 'n8n-chat'),
+                'feature' => 'exportData',
+                'upgrade_url' => $license_manager->get_purchase_url('export_data'),
+            ], 403);
+        }
+
         $type = $request->get_param('type') ?? 'all';
 
         $export = [

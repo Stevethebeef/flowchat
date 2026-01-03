@@ -73,7 +73,8 @@ export interface ChatWidgetProps {
 const ChatWidgetInner: React.FC<{
   config: ChatConfig;
   onClose?: () => void;
-}> = ({ config, onClose }) => {
+  apiUrl?: string;
+}> = ({ config, onClose, apiUrl }) => {
   return (
     <div className="fc-flex fc-flex-col fc-h-full fc-overflow-hidden">
       {config.showHeader && (
@@ -86,7 +87,13 @@ const ChatWidgetInner: React.FC<{
       <Thread
         welcomeMessage={config.welcomeMessage}
         placeholder={config.placeholderText}
-        showVoiceInput={true}
+        showVoiceInput={config.features?.voiceInput !== false}
+        primaryColor={config.primaryColor}
+        fileUpload={config.features?.fileUpload}
+        fileTypes={config.features?.fileTypes}
+        maxFileSize={config.features?.maxFileSize}
+        apiUrl={apiUrl}
+        instanceId={config.instanceId}
       />
     </div>
   );
@@ -138,7 +145,7 @@ export const ChatWidget: React.FC<ChatWidgetProps> = ({
       data-preview={isPreview}
     >
       <AssistantRuntimeProvider runtime={runtime}>
-        <ChatWidgetInner config={config} onClose={onClose} />
+        <ChatWidgetInner config={config} onClose={onClose} apiUrl={apiUrl} />
       </AssistantRuntimeProvider>
     </div>
   );

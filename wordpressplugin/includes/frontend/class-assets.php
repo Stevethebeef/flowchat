@@ -151,6 +151,9 @@ class Assets {
         // Get runtime configuration
         $_cfg = $this->_get_cfg();
 
+        // Get license data for frontend
+        $license_data = $this->_get_license_data();
+
         // Localize admin script
         wp_localize_script('n8n-chat-admin', 'n8nChatAdmin', [
             'apiUrl' => rest_url('n8n-chat/v1/admin'),
@@ -164,7 +167,140 @@ class Assets {
             ],
             'i18n' => $this->get_admin_i18n(),
             '_rt' => $_cfg, // Runtime config
+            'license' => $license_data, // License/feature gating data
         ]);
+    }
+
+    /**
+     * Get license data for frontend feature gating
+     *
+     * @return array License data structure for React FeatureFlagsContext
+     */
+    private function _get_license_data(): array {
+        // Get license manager
+        $lm = \N8nChat\Core\License_Manager::get_instance();
+        $fm = \N8nChat\Core\Feature_Manager::get_instance();
+
+        $is_premium = $lm->is_premium();
+        $is_grace = $lm->is_in_grace();
+        $days_left = $lm->get_grace_days_left();
+        $status = $lm->get_status();
+
+        // Determine tier based on license status
+        // For now, we use a simple model: inactive = free, active/grace = pro
+        // Enterprise tier would come from license data in future
+        $tier = 'free';
+        if ($is_premium) {
+            $tier = 'pro';
+            // Check for enterprise tier from license data
+            $license = $lm->get_license();
+            if (!empty($license['tier']) && $license['tier'] === 'enterprise') {
+                $tier = 'enterprise';
+            }
+        }
+
+        // Define feature flags based on tier
+        $features = $this->_get_tier_features($tier);
+
+        // Define limits based on tier
+        $limits = $this->_get_tier_limits($tier);
+
+        // Build upgrade URL with UTM params
+        $upgrade_url = $lm->get_purchase_url('plugin_upgrade');
+
+        return [
+            'tier' => $tier,
+            'isPremium' => $is_premium,
+            'isGrace' => $is_grace,
+            'daysLeft' => $days_left,
+            'status' => $status,
+            'features' => $features,
+            'limits' => $limits,
+            'upgradeUrl' => $upgrade_url,
+        ];
+    }
+
+    /**
+     * Get feature flags for a specific tier
+     *
+     * @param string $tier License tier (free, pro)
+     * @return array Feature flags
+     */
+    private function _get_tier_features(string $tier): array {
+        // Free tier features - bubble mode is FREE
+        $free = [
+            'multiInstance' => false,
+            'bubble' => true, // Bubble mode is FREE
+            'history' => false,
+            'analytics' => false,
+            'whiteLabel' => false,
+            'fileUpload' => false,
+            'voiceInput' => false,
+            'customTemplates' => false,
+            'apiAccess' => true, // Basic API is free
+            'advancedTargeting' => false,
+            'customCss' => false,
+            'prioritySupport' => false,
+            'autoOpen' => false,
+            'schedule' => false,
+            'exportData' => false,
+        ];
+
+        // Pro tier features - all features enabled
+        $pro = [
+            'multiInstance' => true,
+            'bubble' => true,
+            'history' => true,
+            'analytics' => true,
+            'whiteLabel' => true, // Pro includes white label
+            'fileUpload' => true,
+            'voiceInput' => true,
+            'customTemplates' => true,
+            'apiAccess' => true,
+            'advancedTargeting' => true,
+            'customCss' => true,
+            'prioritySupport' => true,
+            'autoOpen' => true,
+            'schedule' => true,
+            'exportData' => true,
+        ];
+
+        // Normalize enterprise to pro
+        if ($tier === 'enterprise') {
+            $tier = 'pro';
+        }
+
+        return $tier === 'pro' ? $pro : $free;
+    }
+
+    /**
+     * Get feature limits for a specific tier
+     *
+     * @param string $tier License tier (free, pro)
+     * @return array Feature limits
+     */
+    private function _get_tier_limits(string $tier): array {
+        // Normalize enterprise to pro
+        if ($tier === 'enterprise') {
+            $tier = 'pro';
+        }
+
+        if ($tier === 'pro') {
+            return [
+                'maxInstances' => null, // Unlimited
+                'maxTemplates' => null, // Unlimited
+                'maxHistoryDays' => null, // Unlimited
+                'maxFileSize' => 100 * 1024 * 1024, // 100MB
+            ];
+        }
+
+        // Free tier
+        return [
+            'maxInstances' => 1,
+            'maxTemplates' => 3,
+            'maxHistoryDays' => null, // No history
+            'maxFileSize' => 5 * 1024 * 1024, // 5MB
+        ];
     }
 
     /**

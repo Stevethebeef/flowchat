@@ -178,7 +178,12 @@ class File_Handler {
 
         // Check extension
         $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $dangerous_extensions = ['php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'phps', 'phar', 'exe', 'sh', 'bat', 'cmd'];
+        // Block dangerous extensions including SVG (XSS risk due to embedded JavaScript)
+        $dangerous_extensions = [
+            'php', 'phtml', 'php3', 'php4', 'php5', 'php7', 'phps', 'phar',
+            'exe', 'sh', 'bat', 'cmd',
+            'svg', 'svgz', // Block SVG files - can contain embedded JavaScript (XSS risk)
+        ];
 
         if (in_array($ext, $dangerous_extensions, true)) {
             return new \WP_Error('dangerous_file', __('This file type is not allowed for security reasons.', 'n8n-chat'));

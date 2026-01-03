@@ -1,0 +1,26 @@
+<svg width="400" height="100" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Logo for dark backgrounds - white text -->
+  <defs>
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B2C"/>
+      <stop offset="100%" style="stop-color:#FF8F5C"/>
+    </linearGradient>
+    <linearGradient id="glassOverlay" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#FF6B2C" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+
+  <!-- Icon box -->
+  <rect x="10" y="10" width="80" height="80" rx="16" fill="url(#brandGradient)" filter="url(#shadow)"/>
+  <rect x="10" y="10" width="80" height="80" rx="16" fill="url(#glassOverlay)"/>
+
+  <!-- N8 in icon -->
+  <text x="50" y="65" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="36" font-weight="700" fill="white" text-anchor="middle">N8</text>
+
+  <!-- .Chat text - WHITE for dark backgrounds -->
+  <text x="110" y="65" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="40" font-weight="700" fill="#FFFFFF">.Chat</text>
+</svg>

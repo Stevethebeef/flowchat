@@ -30,6 +30,12 @@ define('N8N_CHAT_PLUGIN_BASENAME', plugin_basename(__FILE__));
 define('N8N_CHAT_MIN_PHP_VERSION', '7.4');
 define('N8N_CHAT_MIN_WP_VERSION', '6.0');
 
+// HIGH-008 FIX: Register activation/deactivation hooks at top level
+// These hooks MUST be registered before plugins_loaded action
+require_once N8N_CHAT_PLUGIN_DIR . 'includes/autoload.php';
+register_activation_hook(__FILE__, ['N8nChat\\Activator', 'activate']);
+register_deactivation_hook(__FILE__, ['N8nChat\\Deactivator', 'deactivate']);
+
 /**
  * Check minimum requirements before loading the plugin
  */
@@ -78,15 +84,9 @@ function n8n_chat_init(): void {
         return;
     }
 
-    // Load autoloader
-    require_once N8N_CHAT_PLUGIN_DIR . 'includes/autoload.php';
-
     // Load template tags for theme developers
+    // Note: autoload.php is already loaded at top level for activation hooks (HIGH-008)
     require_once N8N_CHAT_PLUGIN_DIR . 'includes/template-tags.php';
-
-    // Register activation/deactivation hooks
-    register_activation_hook(__FILE__, ['N8nChat\\Activator', 'activate']);
-    register_deactivation_hook(__FILE__, ['N8nChat\\Deactivator', 'deactivate']);
 
     // Initialize the plugin
     add_action('plugins_loaded', function() {

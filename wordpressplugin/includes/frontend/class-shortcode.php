@@ -48,8 +48,11 @@ class Shortcode {
         $this->instance_manager = Instance_Manager::get_instance();
         $this->frontend = new Frontend();
 
+        // Register both shortcode formats for backwards compatibility
+        // [n8n_chat] - Original format with underscore
+        // [n8n-chat] - Alternative format with hyphen (more natural for WordPress)
         add_shortcode('n8n_chat', [$this, 'render']);
-        add_shortcode('n8n-chat', [$this, 'render']);  // Alias with hyphen
+        add_shortcode('n8n-chat', [$this, 'render']);
     }
 
     /**
@@ -67,6 +70,14 @@ class Shortcode {
             'theme' => '',              // Override instance theme
             'welcome' => '',            // Override welcome message
             'placeholder' => '',        // Override placeholder text
+            'title' => '',              // Override chat title
+            'primary-color' => '',      // Override primary color
+            'show-header' => '',        // Override show header (true/false)
+            'show-timestamp' => '',     // Override show timestamp (true/false)
+            'show-avatar' => '',        // Override show avatar (true/false)
+            'position' => '',           // Override bubble position
+            'auto-open' => '',          // Override auto-open enabled (true/false)
+            'auto-open-delay' => '',    // Override auto-open delay (ms)
             'require-login' => '',      // Override login requirement
             'class' => '',              // Additional CSS classes
         ], $atts, 'n8n-chat');
@@ -139,11 +150,113 @@ class Shortcode {
             $instance['placeholderText'] = sanitize_text_field($atts['placeholder']);
         }
 
+        if (!empty($atts['title'])) {
+            $instance['chatTitle'] = sanitize_text_field($atts['title']);
+        }
+
+        if (!empty($atts['primary-color'])) {
+            $instance['primaryColor'] = sanitize_hex_color($atts['primary-color']) ?: sanitize_text_field($atts['primary-color']);
+        }
+
+        if ($atts['show-header'] !== '') {
+            $instance['showHeader'] = filter_var($atts['show-header'], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        if ($atts['show-timestamp'] !== '') {
+            $instance['showTimestamp'] = filter_var($atts['show-timestamp'], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        if ($atts['show-avatar'] !== '') {
+            $instance['showAvatar'] = filter_var($atts['show-avatar'], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        if (!empty($atts['position'])) {
+            if (!isset($instance['bubble'])) {
+                $instance['bubble'] = [];
+            }
+            $instance['bubble']['position'] = sanitize_text_field($atts['position']);
+        }
+
+        if ($atts['auto-open'] !== '') {
+            if (!isset($instance['autoOpen'])) {
+                $instance['autoOpen'] = [];
+            }
+            $instance['autoOpen']['enabled'] = filter_var($atts['auto-open'], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        if ($atts['auto-open-delay'] !== '') {
+            if (!isset($instance['autoOpen'])) {
+                $instance['autoOpen'] = [];
+            }
+            $instance['autoOpen']['delay'] = absint($atts['auto-open-delay']);
+        }
+
         if ($atts['require-login'] !== '') {
+            if (!isset($instance['access'])) {
+                $instance['access'] = [];
+            }
             $instance['access']['requireLogin'] = filter_var($atts['require-login'], FILTER_VALIDATE_BOOLEAN);
         }
 
         return $instance;
+    }
+
+    /**
+     * Build overrides array from shortcode attributes for frontend
+     *
+     * @param array $atts Shortcode attributes
+     * @return array Overrides array for JavaScript
+     */
+    private function build_overrides(array $atts): array {
+        $overrides = [];
+
+        if (!empty($atts['welcome'])) {
+            $overrides['welcomeMessage'] = sanitize_textarea_field($atts['welcome']);
+        }
+
+        if (!empty($atts['placeholder'])) {
+            $overrides['placeholderText'] = sanitize_text_field($atts['placeholder']);
+        }
+
+        if (!empty($atts['title'])) {
+            $overrides['chatTitle'] = sanitize_text_field($atts['title']);
+        }
+
+        if (!empty($atts['theme'])) {
+            $overrides['theme'] = sanitize_text_field($atts['theme']);
+        }
+
+        if (!empty($atts['primary-color'])) {
+            $overrides['primaryColor'] = sanitize_hex_color($atts['primary-color']) ?: sanitize_text_field($atts['primary-color']);
+        }
+
+        if ($atts['show-header'] !== '') {
+            $overrides['showHeader'] = filter_var($atts['show-header'], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        if ($atts['show-timestamp'] !== '') {
+            $overrides['showTimestamp'] = filter_var($atts['show-timestamp'], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        if ($atts['show-avatar'] !== '') {
+            $overrides['showAvatar'] = filter_var($atts['show-avatar'], FILTER_VALIDATE_BOOLEAN);
+        }
+
+        if (!empty($atts['position'])) {
+            $overrides['bubble'] = ['position' => sanitize_text_field($atts['position'])];
+        }
+
+        if ($atts['auto-open'] !== '' || $atts['auto-open-delay'] !== '') {
+            $overrides['autoOpen'] = [];
+            if ($atts['auto-open'] !== '') {
+                $overrides['autoOpen']['enabled'] = filter_var($atts['auto-open'], FILTER_VALIDATE_BOOLEAN);
+            }
+            if ($atts['auto-open-delay'] !== '') {
+                $overrides['autoOpen']['delay'] = absint($atts['auto-open-delay']);
+            }
+        }
+
+        return $overrides;
     }
 
     /**
@@ -195,6 +308,13 @@ class Shortcode {
             'nonce' => wp_create_nonce('wp_rest'),
         ]);
 
+        // Pass shortcode overrides to JS for frontend merging
+        $overrides = $this->build_overrides($atts);
+        if (!empty($overrides)) {
+            $overrides_var_name = 'n8nChatOverrides_' . $container_id;
+            wp_localize_script('n8n-chat-frontend', $overrides_var_name, $overrides);
+        }
+
         return sprintf(
             '<div id="%s" class="%s" style="%s"></div>',
             esc_attr($container_id),
@@ -239,6 +359,13 @@ class Shortcode {
             'apiUrl' => rest_url('n8n-chat/v1'),
             'nonce' => wp_create_nonce('wp_rest'),
         ]);
+
+        // Pass shortcode overrides to JS for frontend merging
+        $overrides = $this->build_overrides($atts);
+        if (!empty($overrides)) {
+            $overrides_var_name = 'n8nChatOverrides_' . $container_id;
+            wp_localize_script('n8n-chat-frontend', $overrides_var_name, $overrides);
+        }
 
         return sprintf(
             '<div id="%s" class="%s"></div>',

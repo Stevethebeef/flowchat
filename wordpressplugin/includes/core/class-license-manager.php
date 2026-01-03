@@ -42,9 +42,9 @@ class License_Manager {
     private const RESEND_URL = 'https://n8.chat/resend-license';
 
     /**
-     * Purchase URL
+     * Purchase URL (pricing section)
      */
-    private const PURCHASE_URL = 'https://n8.chat';
+    private const PURCHASE_URL = 'https://n8.chat/#pricing';
 
     /**
      * Product identifier

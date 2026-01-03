@@ -27,12 +27,29 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const textInputRef = useRef<HTMLTextAreaElement>(null);
 
   // Check if voice input is supported and enabled
   const voiceInputEnabled = config?.features?.voiceInput !== false;
+
+  // Validate a single file
+  const validateFile = useCallback(
+    (file: File): boolean => {
+      if (fileTypes.length > 0 && !fileTypes.includes(file.type)) {
+        console.warn(`File type ${file.type} not allowed`);
+        return false;
+      }
+      if (file.size > maxFileSize) {
+        console.warn(`File ${file.name} exceeds maximum size`);
+        return false;
+      }
+      return true;
+    },
+    [fileTypes, maxFileSize]
+  );
 
   // Handle file selection
   const handleFileSelect = useCallback(
@@ -41,17 +58,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
       setUploadError(null);
 
       // Validate files
-      const validFiles = files.filter((file) => {
-        if (fileTypes.length > 0 && !fileTypes.includes(file.type)) {
-          console.warn(`File type ${file.type} not allowed`);
-          return false;
-        }
-        if (file.size > maxFileSize) {
-          console.warn(`File ${file.name} exceeds maximum size`);
-          return false;
-        }
-        return true;
-      });
+      const validFiles = files.filter((file) => validateFile(file));
 
       setSelectedFiles((prev) => [...prev, ...validFiles]);
 
@@ -60,7 +67,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         fileInputRef.current.value = '';
       }
     },
-    [fileTypes, maxFileSize]
+    [validateFile]
   );
 
   // Remove file
@@ -72,6 +79,38 @@ export const ChatInput: React.FC<ChatInputProps> = ({
   const triggerFileInput = useCallback(() => {
     fileInputRef.current?.click();
   }, []);
+
+  // Drag and drop handlers
+  const handleDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (fileUpload && !disabled && !isUploading) {
+      setIsDragging(true);
+    }
+  }, [fileUpload, disabled, isUploading]);
+
+  const handleDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  }, []);
+
+  const handleDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+
+    if (!fileUpload || disabled || isUploading) return;
+
+    const files = Array.from(e.dataTransfer.files);
+    setUploadError(null);
+
+    files.forEach(file => {
+      if (validateFile(file)) {
+        setSelectedFiles(prev => [...prev, file]);
+      }
+    });
+  }, [fileUpload, disabled, isUploading, validateFile]);
 
   // Handle voice transcript
   const handleVoiceTranscript = useCallback((text: string) => {
@@ -85,23 +124,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     setInputValue(e.target.value);
   }, []);
 
-  // Handle key press (Enter to send)
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  }, []);
-
-  // Auto-resize textarea
-  useEffect(() => {
-    if (textInputRef.current) {
-      textInputRef.current.style.height = 'auto';
-      textInputRef.current.style.height = `${Math.min(textInputRef.current.scrollHeight, 120)}px`;
-    }
-  }, [inputValue]);
-
-  // Handle send message
+  // Handle send message (defined before handleKeyDown to avoid stale closure)
   const handleSend = useCallback(async () => {
     const text = inputValue.trim();
     if (!text && selectedFiles.length === 0) return;
@@ -161,10 +184,38 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     }
   }, [inputValue, selectedFiles, isUploading, disabled, apiUrl, config, threadRuntime]);
 
+  // Handle key press (Enter to send)
+  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
+  }, [handleSend]);
+
+  // Auto-resize textarea
+  useEffect(() => {
+    if (textInputRef.current) {
+      textInputRef.current.style.height = 'auto';
+      textInputRef.current.style.height = `${Math.min(textInputRef.current.scrollHeight, 120)}px`;
+    }
+  }, [inputValue]);
+
   const canSend = (inputValue.trim() || selectedFiles.length > 0) && !isUploading && !disabled;
 
   return (
-    <div className="n8n-chat-input-container">
+    <div
+      className={`n8n-chat-input-container${isDragging ? ' dragging' : ''}`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {/* Drag and drop hint overlay */}
+      {isDragging && (
+        <div className="n8n-chat-dropzone-hint">
+          {t('dropFilesHere', 'Drop files here')}
+        </div>
+      )}
+
       {/* Upload error */}
       {uploadError && (
         <div className="n8n-chat-upload-error" role="alert">
@@ -258,6 +309,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
 
 /**
  * File preview component
+ * Uses useState for previewUrl to prevent memory leaks from blob URLs
  */
 interface FilePreviewProps {
   file: File;
@@ -267,16 +319,23 @@ interface FilePreviewProps {
 
 const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove, disabled }) => {
   const isImage = file.type.startsWith('image/');
-  const previewUrl = isImage ? URL.createObjectURL(file) : null;
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  // Cleanup URL on unmount
+  // Create and cleanup blob URL properly
   useEffect(() => {
+    if (!isImage) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+
+    // Cleanup URL on unmount or when file changes
     return () => {
-      if (previewUrl) {
-        URL.revokeObjectURL(previewUrl);
-      }
+      URL.revokeObjectURL(url);
     };
-  }, [previewUrl]);
+  }, [file, isImage]);
 
   return (
     <div className="n8n-chat-file-preview">

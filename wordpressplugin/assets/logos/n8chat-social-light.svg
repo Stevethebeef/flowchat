@@ -1,0 +1,42 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Social media card - light background -->
+  <defs>
+    <linearGradient id="brandGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FF6B2C"/>
+      <stop offset="100%" style="stop-color:#FF8F5C"/>
+    </linearGradient>
+    <linearGradient id="glassOverlay" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.2"/>
+      <stop offset="100%" style="stop-color:#FFFFFF;stop-opacity:0"/>
+    </linearGradient>
+    <radialGradient id="glowOrb" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#FF6B2C;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#FF6B2C;stop-opacity:0"/>
+    </radialGradient>
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="8" stdDeviation="24" flood-color="#FF6B2C" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Light background -->
+  <rect width="1200" height="630" fill="#FFFFFF"/>
+
+  <!-- Background glow orb -->
+  <ellipse cx="600" cy="315" rx="400" ry="300" fill="url(#glowOrb)"/>
+
+  <!-- Icon box -->
+  <rect x="380" y="165" width="180" height="180" rx="36" fill="url(#brandGradient)" filter="url(#shadow)"/>
+  <rect x="380" y="165" width="180" height="180" rx="36" fill="url(#glassOverlay)"/>
+
+  <!-- N8 in icon -->
+  <text x="470" y="285" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="80" font-weight="700" fill="white" text-anchor="middle">N8</text>
+
+  <!-- .Chat text - dark for light background -->
+  <text x="580" y="285" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="72" font-weight="700" fill="#0A0A0B">.Chat</text>
+
+  <!-- Tagline -->
+  <text x="600" y="420" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="28" font-weight="400" fill="#71717A" text-anchor="middle">AI-Powered Chat Widget for WordPress &amp; Shopify</text>
+
+  <!-- URL -->
+  <text x="600" y="570" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="500" fill="#FF6B2C" text-anchor="middle">n8.chat</text>
+</svg>

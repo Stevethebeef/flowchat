@@ -2,10 +2,10 @@
  * FeatureFlagsContext
  *
  * Provides feature flags and premium feature access control.
- * Per 05-frontend-components.md and 12-feature-gating.md specs.
+ * Reads license data from window.n8nChatAdmin.license (localized from PHP).
  */
 
-import React, { createContext, useContext, useMemo, type ReactNode } from 'react';
+import React, { createContext, useContext, useMemo, useState, useEffect, type ReactNode } from 'react';
 
 /**
  * Feature flags from license/config
@@ -46,12 +46,21 @@ export interface FeatureFlags {
 
   /** Priority support */
   prioritySupport: boolean;
+
+  /** Auto-open triggers */
+  autoOpen: boolean;
+
+  /** Schedule rules */
+  schedule: boolean;
+
+  /** Export data */
+  exportData: boolean;
 }
 
 /**
  * License tier
  */
-export type LicenseTier = 'free' | 'pro' | 'enterprise';
+export type LicenseTier = 'free' | 'pro';
 
 /**
  * Feature limits based on tier
@@ -63,6 +72,17 @@ export interface FeatureLimits {
   maxFileSize: number;
 }
 
+/**
+ * License data from backend
+ */
+export interface LicenseData {
+  tier: LicenseTier;
+  isPremium: boolean;
+  isGrace: boolean;
+  daysLeft: number | null;
+  upgradeUrl: string;
+}
+
 interface FeatureFlagsContextValue {
   /** Current license tier */
   tier: LicenseTier;
@@ -70,48 +90,64 @@ interface FeatureFlagsContextValue {
   /** Whether premium is active */
   isPremium: boolean;
 
+  /** Whether in grace period */
+  isGrace: boolean;
+
+  /** Days left until expiry (null if not applicable) */
+  daysLeft: number | null;
+
   /** Feature flags */
   features: FeatureFlags;
 
   /** Feature limits */
   limits: FeatureLimits;
 
+  /** Upgrade URL */
+  upgradeUrl: string;
+
   /** Check if a specific feature is enabled */
   hasFeature: (feature: keyof FeatureFlags) => boolean;
 
   /** Check if within limit */
   withinLimit: (limitType: keyof FeatureLimits, current: number) => boolean;
+
+  /** Loading state */
+  isLoading: boolean;
 }
 
 const FeatureFlagsContext = createContext<FeatureFlagsContextValue | null>(null);
 
 /**
  * Default feature flags for free tier
+ * Bubble mode is FREE - allows basic floating chat
  */
 const FREE_FEATURES: FeatureFlags = {
   multiInstance: false,
-  bubble: true,
+  bubble: true, // Bubble mode is FREE
   history: false,
   analytics: false,
   whiteLabel: false,
   fileUpload: false,
   voiceInput: false,
   customTemplates: false,
-  apiAccess: true,
+  apiAccess: true, // Basic API access is free
   advancedTargeting: false,
   customCss: false,
   prioritySupport: false,
+  autoOpen: false, // Pro feature
+  schedule: false,
+  exportData: false,
 };
 
 /**
- * Default feature flags for pro tier
+ * Default feature flags for pro tier (all features enabled)
  */
 const PRO_FEATURES: FeatureFlags = {
   multiInstance: true,
   bubble: true,
   history: true,
   analytics: true,
-  whiteLabel: false,
+  whiteLabel: true, // Pro includes white label
   fileUpload: true,
   voiceInput: true,
   customTemplates: true,
@@ -119,24 +155,9 @@ const PRO_FEATURES: FeatureFlags = {
   advancedTargeting: true,
   customCss: true,
   prioritySupport: true,
-};
-
-/**
- * Default feature flags for enterprise tier
- */
-const ENTERPRISE_FEATURES: FeatureFlags = {
-  multiInstance: true,
-  bubble: true,
-  history: true,
-  analytics: true,
-  whiteLabel: true,
-  fileUpload: true,
-  voiceInput: true,
-  customTemplates: true,
-  apiAccess: true,
-  advancedTargeting: true,
-  customCss: true,
-  prioritySupport: true,
+  autoOpen: true,
+  schedule: true,
+  exportData: true,
 };
 
 /**
@@ -150,43 +171,78 @@ const LIMITS: Record<LicenseTier, FeatureLimits> = {
     maxFileSize: 5 * 1024 * 1024, // 5MB
   },
   pro: {
-    maxInstances: 10,
-    maxTemplates: null,
-    maxHistoryDays: 90,
-    maxFileSize: 25 * 1024 * 1024, // 25MB
-  },
-  enterprise: {
-    maxInstances: null,
-    maxTemplates: null,
-    maxHistoryDays: null,
+    maxInstances: null, // Unlimited
+    maxTemplates: null, // Unlimited
+    maxHistoryDays: null, // Unlimited
     maxFileSize: 100 * 1024 * 1024, // 100MB
   },
 };
 
+/**
+ * Get license data from window object (localized from PHP)
+ */
+function getLicenseFromWindow(): LicenseData {
+  const adminData = (window as any).n8nChatAdmin;
+  const license = adminData?.license;
+
+  if (!license) {
+    return {
+      tier: 'free',
+      isPremium: false,
+      isGrace: false,
+      daysLeft: null,
+      upgradeUrl: 'https://n8.chat/#pricing',
+    };
+  }
+
+  return {
+    tier: license.tier || 'free',
+    isPremium: license.isPremium || false,
+    isGrace: license.isGrace || false,
+    daysLeft: license.daysLeft ?? null,
+    upgradeUrl: license.upgradeUrl || 'https://n8.chat/pricing',
+  };
+}
+
 interface FeatureFlagsProviderProps {
   children: ReactNode;
+  /** Override tier (useful for testing) */
   tier?: LicenseTier;
+  /** Override features */
   features?: Partial<FeatureFlags>;
+  /** Override limits */
   limits?: Partial<FeatureLimits>;
 }
 
 /**
  * Provider for feature flags
+ * Reads license status from window.n8nChatAdmin.license
  */
 export function FeatureFlagsProvider({
   children,
-  tier = 'free',
+  tier: overrideTier,
   features: overrideFeatures,
   limits: overrideLimits,
 }: FeatureFlagsProviderProps) {
+  const [isLoading, setIsLoading] = useState(true);
+  const [licenseData, setLicenseData] = useState<LicenseData>(getLicenseFromWindow());
+
+  // Check for license data on mount
+  useEffect(() => {
+    // Get license from window
+    const license = getLicenseFromWindow();
+    setLicenseData(license);
+    setIsLoading(false);
+  }, []);
+
   const value = useMemo(() => {
+    // Use override tier if provided, otherwise use license tier
+    // Normalize any 'enterprise' tier to 'pro' (enterprise removed)
+    let tier = overrideTier || licenseData.tier;
+    if (tier === 'enterprise') tier = 'pro';
+
     // Get base features for tier
-    const baseFeatures =
-      tier === 'enterprise'
-        ? ENTERPRISE_FEATURES
-        : tier === 'pro'
-          ? PRO_FEATURES
-          : FREE_FEATURES;
+    const baseFeatures = tier === 'pro' ? PRO_FEATURES : FREE_FEATURES;
 
     // Merge with overrides
     const features: FeatureFlags = {
@@ -194,8 +250,8 @@ export function FeatureFlagsProvider({
       ...overrideFeatures,
     };
 
-    // Get base limits for tier
-    const baseLimits = LIMITS[tier];
+    // Get base limits for tier (normalize to valid tier)
+    const baseLimits = LIMITS[tier as 'free' | 'pro'] || LIMITS.free;
 
     // Merge with overrides
     const limits: FeatureLimits = {
@@ -216,12 +272,16 @@ export function FeatureFlagsProvider({
     return {
       tier,
       isPremium: tier !== 'free',
+      isGrace: licenseData.isGrace,
+      daysLeft: licenseData.daysLeft,
       features,
       limits,
+      upgradeUrl: licenseData.upgradeUrl,
       hasFeature,
       withinLimit,
+      isLoading,
     };
-  }, [tier, overrideFeatures, overrideLimits]);
+  }, [overrideTier, licenseData, overrideFeatures, overrideLimits, isLoading]);
 
   return (
     <FeatureFlagsContext.Provider value={value}>{children}</FeatureFlagsContext.Provider>
@@ -234,7 +294,19 @@ export function FeatureFlagsProvider({
 export function useFeatureFlags(): FeatureFlagsContextValue {
   const context = useContext(FeatureFlagsContext);
   if (!context) {
-    throw new Error('useFeatureFlags must be used within a FeatureFlagsProvider');
+    // Return a safe default if used outside provider
+    return {
+      tier: 'free',
+      isPremium: false,
+      isGrace: false,
+      daysLeft: null,
+      features: FREE_FEATURES,
+      limits: LIMITS.free,
+      upgradeUrl: 'https://n8.chat/#pricing',
+      hasFeature: () => false,
+      withinLimit: () => false,
+      isLoading: false,
+    };
   }
   return context;
 }
@@ -269,6 +341,17 @@ export function useTier(): LicenseTier {
 export function useFeatureLimits(): FeatureLimits {
   const { limits } = useFeatureFlags();
   return limits;
+}
+
+/**
+ * Hook to get upgrade URL with UTM params
+ */
+export function useUpgradeUrl(campaign?: string): string {
+  const { upgradeUrl } = useFeatureFlags();
+  if (!campaign) return upgradeUrl;
+
+  const separator = upgradeUrl.includes('?') ? '&' : '?';
+  return `${upgradeUrl}${separator}utm_source=plugin&utm_medium=admin&utm_campaign=${campaign}`;
 }
 
 export default FeatureFlagsContext;

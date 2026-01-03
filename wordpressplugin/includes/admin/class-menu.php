@@ -26,7 +26,7 @@ class Menu {
     /**
      * Menu icon (dashicons)
      */
-    private const ICON = 'dashicons-format-chat';
+    private const ICON = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHg9IjMyIiB5PSIzMiIgd2lkdGg9IjQ0OCIgaGVpZ2h0PSI0NDgiIHJ4PSI4MCIgZmlsbD0iI0ZGNkIyQyIvPjx0ZXh0IHg9IjI1NiIgeT0iMzEwIiBmb250LWZhbWlseT0ic3lzdGVtLXVpLC1hcHBsZS1zeXN0ZW0sc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyMDAiIGZvbnQtd2VpZ2h0PSI3MDAiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5OODwvdGV4dD48L3N2Zz4=';
 
     /**
      * Constructor

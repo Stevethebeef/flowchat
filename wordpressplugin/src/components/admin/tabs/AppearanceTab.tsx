@@ -8,6 +8,9 @@ import React, { useState, useEffect } from 'react';
 import type { AdminInstance } from '../../../types';
 import { useAdminI18n } from '../../../hooks/useAdminI18n';
 import { InfoIcon } from '../shared/InfoIcon';
+import { useFeatureFlags } from '../../../context/FeatureFlagsContext';
+import { PremiumFeature } from '../shared/PremiumFeature';
+import { ProBadge } from '../shared/ProBadge';
 
 interface AppearanceTabProps {
   instance: Partial<AdminInstance>;
@@ -56,12 +59,16 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
   updateField,
 }) => {
   const { t } = useAdminI18n();
+  const { hasFeature } = useFeatureFlags();
   const [stylePresets, setStylePresets] = useState<StylePreset[]>([]);
   const [loadingPresets, setLoadingPresets] = useState(true);
   const [showCustomCss, setShowCustomCss] = useState(false);
 
   const appearance = instance.appearance || {};
   const colorSource = instance.colorSource || 'custom';
+
+  // Premium feature check
+  const hasCustomCssFeature = hasFeature('customCss');
 
   // Fetch style presets
   useEffect(() => {
@@ -439,36 +446,40 @@ export const AppearanceTab: React.FC<AppearanceTabProps> = ({
       </div>
 
       {/* Custom CSS */}
-      <div className="n8n-chat-section">
-        <button
-          type="button"
-          className="n8n-chat-toggle-advanced"
-          onClick={() => setShowCustomCss(!showCustomCss)}
-          aria-expanded={showCustomCss}
-        >
-          <span className={`dashicons ${showCustomCss ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-right-alt2'}`}></span>
-          {showCustomCss ? t('hide', 'Hide') : t('show', 'Show')} {t('customCss', 'Custom CSS')}
-        </button>
+      <PremiumFeature feature="customCss" featureName="Custom CSS">
+        <div className="n8n-chat-section">
+          <button
+            type="button"
+            className="n8n-chat-toggle-advanced"
+            onClick={() => hasCustomCssFeature && setShowCustomCss(!showCustomCss)}
+            aria-expanded={showCustomCss}
+            disabled={!hasCustomCssFeature}
+          >
+            <span className={`dashicons ${showCustomCss ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-right-alt2'}`}></span>
+            {showCustomCss ? t('hide', 'Hide') : t('show', 'Show')} {t('customCss', 'Custom CSS')}
+            {!hasCustomCssFeature && <ProBadge variant="inline" />}
+          </button>
 
-        {showCustomCss && (
-          <div className="n8n-chat-advanced-content">
-            <div className="n8n-chat-field">
-              <label htmlFor="fc-custom-css">{t('customCss', 'Custom CSS')}</label>
-              <textarea
-                id="fc-custom-css"
-                value={instance.customCss || ''}
-                onChange={(e) => updateField('customCss', e.target.value)}
-                rows={10}
-                className="large-text code"
-                placeholder={`.n8n-chat-widget {\n  /* Your custom styles */\n}`}
-              />
-              <p className="description">
-                {t('customCssDesc', 'Add custom CSS to further customize the chat appearance. All styles are scoped to')} <code>.n8n-chat-widget</code>.
-              </p>
+          {showCustomCss && hasCustomCssFeature && (
+            <div className="n8n-chat-advanced-content">
+              <div className="n8n-chat-field">
+                <label htmlFor="fc-custom-css">{t('customCss', 'Custom CSS')}</label>
+                <textarea
+                  id="fc-custom-css"
+                  value={instance.customCss || ''}
+                  onChange={(e) => updateField('customCss', e.target.value)}
+                  rows={10}
+                  className="large-text code"
+                  placeholder={`.n8n-chat-widget {\n  /* Your custom styles */\n}`}
+                />
+                <p className="description">
+                  {t('customCssDesc', 'Add custom CSS to further customize the chat appearance. All styles are scoped to')} <code>.n8n-chat-widget</code>.
+                </p>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </PremiumFeature>
     </div>
   );
 };
